@@ -17,9 +17,8 @@
                       
         </div>
 
-            <div class ="row mt-3 d-flex justify-content-center">
+            <div class ="row mt-3 text-center">
                 <div class = "col p-3 bg-2 text-white h2">Sun
-              
                   <ul class="list-group list-group-vertical h6">
                         <li class="list-group-item">asdasdasdas</li>
                         <li class="list-group-item">asdasda</li>
@@ -30,13 +29,10 @@
                         <li class="list-group-item">asdasda </li>
                         <li class="list-group-item">asdasda </li>
                         <li class="list-group-item">asdasda </li>
-                    </ul>
-               
-                    
+                    </ul>   
                 </div>
                 
                 <div class = "col p-3 bg-2 text-white h2">Mon
-                
                     <ul class="list-group list-group-vertical h6">
                         <li class="list-group-item">asdasdasdas</li>
                         <li class="list-group-item">asdasda</li>
@@ -49,8 +45,8 @@
                         <li class="list-group-item">asdasda </li>
                     </ul>
                 </div>
-                <div class = "col p-3 bg-2 text-white h2">Tue
-                    
+
+                <div class = "col p-3 bg-2 text-white h2">Tue 
                     <ul class="list-group list-group-vertical h6">
                         <li class="list-group-item">asdasdasdas</li>
                         <li class="list-group-item">asdasda</li>
@@ -61,8 +57,7 @@
                         <li class="list-group-item">asdasda </li>
                         <li class="list-group-item">asdasda </li>
                         <li class="list-group-item">asdasda </li>
-                    </ul>
-                
+                    </ul>  
                 </div>
                     
                 <div class = "col p-3 bg-2 text-white h2">Wed
@@ -77,8 +72,8 @@
                         <li class="list-group-item">asdasda </li>
                         <li class="list-group-item">asdasda </li>
                     </ul>
-                
                 </div>
+
                 <div class = "col p-3 bg-2 text-white h2">Thu
                     <ul class="list-group list-group-vertical h6">
                         <li class="list-group-item">asdasdasdas</li>
@@ -91,8 +86,8 @@
                         <li class="list-group-item">asdasda </li>
                         <li class="list-group-item">asdasda </li>
                     </ul>
-                
                 </div>
+
                 <div class = "col p-3 bg-2 text-white h2">Friday
                     <ul class="list-group list-group-vertical h6">
                         <li class="list-group-item">asdasdasdas</li>
@@ -106,6 +101,7 @@
                         <li class="list-group-item">asdasda </li>
                     </ul>
                 </div>
+
                 <div class = "col p-3 bg-2 text-white h2">Sat
                     <ul class="list-group list-group-vertical h6">
                         <li class="list-group-item">asdasdasdas</li>
@@ -119,18 +115,9 @@
                         <li class="list-group-item">asdasda </li>
                     </ul>
                 </div>
+
             </div>
         </div>
-
-    
-       
-
-    
-    </form>
-    
+    </form> 
   </div>
-    
-    
-
-
 @endsection
