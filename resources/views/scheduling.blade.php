@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
   
   <div class = "container-lg bg-2">
@@ -14,7 +15,6 @@
                     <input type="text" class="form-control  " placeholder="Search">
                     <input type="submit" value="Search" class="btn bg-3 mx-3 text-white">   
                 </div>
-                      
         </div>
 
             <div class ="row mt-3 text-center">
