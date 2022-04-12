@@ -19,7 +19,7 @@
         .bg-2{background-color: #2D4263;}
         .bg-3{background-color: #1199EE;}
         .bg-4{background-color: #C84B31;}
-        .bg-5{background-color: #FFFFFF;}
+        
     </style>
 </head>
 <body>
