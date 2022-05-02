@@ -68,7 +68,7 @@
                     </a>
                 </div>
 
-                <div class="offcanvas offcanvas-start show" id="sidebar">
+                <div class="offcanvas offcanvas-start" id="sidebar">
                     <div class="offcanvas-header bg-1 py-2 ps-5 p-0">
                         <a href="/" class="navbar-brand text-white fw-bolder ps-4">SProMAp</a>
                     </div>
