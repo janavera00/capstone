@@ -28,6 +28,12 @@
         .nav-item:hover{
             opacity: .5;
         }
+
+        /* for scrollbar */
+
+        ::-webkit-scrollbar {
+            width: 1px;
+        }
     </style>
 </head>
 <body>
@@ -45,17 +51,17 @@
             <div class="d-flex justify-content-between flex-column bg-2 p-0" style="width: 4.5rem;">
                 <ul class="nav nav-pills nav-flush flex-column">
                     <li class="nav-item text-center border-bottom">
-                        <a href="" class="nav-link py-4">
+                        <a href="{{ url('home') }}" class="nav-link py-4">
                             <i class="fa fa-solid fa-gauge-high fa-xl"></i>
                         </a>
                     </li>
                     <li class="nav-item text-center border-bottom">
-                        <a href="" class="nav-link py-4">
+                        <a href="{{ url('filing') }}" class="nav-link py-4">
                             <i class="fa fa-solid fa-folder-open fa-xl"></i>
                         </a>
                     </li>
                     <li class="nav-item text-center border-bottom">
-                        <a href="" class="nav-link py-4">
+                        <a href="{{ url('scheduling') }}" class="nav-link py-4">
                             <i class="fa fa-solid fa-calendar fa-xl"></i>
                         </a>
                     </li>
@@ -68,7 +74,7 @@
                     </a>
                 </div>
 
-                <div class="offcanvas offcanvas-start" id="sidebar">
+                <div class="offcanvas offcanvas-start" style="width: 15vmax;" id="sidebar">
                     <div class="offcanvas-header bg-1 py-2 ps-5 p-0">
                         <a href="/" class="navbar-brand text-white fw-bolder ps-4">SProMAp</a>
                     </div>
@@ -103,7 +109,7 @@
                         <div class="border-top py-3">
                             <a href="" class="nav-link pt-3 mx-3 d-flex justify-content-center align-items-center">
                                 <i class="fa fa-solid fa-user fa-xl"></i>
-                                <h3 class="text-white m-1 ms-3">John Arnulfo L. Navera</h3>
+                                <h3 class="text-white text-center m-1 ms-3">John Arnulfo L. Navera</h3>
                             </a>
                             <div class="w-100 mb-3 d-flex justify-content-center">
                                 <a href="" class="btn btn-danger">Logout</a>

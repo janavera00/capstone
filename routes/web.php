@@ -14,12 +14,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-
     return view('login');
-
 });
 Route::get('/home', function () {
-
     return view('dashboard');
-
 });
+Route::get('/filing', function () {
+    return view('filing');
+});
+Route::get('/scheduling', function () {
+    return view('scheduling');
+});
+Route::post('/home', function () {
+    return view('dashboard');
+})->name('login');

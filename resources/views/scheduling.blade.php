@@ -2,24 +2,51 @@
 
 @section('content')
 
-<div class="container-lg bg-2">
-    <div class="container mt-3 text-center display-3 text-white">
-        Weekly Schedule
+<div class="container bg-2 mt-4" style="height: 40vmax;">
+    <div class="text-center text-white">
+        <p class="display-3">Weekly Schedule</p>
     </div>
 
-    <form action="" method="post">
-        @csrf
-        <div class="d-flex p-3 justify-content-center">
-            <input type="submit" value="Add new Schedule" class="btn bg-3 text-white">
-            <div class="input-group input-group-lg w-75 px-3">
-                <input type="text" class="form-control  " placeholder="Search">
-                <input type="submit" value="Search" class="btn bg-3 mx-3 text-white">
+    <div class="row mt-3 text-center">
+        <div class="col p-3 text-white h2">
+            <h2>Sun</h2>
+            <div class="overflow-auto rounded" style="height: 70%;">
+                <ul class="list-group list-group-vertical h5">
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                </ul>
             </div>
         </div>
 
-        <div class="row mt-3 text-center">
-            <div class="col p-3 bg-2 text-white h2">Sun
-                <ul class="list-group list-group-vertical h6">
+        <div class="col p-3 text-white h2">
+            <h2>Mon</h2>
+            <div class="overflow-auto rounded" style="height: 70%;">
+                <ul class="list-group list-group-vertical h5">
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
                     <li class="list-group-item">asdasdasdas</li>
                     <li class="list-group-item">asdasda</li>
                     <li class="list-group-item">asdasda</li>
@@ -31,93 +58,139 @@
                     <li class="list-group-item">asdasda </li>
                 </ul>
             </div>
-
-            <div class="col p-3 bg-2 text-white h2">Mon
-                <ul class="list-group list-group-vertical h6">
-                    <li class="list-group-item">asdasdasdas</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                </ul>
-            </div>
-
-            <div class="col p-3 bg-2 text-white h2">Tue
-                <ul class="list-group list-group-vertical h6">
-                    <li class="list-group-item">asdasdasdas</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                </ul>
-            </div>
-
-            <div class="col p-3 bg-2 text-white h2">Wed
-                <ul class="list-group list-group-vertical h6">
-                    <li class="list-group-item">asdasdasdas</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                </ul>
-            </div>
-
-            <div class="col p-3 bg-2 text-white h2">Thu
-                <ul class="list-group list-group-vertical h6">
-                    <li class="list-group-item">asdasdasdas</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                </ul>
-            </div>
-
-            <div class="col p-3 bg-2 text-white h2">Friday
-                <ul class="list-group list-group-vertical h6">
-                    <li class="list-group-item">asdasdasdas</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                </ul>
-            </div>
-
-            <div class="col p-3 bg-2 text-white h2">Sat
-                <ul class="list-group list-group-vertical h6">
-                    <li class="list-group-item">asdasdasdas</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda item</li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                    <li class="list-group-item">asdasda </li>
-                </ul>
-            </div>
-
         </div>
+
+        <div class="col p-3 text-white h2">
+            <h2>Tue</h2>
+            <div class="overflow-auto rounded" style="height: 70%;">
+                <ul class="list-group list-group-vertical h5">
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col p-3 text-white h2">
+            <h2>Wed</h2>
+            <div class="overflow-auto rounded" style="height: 70%;">
+                <ul class="list-group list-group-vertical h5">
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col p-3 text-white h2">
+            <h2>Thu</h2>
+            <div class="overflow-auto rounded" style="height: 70%;">
+                <ul class="list-group list-group-vertical h5">
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col p-3 text-white h2">
+            <h2>Fri</h2>
+            <div class="overflow-auto rounded" style="height: 70%;">
+                <ul class="list-group list-group-vertical h5">
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col p-3 text-white h2">
+            <h2>Sat</h2>
+            <div class="overflow-auto rounded" style="height: 70%;">
+                <ul class="list-group list-group-vertical h5">
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasdasdas</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda item</li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                    <li class="list-group-item">asdasda </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
 </div>
-</form>
-</div>
+
 @endsection
