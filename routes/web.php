@@ -18,3 +18,8 @@ Route::get('/', function () {
     return view('login');
 
 });
+Route::get('/home', function () {
+
+    return view('dashboard');
+
+});
