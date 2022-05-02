@@ -120,7 +120,11 @@
                     </a>
                 </div>
         
-                
+            </div>
+
+
+            <div class="col">
+                @yield("content")
             </div>
         </div>
     </div>
