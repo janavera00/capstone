@@ -25,7 +25,7 @@
 
         .p-0{padding: 0;}
 
-        .nav-item:hover{
+        a:hover{
             opacity: .5;
         }
 
