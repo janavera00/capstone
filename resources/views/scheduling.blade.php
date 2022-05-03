@@ -32,21 +32,21 @@
                 <h2>Sun</h2>
                 <div class="overflow-auto rounded bg-white" style="height: 40rem;">
                     <ul class="list-group list-group-vertical h5">
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasdasdas</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda item</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda items</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasdasdas</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda item</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda items</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasdasdas</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda item</a></li>
-                        <li class="list-group-item"><a href="" class="nav-link text-black">asdasda items</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasdasdas</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda item</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda items</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasdasdas</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda item</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda items</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasdasdas</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda item</a></li>
+                        <li class="list-group-item"><a href="{{ url('scheduling/1') }}" class="nav-link text-black">asdasda items</a></li>
                     </ul>
                 </div>
             </div>

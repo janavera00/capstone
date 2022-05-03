@@ -13,12 +13,12 @@
     <style>
         .color-1{color: #191919;}
         .color-2{color: #2D4263;}
-        .color-3{color: #1199EE;}
+        .color-3{color: #0076bf;}
         .color-4{color: #C84B31;}
 
         .bg-1{background-color: #191919;}
         .bg-2{background-color: #2D4263;}
-        .bg-3{background-color: #1199EE;}
+        .bg-3{background-color: #0076bf;}
         .bg-4{background-color: #C84B31;}
     </style>    
 </head>
