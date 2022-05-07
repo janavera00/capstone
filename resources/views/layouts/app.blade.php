@@ -39,6 +39,7 @@
         ::-webkit-scrollbar {
             width: 1px;
         }
+
     </style>
 </head>
 

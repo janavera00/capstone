@@ -76,13 +76,52 @@
                         </ul>
                     </div>
                     <div class="my-auto">
-                        <a href="" class="mb-3 btn bg-3 px-5">
+                        <a data-bs-toggle="modal" href="#editSched" class="mb-3 btn bg-3 px-5">
                             <p class="text-white h4 pt-2">Edit Schedule</p>
                         </a>
                     </div>
+
                 </div>
             </div>
+            
+        </div>
+    </div>
+</div>
 
+
+<!-- Modal for editing schedule -->
+<div class="modal" id="editSched">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header text-white bg-1">
+                <h2 class="modal-title">Edit Schedule</h2>
+            </div>
+
+            <div class="modal-body">
+                <form action="" method="post">
+                    <div class="mt-2">
+                        <label for="title" class="form-label">Title:</label>
+                        <input type="text" name="title" id="title" class="form-control">
+                    </div>
+                    <div>
+                        <label for="date" class="form-label">Date:</label>
+                        <input type="date" name="date" id="date" class="form-control">
+                    </div>
+                    <div>
+                        <label for="time" class="form-label">Time:</label>
+                        <input type="time" name="time" id="time" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label for="assigned" class="form-label">Assigned To:</label>
+                        <input type="text" name="assigned" id="assigned" class="form-control">
+                    </div>
+                    <div class="my-2 d-flex justify-content-around">
+                        <a class="btn bg-4 text-white" style="width: 45%;" data-bs-dismiss="modal">Cancel</a>
+                        <input type="submit" value="Add" class="btn btn-primary" style="width: 45%;">
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
