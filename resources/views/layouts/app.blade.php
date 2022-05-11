@@ -35,11 +35,13 @@
         }
 
         /* for scrollbar */
-
         ::-webkit-scrollbar {
             width: 1px;
         }
 
+        .btn{
+            width: 200px;
+        }
     </style>
 </head>
 
