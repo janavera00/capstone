@@ -25,6 +25,12 @@ Route::get('/home', function () {
 Route::get('/filing', function () {
     return view('filing');
 });
+
+// still to edit, should be redirect to specific folder
+Route::get('/123', function () {
+    return view('file');
+});
+
 Route::get('/scheduling', function () {
     return view('scheduling');
 });
