@@ -1,0 +1,94 @@
+/* Calendar CSS */
+
+.calendar {
+    width: 20rem;
+    height: auto;
+    /* box-shadow: 0 0.5rem 3rem rgba(0, 0, 0, 0.4); */
+  }
+  
+  .month {
+    width: 100%;
+    height: 2rem;
+    /* background-color: #167e56; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 2rem;
+    text-align: center;
+    /* text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5); */
+  }
+
+  .month h1 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    /* margin-top: 1.5rem; */
+  }
+
+  #date p {
+    font-size: 1.3rem;
+  }
+
+  .weekdays {
+    width: 100%;
+    height: 2rem;
+    padding: 0 0.4rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .weekdays div {
+    font-size: 1rem;
+    font-weight: 400;
+    /* letter-spacing: 0.1rem; */
+    width: calc(19.2rem / 7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5); */
+  }
+  
+  .days {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.2rem;
+  }
+  
+  .days .day {
+    font-size: .9rem;
+    margin: 0.3rem;
+    width: calc(15.2rem / 7);
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5); */
+    transition: background-color 0.2s;
+  }
+
+  .days .blank {
+    margin: 0.3rem;
+    width: calc(15.2rem / 7);
+    height: 2rem;
+    display: flex;
+  }
+  
+  .days .day:hover:not(.today) {
+    /* background-color: #262626; */
+    /* border: 0.2rem solid #777; */
+    cursor: pointer;
+  }
+ 
+  .days .active{
+    background-color: gray;
+    border-radius: 50%;
+    color: white;
+  }
+
+  .days .hasEvent{
+    background-color: #0076bf;
+    border-radius: 50%;
+    color: white;
+  }
