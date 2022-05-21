@@ -81,8 +81,14 @@
     cursor: pointer;
   }
  
+  .days .current{
+    background-color: rgb(128, 128, 128);
+    border-radius: 50%;
+    color: white;
+  }
+ 
   .days .active{
-    background-color: gray;
+    background-color: rgb(51, 198, 31);
     border-radius: 50%;
     color: white;
   }

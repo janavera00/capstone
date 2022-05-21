@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FilingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,14 +23,9 @@ Route::get('/scheduling/{id}', function ($id) {
 Route::get('/home', function () {
     return view('dashboard');
 });
-Route::get('/filing', function () {
-    return view('filing');
-});
 
-// still to edit, should be redirect to specific folder
-Route::get('/123', function () {
-    return view('file');
-});
+Route::get('/filing', [FilingController::class, 'show']);
+Route::get('/filing/{project_id}', [FilingController::class, 'showFiles']);
 
 Route::get('/scheduling', function () {
     return view('scheduling');
