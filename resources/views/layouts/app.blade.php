@@ -44,6 +44,14 @@
             width: 200px;
         }
 
+        .modal * {
+            font-size: 1.5rem;
+        }
+        .modal-content, .modal-dialog {
+            width: 50vw;
+            margin-top: 100px;
+            max-width: 50vw;
+        }
     </style>
 </head>
 

@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('address');
-            $table->string('contact');
-            $table->string('email')->unique();
-            $table->string('username');
-            $table->string('password');
-            $table->enum('role', ['Admin', 'Secretary', 'Engineer', 'Surveyor']);
+            $table->string('task');
+            $table->string('date');
+            $table->string('time');
+            $table->enum('status', ['Active', 'Done', 'Overdue']);
+            $table->foreignId('project_id')->constrained();
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('tasks');
     }
 };

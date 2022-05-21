@@ -19,132 +19,20 @@
         <div>
             <table class="table table-light table-bordered mt-3" style="margin-bottom: 0px;">
                 <tr class="text-center">
-                    <th style="width: 20%;">Control No.</th>
-                    <th style="width: 40%;">Client</th>
-                    <th style="width: 40%;">Location</th>
+                    <th style="width: 10%;">Control No.</th>
+                    <th style="width: 35%;">Client</th>
+                    <th style="width: 55%;">Location</th>
                 </tr>
             </table>
             <div class="overflow-auto" style="height: 65vh;">
                 <table class="table table-light table-striped table-bordered table-hover">
-                    @php
-                        $link = "location.href = '123'";
-                    @endphp
-                    <tr onclick="{{ $link }}"> 
-                        <td style="width: 20%;">00001</td>
-                        <td style="width: 40%;">John Doe</td>
-                        <td style="width: 40%;">Anywhere St.</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
-                    <tr>
-                        <td>00001</td>
-                        <td>John Doe</td>
-                        <td>Anywhere St.</td>
-                    </tr>
+                    @foreach($projects as $project)
+                        <tr onclick="location.href = 'filing/{{ $project->id }}'"> 
+                            <td style="width: 10%; text-align:center;"><?php printf('%05s', $project->id); ?></td>
+                            <td style="width: 35%;">{{ $project->client->name }}</td>
+                            <td style="width: 55%;">{{ $project->location }}</td>
+                        </tr>
+                    @endforeach
                 </table>
             </div>
         </div>

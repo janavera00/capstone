@@ -27,21 +27,29 @@ const months = [
 
 let selectedDate = `${date.getDate()}|${date.getMonth()}|${date.getFullYear()}`;
 
+document.getElementsByTagName('hr')[0].remove();
 
 let displayDate = `<h1 id="${date.getDate()}|${date.getMonth()}|${date.getFullYear()}">${weekdaysFull[date.getDay()]}</h1><p>${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</p>`;
 currentDateDisplay.innerHTML = displayDate;
 
-document.getElementById('year').innerHTML = date.getFullYear();
-
-
 function constructCalendar(){
-    for(let x = 0;x < 12;x++)
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    for(let x = 0;x < 10;x++)
     {
         const calendarMonth = document.getElementById(x);
     
         date.setDate(1);
-        date.setMonth(x);
+        date.setMonth(currentMonth);
+        date.setFullYear(currentYear);
         
+        if(currentMonth < 11){
+            currentMonth++;
+        }else{
+            currentMonth = 0;
+            currentYear++;
+        }
+
         const monthDays = calendarMonth.querySelector('.days');
         
         const lastDay = new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
@@ -63,7 +71,7 @@ function constructCalendar(){
             weekdaysDisplay += `<div>${week}</div>`;
         });
         calendarMonth.querySelector('.weekdays').innerHTML = weekdaysDisplay;
-        calendarMonth.querySelector('.date h1').innerHTML = months[date.getMonth()];
+        calendarMonth.querySelector('.date h1').innerHTML = `${months[date.getMonth()]}, ${date.getFullYear()}`;
         
         let days = "";
         
@@ -76,14 +84,18 @@ function constructCalendar(){
         for(let i = 1;i <= lastDay;i++)
         {
             dispDate = `${i}|${date.getMonth()}|${date.getFullYear()}`;
-    
-            if(dispDate == selectedDate)
+
+            if(dispDate == `${new Date().getDate()}|${new Date().getMonth()}|${new Date().getFullYear()}`)
+                days += `<div class="day current" onclick="changeDate('${i}', '${date.getMonth()}', '${date.getFullYear()}')" id="${dispDate}">${i}</div>`;
+            else if(dispDate == selectedDate)
                 days += `<div class="day active" onclick="changeDate('${i}', '${date.getMonth()}', '${date.getFullYear()}')" id="${dispDate}">${i}</div>`;
             else
                 days += `<div class="day" onclick="changeDate('${i}', '${date.getMonth()}', '${date.getFullYear()}')" id="${dispDate}">${i}</div>`;
             monthDays.innerHTML = days;
         } 
     }
+
+    console.log(`${date.getDate()}, ${date.getMonth()}, ${date.getFullYear()}, = ${currentMonth}`);
 }
 
 function changeDate(day, month, year){
@@ -93,6 +105,7 @@ function changeDate(day, month, year){
     selectedDate = `${day}|${month}|${year}`;
 
     currentDateDisplay.innerHTML = displayDate;
+    // currentMonth = new Date().getMonth();
     constructCalendar();
     console.log(selectedDate);
 }

@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Client;
+use App\Models\File;
+use App\Models\Project;
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +19,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        User::factory(10)->create();
+        Client::factory(10)->create();
+        Project::factory(10)->create();
+        File::factory(10)->create();
+        Task::factory(10)->create();
     }
 }
