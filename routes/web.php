@@ -22,6 +22,9 @@ Route::get('/', function () {
 Route::get('/scheduling/{id}', function ($id) {
     return view('schedDetails');
 });
+Route::get('/home', function () {
+    return view('dashboard');
+});
 
 Route::get('/filing', [FilingController::class, 'show']);
 Route::get('/filing/{project_id}', [FilingController::class, 'showFiles']);
