@@ -53,7 +53,7 @@
                     <div class="mt-2">
                         <label for="client">Client:</label>
                         <input type="text" name="client" id="client" class="form-control" list="clientList" value="{{ old('client') }}">
-                        @error('client')
+                        @error('client') 
                         <p class="text-danger">*{{$message}}</p>
                         @enderror
                         <datalist id="clientList">
