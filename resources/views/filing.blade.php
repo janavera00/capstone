@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    $error = true;
+@endphp
+
 @section('content')
     
     <div class="container text-white bg-2 mt-5 overflow-auto" style="height: 80vh;">
@@ -38,8 +42,9 @@
         </div>
     </div>
     
+    <input type="hidden" id="showError" value="{{ $error }}">
 
-    <!-- Modal for editing schedule -->
+    <!-- Modal for adding project -->
     <div class="modal" id="addProject">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -68,4 +73,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        if(document.querySelector('#showError').value){
+            $('#register').modal('show');
+            // console.log(document.querySelector('#showError').value);
+            // let node = document.querySelector('#addProject');
+            // node.classList.add('show');
+            // node.aria-modal("true");
+        }
+    </script>
     @endsection

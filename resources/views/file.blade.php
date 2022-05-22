@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <a href="{{ url('filing') }}" class="btn bg-4 px-4 py-3 my-4">
+    <a href="{{ url('filing') }}" class="btn bg-4 py-3 my-2" style="width: 5rem;">
         <i class="fas fa-arrow-left fa fa-2xl"></i>
     </a>
     <div class="container text-white bg-2 overflow-auto" style="height: 80vh;">
