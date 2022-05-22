@@ -196,7 +196,7 @@
     
     <!-- Modal for adding schedule -->
     <div class="modal" id="newSched">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
 
                 <div class="modal-header text-white bg-1">
@@ -205,18 +205,18 @@
 
                 <div class="modal-body">
                     <form action="" method="get">
-                        <div class="mt-4">
+                        <div class="mt-2">
                             <label for="task" class="form-label">Task:</label>
                             <input type="text" name="task" id="task" class="form-control">
                         </div>
-                        <div class="mt-4">
+                        <div class="mt-2">
                             <label for="date" class="form-label">Date and Time:</label>
                             <div class="d-flex justify-content-between">
                                 <input type="date" name="date" id="date" class="form-control" style="width: 49%;">
                                 <input type="time" name="time" id="time" class="form-control" style="width: 49%;">
                             </div>
                         </div>
-                        <div class="mt-4">
+                        <div class="mt-2">
                             <label for="project" class="form-label">Project(client and location):</label>
                             <select name="project" id="project" class="form-control">
                                 <option disabled selected hidden></option>
@@ -225,14 +225,14 @@
                                 <option value="">John Dame - Anywhere St., Canaman, Camarines Sur</option>
                             </select>
                         </div>
-                        <div class="mt-4">
+                        <div class="mt-2">
                             <label for="employee" class="fomr-label">Employee/s Assigned:</label>
-                            <div class="mx-auto" style="width: fit-content;">
-                                <table id="dynamicField" style="width: 48vw;">
+                            <div>
+                                <table id="dynamicField" class="w-100">
                                     <tr>
                                         <td>
                                             <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
-                                            <select name="employee[]" id="employee" class="form-control" style="width: 40vw;">
+                                            <select name="employee[]" id="employee" class="form-control">
                                                 <option selected hidden></option>
                                                 <option value="">John Doe</option>
                                                 <option value="">John Dane</option>
@@ -241,15 +241,15 @@
                                                 <option value="">Johnathan Doe</option>
                                             </select>
                                         </td>
-                                        <td><a class="btn btn-success w-100" onclick="addEmployee()">+</a></td>
-                                        <td><a class="btn btn-danger w-100" onclick="removeEmployee()">-</a></td>
+                                        <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee()">+</a></td>
+                                        <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee()">-</a></td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
-                        <div class="my-4 d-flex justify-content-around">
-                            <a class="btn bg-4 text-white" style="width: 45%;" data-bs-dismiss="modal">Cancel</a>
-                            <input type="submit" value="Add" class="btn btn-primary" style="width: 45%;">
+                        <div class="my-2 d-flex justify-content-around">
+                            <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                            <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
                         </div>
                     </form>
                 </div>

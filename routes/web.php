@@ -26,6 +26,7 @@ Route::get('/home', function () {
 
 Route::get('/filing', [FilingController::class, 'show']);
 Route::get('/filing/{project_id}', [FilingController::class, 'showFiles']);
+Route::post('/filing/create', [FilingController::class, 'createProject']);
 
 Route::get('/scheduling', function () {
     return view('scheduling');

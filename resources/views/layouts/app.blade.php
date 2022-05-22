@@ -39,18 +39,13 @@
         ::-webkit-scrollbar {
             width: 1px;
         }
-
-        .btn{
-            width: 200px;
+        
+        .modal-content{
+            font-size: 1.2rem;
         }
-
-        .modal * {
+        .modal-content label{
             font-size: 1.5rem;
-        }
-        .modal-content, .modal-dialog {
-            width: 50vw;
-            margin-top: 100px;
-            max-width: 50vw;
+            padding-bottom: 0px;
         }
     </style>
 </head>
