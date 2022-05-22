@@ -75,7 +75,7 @@
                         </div>
                         <hr>
                         <div>
-                            <label for="contact">Contact Number:</label>
+                            <label for="contact">Contact Number: </label>
                             <div class="d-flex">
                                 <p class="m-2">+63</p>
                                 <input type="text" name="contact" id="contact" maxlength="9" class="form-control" value="{{ old('contact') }}">
