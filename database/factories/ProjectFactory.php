@@ -19,7 +19,7 @@ class ProjectFactory extends Factory
     {
         return [
             'client_id' => $this->faker->randomDigit()+1,
-            'engineer' => $this->faker->randomDigit()+1,
+            'user_id' => $this->faker->randomDigit()+1,
             'location' => $this->faker->address(),
             'survey_number' => 'Lot '.$this->faker->randomNumber(1, true).' Psd-'.$this->faker->randomNumber(2, true).'-'.$this->faker->randomNumber(6, true),
             'lot_area' => $this->faker->randomNumber(3).' sqr.m.',
