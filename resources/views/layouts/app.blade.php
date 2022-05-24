@@ -44,7 +44,7 @@
             font-size: 1.2rem;
         }
         .modal-content label{
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             padding-bottom: 0px;
         }
     </style>

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained();
-            $table->foreignId('engineer')->nullable()->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->string('location');
             $table->string('survey_number')->nullable();
             $table->string('lot_area')->nullable();
