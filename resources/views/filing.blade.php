@@ -40,7 +40,7 @@
 
 <!-- Modal for adding project -->
 <div class="modal" id="addProject">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
             <div class="modal-header text-white bg-1">

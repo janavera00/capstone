@@ -24,7 +24,7 @@ class Project extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function engineer()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

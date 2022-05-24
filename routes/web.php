@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FilingController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,20 +20,24 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::get('/scheduling/{id}', function ($id) {
-    return view('schedDetails');
-});
+
 Route::get('/home', function () {
     return view('dashboard');
 });
 
 Route::get('/filing', [FilingController::class, 'show']);
-Route::get('/filing/{project_id}', [FilingController::class, 'showFiles']);
+Route::get('/filing/{project}', [FilingController::class, 'showFiles']);
+Route::post('/filing/{project}/createFile', [FilingController::class, 'createFile']);
+Route::post('/filing/{file}/updateFile', [FilingController::class, 'updateFile']);
 Route::post('/filing/create', [FilingController::class, 'createProject']);
+Route::post('/project/update/{project}', [FilingController::class, 'updateProject']);
+Route::post('/project/{project}/confirmPass', [FilingController::class, 'confirmPass']);
 
-Route::get('/scheduling', function () {
-    return view('scheduling');
-});
+Route::get('/scheduling', [TaskController::class, 'show']);
+Route::post('/scheduling/create', [TaskController::class, 'createTask']);
+Route::get('/scheduling/{task}', [TaskController::class, 'openTask']);
+Route::post('/scheduling/update/{task}', [TaskController::class, 'updateTask']);
+
 Route::post('/home', function () {
     return view('dashboard');
 })->name('login');

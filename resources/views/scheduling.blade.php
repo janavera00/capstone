@@ -27,164 +27,35 @@
                             <button class="btn btn-primary m-auto" style="width: 8rem;" data-bs-toggle="modal" data-bs-target="#newSched">Schedule new task</button>
                         </div>
                         <div class="col d-flex">
-                            <div class="m-auto text-center" id="date"></div>
+                            <div class="m-auto text-center" id="date">
+                            </div>
                         </div>
                         <div class="col"></div>
                     </div>
             
-                    <div class="bg-white p-3 rounded overflow-auto mx-auto" style="height: 70vh;">
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="{{ url('scheduling/1') }}" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
+                    <div class="bg-white p-3 rounded overflow-auto d-flex flex-column" style="height: 70vh;">
+                        <ul id="eventsOnCalendar" hidden>
+                            @foreach($tasks as $task)
+                            <li>{{$task->date}}</li>
+                            @endforeach
+                        </ul>
+
+                        <div class="m-auto" id="selectedDateMessage">
+                            <h2 class="text-secondary text-center" style="border-bottom: 1px solid gray; width: fit-content;">No Task Scheduled for this day</h2>
                         </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Ipsum</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Dolor</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - sit</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - amet</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - consectetur</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
-                        <div class="mx-auto" style="width: fit-content;">
-                            <a href="" class="btn btn-primary bg-3" style="width: fit-content;">
-                                <h2>10am - Lorem</h2>
-                                <p>John Doe<br>Anywhere st.</p>
-                            </a>
-                        </div>
-                        <hr>
-                        
+
+                        @foreach($tasks as $task)
+                            <div class="selectedDate" id="{{ $task->date }}">
+                                <a href="{{ url('scheduling/'.$task->id) }}" class="btn btn-primary bg-3 w-100 text-start" style="width: fit-content;">
+                                    @php
+                                        $time = explode(':', $task->time); 
+                                    @endphp
+                                    <h2>{{ date("g:i a", mktime($time[0],$time[1])) }} - {{ $task->task }}</h2>
+                                    <p>{{ $task->project->client->name }}<br>{{ $task->project->location }}</p>
+                                </a>
+                                <hr>
+                            </div>
+                        @endforeach
                         
                     </div>
                 </div>
@@ -204,7 +75,8 @@
                 </div>
 
                 <div class="modal-body">
-                    <form action="" method="get">
+                    <form action="{{ url('scheduling/create') }}" method="post">
+                        @csrf
                         <div class="mt-2">
                             <label for="task" class="form-label">Task:</label>
                             <input type="text" name="task" id="task" class="form-control">
@@ -220,9 +92,9 @@
                             <label for="project" class="form-label">Project(client and location):</label>
                             <select name="project" id="project" class="form-control">
                                 <option disabled selected hidden></option>
-                                <option value="">John Doe - Anywhere St., Naga City</option>
-                                <option value="">Jane Doe - Anywhere St., Pili, Camarines Sur</option>
-                                <option value="">John Dame - Anywhere St., Canaman, Camarines Sur</option>
+                                @foreach($projects as $project)
+                                    <option value="{{ $project->id }}">{{ $project->client->name }} - {{ $project->location }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="mt-2">
@@ -232,13 +104,11 @@
                                     <tr>
                                         <td>
                                             <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
-                                            <select name="employee[]" id="employee" class="form-control">
+                                            <select name="employee[]" class="form-control employee">
                                                 <option selected hidden></option>
-                                                <option value="">John Doe</option>
-                                                <option value="">John Dane</option>
-                                                <option value="">John Smith</option>
-                                                <option value="">Jane Doe</option>
-                                                <option value="">Johnathan Doe</option>
+                                                @foreach($users as $user)
+                                                    <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                                @endforeach
                                             </select>
                                         </td>
                                         <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee()">+</a></td>
