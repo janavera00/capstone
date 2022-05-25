@@ -20,7 +20,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    return view('dashboard');
+    return view('office/dashboard');
 });
 
 Route::get('/filing', [FilingController::class, 'show']);
@@ -37,5 +37,5 @@ Route::get('/scheduling/{task}', [TaskController::class, 'openTask']);
 Route::post('/scheduling/update/{task}', [TaskController::class, 'updateTask']);
 
 Route::post('/home', function () {
-    return view('dashboard');
+    return view('office/dashboard');
 })->name('login');
