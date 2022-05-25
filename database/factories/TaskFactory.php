@@ -19,7 +19,7 @@ class TaskFactory extends Factory
     {
         return [
             'task' => $this->faker->word(),
-            'date' => $this->faker->date(),
+            'date' => $this->faker->dateTimeInInterval('now', '2 months')->format("Y-m-d"),
             'time' => $this->faker->time(),
             'status' => $this->faker->randomElement(['Active', 'Done', 'Overdue']),
             'project_id' => $this->faker->randomDigit()+1,

@@ -20,13 +20,13 @@ class FilingController extends Controller
 
         // dd($projects);
 
-        return view('filing', ['projects' => $projects, 'clients' => $clients]);
+        return view('office/filing', ['projects' => $projects, 'clients' => $clients]);
     }
 
     public function showFiles(Project $project)
     {
         $users = User::all();
-        return view('file', ['project' => $project, 'users' => $users]);
+        return view('office/file', ['project' => $project, 'users' => $users]);
     }
 
     public function createProject(Request $req)
