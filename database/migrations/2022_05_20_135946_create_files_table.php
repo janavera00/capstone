@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->foreignId('project_id')->constrained();
             $table->enum('status', ['In Folder', 'Digital', 'Away']);
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

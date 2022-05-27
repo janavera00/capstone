@@ -49,7 +49,9 @@
                 </div>
             </form>
         </div>
+        <a href="project/1" class="btn btn-primary">continue as client</a>
     </div>
+
 
 </body>
 </html>

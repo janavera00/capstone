@@ -20,16 +20,16 @@ class FilingController extends Controller
 
         // dd($projects);
 
-        return view('office/filing', ['projects' => $projects, 'clients' => $clients]);
+        return view('filing', ['projects' => $projects, 'clients' => $clients]);
     }
 
     public function showFiles(Project $project)
     {
         $users = User::all();
-        return view('office/file', ['project' => $project, 'users' => $users]);
+        return view('file', ['project' => $project, 'users' => $users]);
     }
 
-    public function createProject(Request $req)
+    public function createProject()
     {
         $request = request()->validate([
             'client' => ['required', 'max:255',],
@@ -39,12 +39,13 @@ class FilingController extends Controller
         $project = new Project();
         $project['location'] = $request['location'];
 
-        $client = Client::where('name', $req['client'])->first();
+        $client = Client::where('name', $request['client'])->first();
+        
         if(!$client)
         {   
             $request += request()->validate([
                 'address' => ['required', 'max:255',],
-                'contact' => ['required', 'max:9',],
+                'contact' => ['required', 'numeric',],
                 'email' => ['required', 'max:255', 'email', 'unique:clients,email'],
             ]);
             
@@ -74,17 +75,18 @@ class FilingController extends Controller
     {
         $request = request()->validate([
             'title' => 'required|max:255',
-            'description' => 'required|max:255',
+            'description' => 'max:255',
+            'img' => 'required|mimes:jpg,png,jpeg',
         ]);
 
-        // $newImageName = time().'_'.$request['title'].'.'.$request['img']->extension();
+        $newImageName = time().'_'.$request['title'].'.'.$request['img']->extension();
 
-        // dd($newImageName);
+        $request['img']->move(public_path('documents'), $newImageName);
 
         $file = new File();
         $file['title'] = $request['title'];
         $file['description'] = $request['description'];
-        // $file['image_path'] = $request['img'];
+        $file['image_path'] = $newImageName;
         $file['project_id'] = $project->id;
         $file->save();
 
@@ -95,12 +97,11 @@ class FilingController extends Controller
     {
         $request = request()->validate([
             'title' => 'required|max:255',
-            'description' => 'required|max:255',
+            'description' => 'max:255',
         ]);
 
-        // $file['title'] = $request['title'];
+        $file['title'] = $request['title'];
         $file['description'] = $request['description'];
-        // $file['project_id'] = $project->id;
         $file->save();
 
         return redirect('filing/'.$file->project_id);

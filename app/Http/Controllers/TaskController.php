@@ -15,13 +15,13 @@ class TaskController extends Controller
         $projects = Project::all();
         $users = User::all();
 
-        return view('office/scheduling', ['tasks' => $tasks, 'projects' => $projects, 'users' => $users]);
+        return view('scheduling', ['tasks' => $tasks, 'projects' => $projects, 'users' => $users]);
     }
 
     public function openTask(Task $task)
     {
         $users = User::all();
-        return view('office/schedDetails', ['task' => $task, 'users' => $users]);
+        return view('schedDetails', ['task' => $task, 'users' => $users]);
     }
 
     public function createTask()
