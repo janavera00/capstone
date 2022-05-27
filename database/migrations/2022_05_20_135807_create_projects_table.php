@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained();
-            $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('location');
             $table->string('survey_number')->nullable();
             $table->string('lot_area')->nullable();

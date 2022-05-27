@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FilingController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,13 @@ Route::get('/scheduling', [TaskController::class, 'show']);
 Route::post('/scheduling/create', [TaskController::class, 'createTask']);
 Route::get('/scheduling/{task}', [TaskController::class, 'openTask']);
 Route::post('/scheduling/update/{task}', [TaskController::class, 'updateTask']);
+
+
+
+Route::get('delete/{client}', [ClientController::class, 'delete']);
+Route::get('project/{client}', [ClientController::class, 'showProjects']);
+Route::get('project/content/{project}', [ClientController::class, 'showProjectDetail']);
+Route::get('client/schedule/{client}', [ClientController::class, 'showTasks']);
 
 Route::post('/home', function () {
     return view('office/dashboard');
