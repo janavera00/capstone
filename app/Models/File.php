@@ -14,6 +14,7 @@ class File extends Model
         'description',
         'project_id',
         'status',
+        'image_path',
     ];
 
     public function project()
