@@ -38,6 +38,8 @@
     </div>
 </div>
 
+
+
 <!-- Modal for adding project -->
 <div class="modal" id="addProject">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -54,7 +56,7 @@
                         <label for="client">Client:</label>
                         <input type="text" name="client" id="client" class="form-control" list="clientList" value="{{ old('client') }}">
                         @error('client') 
-                        <p class="text-danger">*{{$message}}</p>
+                        <p class="text-danger">*{{ $message }}</p>
                         @enderror
                         <datalist id="clientList">
                             @foreach($clients as $client)
