@@ -12,8 +12,10 @@ class TaskController extends Controller
     public function show()
     {
         $tasks = Task::all();
-        $projects = Project::all();
         $users = User::all();
+        $projects = Project::all();
+
+        $tasks = $tasks->sortBy('date')->sortBy('time');
 
         return view('scheduling', ['tasks' => $tasks, 'projects' => $projects, 'users' => $users]);
     }
@@ -22,6 +24,14 @@ class TaskController extends Controller
     {
         $users = User::all();
         return view('schedDetails', ['task' => $task, 'users' => $users]);
+    }
+
+    public function showProjectTask(Project $project)
+    {
+        $projects = Project::all();
+        $users = User::all();
+
+        return view('projectTask', ['projects' => $projects, 'proj' => $project, 'users' => $users]);
     }
 
     public function createTask()
@@ -46,7 +56,7 @@ class TaskController extends Controller
             $task->employees()->attach($user);
         }
 
-        return redirect('scheduling');
+        return redirect(url()->previous());
     }
 
     public function updateTask(Task $task)

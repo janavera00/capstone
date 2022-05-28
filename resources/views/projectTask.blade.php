@@ -5,74 +5,51 @@
         <div class="row"  style="height: 90vh;">
             <div class="col-4">
                 
-                <div class="bg-white mt-4 rounded pb-4" style="height: fit-content;">
-                    <div class="container overflow-auto pt-3" style="height: 50vh; width: fit-content;">
-                        @for($i = 0;$i < 10;$i++)
-                        
-                        <hr class="text-black">
-                        
-                        <div class="calendar mt-2" id="{{$i}}">
-                            <div class="month">
-                                <div class="date">
-                                    <h1></h1>
-                                </div>
-                            </div>
-                            <div class="weekdays"></div>
-                            <div class="days"></div>
-                        </div>
-                        @endfor
-                    </div>
-                </div>
-
-                <div class="d-flex bg-white mt-2 p-2 rounded-top" style="border-bottom: 1px black solid;">
+                <div class="d-flex bg-white mt-4 p-2 rounded-top" style="border-bottom: 1px black solid;">
                     <h2 class="mx-auto">Projects</h2>
                 </div>
-                <div class="bg-white p-2 overflow-auto rounded-bottom" style="height: 25vh;">
-                    <table class="table table-light table-hover">
-                        @foreach($projects as $project)
-                        <tr onclick="location.href='../scheduling/{{$project->id}}'" style="cursor: pointer;">
-                            <td>{{ $project->client->name }}</td>
-                            <td>{{ $project->location }}</td>
-                        </tr>
-                        @endforeach
-                    </table>
+                <div class="bg-white p-2 overflow-auto rounded-bottom" style="height: 76vh;">
+                    @foreach($projects as $project)
+                    <div class="p-2 row" onclick="location.href='../scheduling/{{$project->id}}'" style="cursor: pointer; border-bottom:1px solid ;">
+                        <p class="col-4">
+                            {{ $project->client->name }}
+                        </p>
+                        <p class="col">
+                            {{ $project->location }}
+                        </p>
+                    </div>
+                    @endforeach
+                    
                 </div>
             </div>
 
             <div class="col mt-3">
                 <div class="container">
-                    <div class="row text-white mx-auto mt-2 p-2">
-                        <div class="col d-flex">
-                            <button class="btn btn-primary m-auto" style="width: 8rem;" data-bs-toggle="modal" data-bs-target="#newSched">Schedule new task</button>
+                    <div class="row text-white mx-auto mt-2 p-2 overflow-auto" style="height: 17vh;">
+                        <div class="col-2 d-flex flex-column justify-content-between">
+                            <button class="btn btn-primary m-auto" data-bs-toggle="modal" data-bs-target="#newSched">Schedule new task</button>
+                            <a href="../scheduling" class="btn btn-success m-auto">Show All Tasks</a>
                         </div>
                         <div class="col d-flex">
-                            <div class="m-auto text-center" id="date"></div>
+                            <div class="m-auto text-center">
+                                <h1>{{ $proj->client->name }}</h1>
+                                <p>{{ $proj->location }}</p>
+                            </div>
                         </div>
-                        <div class="col"></div>
+                        <div class="col-2 d-flex">
+                        </div>
                     </div>
             
-                    <div class="bg-white p-3 rounded overflow-auto d-flex flex-column" style="height: 70vh;">
-                        <ul id="eventsOnCalendar" hidden>
-                            
-                            @foreach($tasks as $task)
-                            <li>{{$task->date}}</li>
-                            @endforeach
-                                                        
-                        </ul>
-
-                        <div class="m-auto" id="selectedDateMessage">
-                            <h2 class="text-secondary text-center" style="border-bottom: 1px solid gray; width: fit-content;">No Task Scheduled for this day</h2>
-                        </div>
-
-
-
-                        @foreach($tasks as $task)
-                            <div class="selectedDate" id="{{ $task->date }}">
+                    <div class="bg-white p-3 rounded overflow-auto d-flex flex-column" style="height: 65vh;">
+                        
+                        @foreach($proj->tasks as $task)
+                            <div>
                                 <a href="{{ url('task/'.$task->id) }}" class="btn btn-primary bg-3 w-100 text-start" style="width: fit-content;">
                                     @php
                                         $time = explode(':', $task->time); 
+                                        $date = explode('-', $task->date); 
                                     @endphp
-                                    <h2>{{ date("g:i a", mktime($time[0],$time[1])) }} - {{ $task->task }}</h2>
+                                    <h2>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }} | {{ $task->task }}</h2>
                                     <p>{{ $task->project->client->name }}<br>{{ $task->project->location }}</p>
                                 </a>
                                 <hr>
@@ -83,7 +60,6 @@
                 </div>
             </div>
         </div>
-        <script src="/js/calendar.js"></script>
     </div>
 
     
@@ -112,12 +88,8 @@
                         </div>
                         <div class="mt-2">
                             <label for="project" class="form-label">Project(client and location):</label>
-                            <select name="project" id="project" class="form-control">
-                                <option disabled selected hidden></option>
-                                @foreach($projects as $project)
-                                    <option value="{{ $project->id }}">{{ $project->client->name }} - {{ $project->location }}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" name="project" id="project" class="form-control" value="{{ $proj->id }}" hidden>
+                            <input type="text" class="form-control" value="{{ $proj->client->name }} - {{ $proj->location }}" readonly>
                         </div>
                         <div class="mt-2">
                             <label for="employee" class="fomr-label">Employee/s Assigned:</label>
@@ -126,7 +98,7 @@
                                     <tr>
                                         <td>
                                             <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
-                                            <select name="employee[]" class="form-control employee">
+                                            <select name="employee[]" id="employee" class="form-control employee">
                                                 <option selected hidden></option>
                                                 @foreach($users as $user)
                                                     <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
@@ -151,7 +123,7 @@
 
     <script>
         let field = document.getElementById('dynamicField');
-        const elmt = document.getElementsByTagName('td')[0];
+        const elmt = document.getElementById('employee');
         function addEmployee(){
             const row = document.createElement('tr');
             row.appendChild(elmt.cloneNode(true));
