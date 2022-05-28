@@ -100,15 +100,14 @@
                 @foreach($project->files as $file)
                 <div class="col-2">
                     <div class="m-2 card bg-secondary overflow-auto">
-                        <div class="card-header">
-                            <h3 class="card-title">{{ $file->title }}</h3>
-                        </div>
-                        <div class="card-body">
-                            <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
-                        </div>
-                        <div class="card-footer d-flex">
-                            <button class="btn btn-primary mx-auto" data-bs-toggle="modal" data-bs-target="#showFile-{{$file->id}}">Open</button>
-                        </div>
+                        <a href="#showFile-{{$file->id}}" data-bs-toggle="modal" class="text-decoration-none text-white">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ $file->title }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
+                            </div>
+                        </a>
                     </div>
                 </div>
                 @endforeach

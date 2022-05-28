@@ -27,7 +27,7 @@
         <div class="overflow-auto" style="height: 65vh;">
             <table class="table table-light table-striped table-bordered table-hover">
                 @foreach($projects as $project)
-                <tr onclick="location.href = 'filing/{{ $project->id }}'">
+                <tr onclick="location.href = 'filing/{{ $project->id }}'" style="cursor: pointer;">
                     <td style="width: 10%; text-align:center;"><?php printf('%05s', $project->id); ?></td>
                     <td style="width: 35%;">{{ $project->client->name }}</td>
                     <td style="width: 55%;">{{ $project->location }}</td>
