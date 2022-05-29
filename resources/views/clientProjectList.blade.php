@@ -20,7 +20,7 @@
         <div class="row m-2">
             @foreach($client->projects as $project)
             <div class="col-2 my-2">
-                <div class="card text-black text-center" onclick="location.href = '{{ $client->id }}/{{ $project->id }}'">
+                <div class="card text-black text-center" onclick="location.href = '{{ $client->id }}/{{ $project->id }}'" style="cursor: pointer;">
                     <div class="card-body">
                         <h1>{{ ($project->land_owner)?$project->land_owner:'' }}</h1>
                         <hr>
