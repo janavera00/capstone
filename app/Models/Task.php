@@ -22,6 +22,11 @@ class Task extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function requests()
+    {
+        return $this->hasMany(Request::class);
+    }
+
     public function employees()
     {
         return $this->belongsToMany(User::class);

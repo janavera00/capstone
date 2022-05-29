@@ -41,8 +41,8 @@ Route::post('/scheduling/update/{task}', [TaskController::class, 'updateTask']);
 
 Route::get('project/{client}', [ClientController::class, 'showProjects']);
 Route::get('project/{client}/{project}', [ClientController::class, 'showProjectDetail']);
+Route::post('project/{client}/{project}/submitFile', [ClientController::class, 'submitFile']);
 Route::get('schedule/{client}', [ClientController::class, 'showTasks']);
-Route::get('delete/{client}', [ClientController::class, 'delete']);
 
 Route::post('/home', function () {
     return view('dashboard');
