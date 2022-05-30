@@ -19,10 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(10)->create();
-        Client::factory(10)->create();
-        Project::factory(10)->create();
-        File::factory(10)->create();
-        Task::factory(10)->create();
+        User::factory(4)->create();
+        Client::factory(4)->create();
     }
 }

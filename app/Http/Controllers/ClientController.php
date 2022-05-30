@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\File;
 use App\Models\Project;
 use App\Models\Request as ModelsRequest;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -27,6 +28,7 @@ class ClientController extends Controller
             'title' => 'required|max:255',
             'description' => 'max:255',
             'img' => 'required|mimes:jpg,png,jpeg',
+            'remark' => 'max:255',
         ]);
 
         $newImageName = time().'_'.$request['title'].'.'.$request['img']->extension();
@@ -36,24 +38,43 @@ class ClientController extends Controller
         $file = new File;
         $file['title'] = $request['title'];
         $file['description'] = $request['description'];
-        $file['project_id'] = $project->id;
         $file['status'] = "Request";
         $file['image_path'] = $newImageName;
 
         $file->save();
 
         $req = new ModelsRequest();
-        $req['project_id'] = $project->id;
         $req['file_id'] = $file->id;
+        $req['status'] = "Request";
 
         $req->save();
 
         return redirect(url()->previous());
     }
 
-    public function showTasks(Client $client)
+    public function requestTask(Client $client, Project $project)
     {
-        return view('scheduling', ['client' => $client]);
-    }
+        $request = request()->validate([
+            'task' => 'required|max:255',
+            'date' => 'required',
+            'time' => 'required',
+            'remark' => 'max:255',
+        ]);
 
+        $task = new Task;
+        $task['task'] = $request['task'];
+        $task['date'] = $request['date'];
+        $task['time'] = $request['time'];
+        $task['status'] = "Request";
+        $task['project_id'] = $project->id;
+        $task->save();
+
+        $req = new ModelsRequest();
+        $req['task_id'] = $task->id;
+        $req['remarks'] = $request['remark'];
+        $req['status'] = "Request";
+        $req->save();
+
+        return redirect(url()->previous());
+    }
 }
