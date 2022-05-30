@@ -81,9 +81,9 @@
                 <h2 class="modal-title">Edit Schedule</h2>
             </div>
 
-            <div class="modal-body">
-                <form action="{{ url('scheduling/update/'.$task->id) }}" method="post">
-                    @csrf
+            <form action="{{ url('scheduling/update/'.$task->id) }}" method="post">
+                @csrf
+                <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="mt-2">
                         <label for="title" class="form-label">Title:</label>
                         <input type="text" name="title" id="title" class="form-control" value="{{ ($task->task)?$task->task:'' }}">
@@ -136,12 +136,12 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="my-2 d-flex justify-content-around">
-                        <a class="btn bg-4 text-white" style="width: 45%;" data-bs-dismiss="modal">Cancel</a>
-                        <input type="submit" value="Update" class="btn btn-primary" style="width: 45%;">
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer bg-secondary d-flex justify-content-around">
+                    <a class="btn bg-4 text-white" style="width: 45%;" data-bs-dismiss="modal">Cancel</a>
+                    <input type="submit" value="Update" class="btn btn-primary" style="width: 45%;">
+                </div>
+            </form>
         </div>
     </div>
 </div>

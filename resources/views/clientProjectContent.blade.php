@@ -49,7 +49,7 @@
                                 <div class="col-10 p-2 rounded bg-white text-black">{{ ($project->survey_number)?$survey_num[2]:'' }}</div>
                             </div>
                         </div>
-    
+
                     </div>
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Lot Area</p>
@@ -70,8 +70,8 @@
 
 
         <hr>
-        
-        
+
+
         <div class="row justify-content-around">
             <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
                 <h1 class="mx-auto pt-2">Documents</h1>
@@ -81,9 +81,9 @@
                     @if($file->status != 'Request')
                     <div class="col-6">
                         <div class="m-2 card bg-secondary overflow-auto" onclick="showFile('{{$file->title}}', '{{$file->description}}', '{{$file->image_path}}')" style="cursor: pointer;">
-                            
+
                             <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
-                            
+
                             <div class="card-header">
                                 <h3 class="card-title">{{ $file->title }}</h3>
                             </div>
@@ -104,30 +104,30 @@
             <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
                 <h1 class="mx-auto pt-2">Tasks</h1>
 
-                    @foreach($project->tasks as $task)
-                    @if($task->status != "Request")
-                    <div class="border-top my-2 d-flex flex-column">
-                        @php
-                            $dateTime = $task->date."|".$task->time;
-                            $link = "showTask('".$task->task."', '".$dateTime."'";
+                @foreach($project->tasks as $task)
+                @if($task->status != "Request")
+                <div class="border-top my-2 d-flex flex-column">
+                    @php
+                    $dateTime = $task->date."|".$task->time;
+                    $link = "showTask('".$task->task."', '".$dateTime."'";
 
-                            for($i = 0;$i < count($task->employees);$i++){
-                                $link .= ", '".$task->employees[$i]->role ." - ". $task->employees[$i]->name ."'";
-                            }
-                            $link .= ")"; 
+                    for($i = 0;$i < count($task->employees);$i++){
+                        $link .= ", '".$task->employees[$i]->role ." - ". $task->employees[$i]->name ."'";
+                        }
+                        $link .= ")";
                         @endphp
                         <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}">
                             @php
-                                $time = explode(':', $task->time); 
-                                $date = explode('-', $task->date); 
+                            $time = explode(':', $task->time);
+                            $date = explode('-', $task->date);
                             @endphp
                             <h2>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h2>
                             <p>{{ $task->task }}</p>
                         </button>
                         <button data-bs-toggle="modal" data-bs-target="#showTask" id="showTaskBtn" hidden></button>
-                    </div>
-                    @endif
-                    @endforeach
+                </div>
+                @endif
+                @endforeach
 
             </div>
         </div>
@@ -139,48 +139,49 @@
 <div class="modal" id="submitDocument">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-1 text-white">
-                <h1 class="modal-title">Submit a documment</h1>
-            </div>
-            <div class="modal-body">
-                <p>Enter the name of the document, a short description of it, and a scanned/photograph copy of the document</p>
-                <hr>
+                <div class="modal-header bg-1 text-white">
+                    <h1 class="modal-title">Submit a documment</h1>
+                </div>
                 <form action="{{ url('project/'.$client->id.'/'.$project->id.'/submitFile') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="mt-2">
-                        <div class="d-flex">
-                            <p class="text-danger">*</p>
-                            <label for="title">Title:</label>
+                    <div class="modal-body overflow-auto" style="height: 60vh;">
+                        <p>Enter the name of the document, a short description of it, and a scanned/photograph copy of the document</p>
+                        <hr>
+                        <div class="mt-2">
+                            <div class="d-flex">
+                                <p class="text-danger">*</p>
+                                <label for="title">Title:</label>
+                            </div>
+                            <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" required>
+                            @error('title')
+                            <p class="text-danger">* {{ $message }}</p>
+                            @enderror
                         </div>
-                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" required>
-                        @error('title')
-                        <p class="text-danger">* {{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="mt-2">
-                        <label for="description">Description:</label>
-                        <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}">
-                        @error('description')
-                        <p class="text-danger">* {{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div class="mt-2">
-                        <div class="d-flex">
-                            <p class="text-danger">*</p>
-                            <label for="img">Document:</label>
+                        <div class="mt-2">
+                            <label for="description">Description:</label>
+                            <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}">
+                            @error('description')
+                            <p class="text-danger">* {{ $message }}</p>
+                            @enderror
                         </div>
-                        <input type="file" name="img" id="img" class="form-control" accept="image/*" value="{{ old('img') }}">
-                        @error('img')
-                        <p class="text-danger">* {{ $message }}</p>
-                        @enderror
+                        <div class="mt-2">
+                            <div class="d-flex">
+                                <p class="text-danger">*</p>
+                                <label for="img">Document:</label>
+                            </div>
+                            <input type="file" name="img" id="img" class="form-control" accept="image/*" value="{{ old('img') }}">
+                            @error('img')
+                            <p class="text-danger">* {{ $message }}</p>
+                            @enderror
+                        </div>
+
                     </div>
-                    <hr>
-                    <div class="my-3 d-flex justify-content-around">
+                    <div class="modal-footer bg-secondary d-flex justify-content-around mb-0">
                         <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
                         <input type="submit" value="Submit" class="btn btn-primary" style="width: 200px;">
                     </div>
                 </form>
-            </div>
+           
         </div>
     </div>
 </div>
@@ -194,18 +195,18 @@
             <div class="modal-header text-white bg-1">
                 <h2 class="modal-title">Request task schedule</h2>
             </div>
-
-            <div class="modal-body">
-                <form action="{{ url('project/'.$client->id.'/'.$project->id.'/requestTask') }}" method="post">
-                    @csrf 
-                    <div class="mt-2">
+            
+            <form action="{{ url('project/'.$client->id.'/'.$project->id.'/requestTask') }}" method="post">
+                @csrf
+                <div class="modal-body overflow-auto" style="height: 60vh;">
+                    <div class="m-2 p-2 border rounded">
                         <div class="d-flex">
                             <p class="text-danger">*</p>
                             <label for="task" class="form-label">Task:</label>
                         </div>
                         <input type="text" name="task" id="task" class="form-control">
                     </div>
-                    <div class="mt-2">
+                    <div class="m-2 p-2 border rounded">
                         <div class="d-flex">
                             <p class="text-danger">*</p>
                             <label for="date" class="form-label">Date and Time:</label>
@@ -215,18 +216,17 @@
                             <input type="time" name="time" id="time" class="form-control" style="width: 49%;">
                         </div>
                     </div>
-                    <div class="mt-2">
+                    <div class="m-2 p-2 border rounded">
                         <label for="remark" class="form-label">Remarks:</label>
                         <input type="text" name="remark" id="remark" class="form-control">
                     </div>
 
-                    <hr class="my-4">
-                    <div class="my-2 d-flex justify-content-around">
-                        <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
-                        <input type="submit" value="Submit" class="btn btn-primary" style="width: 200px;">
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-around">
+                    <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                    <input type="submit" value="Submit" class="btn btn-primary" style="width: 200px;">
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -238,12 +238,12 @@
             <div class="modal-header bg-1 text-white">
                 <h2 class="modal-title" id="fileTitle"></h2>
             </div>
-            <div class="modal-body">
-                <div class="my-2">
+            <div class="modal-body overflow-auto" style="height: 60vh;">
+                <div class="m-2 p-2 border rounded">
                     <img class="w-100" id="fileImage">
                 </div>
-                <div class="my-2 p-2 bg-white rounded">
-                    <p id="fileDescription"></p>
+                <div class="m-2 p-2 border rounded p-2 bg-white rounded">
+                    <p class="my-0" id="fileDescription"></p>
                 </div>
             </div>
         </div>
@@ -254,7 +254,9 @@
 <div class="modal" id="showTask">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-1 text-white"><h2 class="modal-title" id="taskTitle"></h2></div>
+            <div class="modal-header bg-1 text-white">
+                <h2 class="modal-title" id="taskTitle"></h2>
+            </div>
             <div class="modal-body">
                 <div class="my-2 row">
                     <p class="col-2 pt-2">Schedule:</p>
@@ -275,16 +277,14 @@
         btn.textContent = (btn.textContent == 'Show More Info' ? 'Hide Info' : 'Show More Info');
     }
 
-    function showFile(title, description, path)
-    {
+    function showFile(title, description, path) {
         document.getElementById('showFileBtn').click();
         document.getElementById('fileTitle').textContent = title;
         document.getElementById('fileDescription').textContent = description;
         document.getElementById('fileImage').src = `{{ asset('documents/${path}') }}`;
     }
 
-    function showTask()
-    {
+    function showTask() {
         document.getElementById('showTaskBtn').click();
         document.getElementById('taskTitle').textContent = arguments[0];
 
@@ -296,11 +296,11 @@
         let minutes = ('0' + date.getMinutes()).slice(-2);
 
         document.getElementById('taskSchedule').textContent = `${days[date.getDay()]} | ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} | ${(date.getHours())%12}:${minutes} ${(date.getHours() > 12)?'pm':'am'}`;
-        
+
         let employeeContainer = document.getElementById('taskEmployees');
         removeAllChildNodes(employeeContainer);
 
-        for(let i = 2;i < arguments.length; i++){
+        for (let i = 2; i < arguments.length; i++) {
             const node = document.createElement('li');
             node.appendChild(document.createTextNode(arguments[i]));
             employeeContainer.appendChild(node);

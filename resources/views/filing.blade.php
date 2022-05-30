@@ -49,9 +49,9 @@
                 <h2 class="modal-title">Add Project</h2>
             </div>
 
-            <div class="modal-body">
-                <form action="{{ url('filing/create') }}" method="post">
-                    @csrf
+            <form action="{{ url('filing/create') }}" method="post">
+                @csrf
+                <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="mt-2">
                         <label for="client">Client:</label>
                         <input type="text" name="client" id="client" class="form-control" list="clientList" value="{{ old('client') }}">
@@ -104,13 +104,12 @@
                         @enderror
                     </div>
 
-                    <hr>
-                    <div class="my-3 d-flex justify-content-around">
-                        <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
-                        <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer bg-secondary d-flex justify-content-around">
+                    <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                    <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
+                </div>
+            </form>
         </div>
     </div>
 </div>

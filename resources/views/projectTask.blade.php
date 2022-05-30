@@ -41,7 +41,8 @@
                     </div>
             
                     <div class="bg-white p-3 rounded overflow-auto d-flex flex-column" style="height: 65vh;">
-                        
+    
+                        @if(count($proj->tasks) > 0)
                         @foreach($proj->tasks as $task)
                             <div>
                                 <a href="{{ url('task/'.$task->id) }}" class="btn btn-primary bg-3 w-100 text-start" style="width: fit-content;">
@@ -55,6 +56,12 @@
                                 <hr>
                             </div>
                         @endforeach
+                        @else
+                            <div class="m-auto" id="selectedDateMessage">
+                                <h2 class="text-secondary text-center" style="border-bottom: 1px solid gray; width: fit-content;">No Task Scheduled for this project</h2>
+                            </div>
+                        @endif
+
                         
                     </div>
                 </div>
@@ -72,9 +79,9 @@
                     <h2 class="modal-title">Schedule new task</h2>
                 </div>
 
-                <div class="modal-body">
-                    <form action="{{ url('scheduling/create') }}" method="post">
-                        @csrf
+                <form action="{{ url('scheduling/create') }}" method="post">
+                    @csrf
+                    <div class="modal-body overflow-auto" style="height: 60vh;">
                         <div class="mt-2">
                             <label for="task" class="form-label">Task:</label>
                             <input type="text" name="task" id="task" class="form-control">
@@ -111,12 +118,12 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="my-2 d-flex justify-content-around">
-                            <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
-                            <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer bg-secondary d-flex justify-content-around">
+                        <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                        <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -125,9 +125,9 @@
             <div class="modal-header bg-1 text-white">
                 <h1 class="modal-title">Add New File</h1>
             </div>
-            <div class="modal-body">
-                <form action="{{ url('filing/'.$project->id.'/createFile') }}" method="post" enctype="multipart/form-data">
-                    @csrf
+            <form action="{{ url('filing/'.$project->id.'/createFile') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="mt-2">
                         <label for="title">Title:</label>
                         <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}">
@@ -149,13 +149,13 @@
                         <p class="text-danger">* {{ $message }}</p>
                         @enderror
                     </div>
-                    <hr>
-                    <div class="my-3 d-flex justify-content-around">
-                        <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
-                        <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
-                    </div>
-                </form>
-            </div>
+                    
+                </div>
+                <div class="modal-footer bg-secondary d-flex justify-content-around">
+                    <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                    <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
+                </div>
+            </form>
         </div>
     </div>
 </div>

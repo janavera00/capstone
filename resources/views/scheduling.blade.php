@@ -96,9 +96,9 @@
                     <h2 class="modal-title">Schedule new task</h2>
                 </div>
 
-                <div class="modal-body">
-                    <form action="{{ url('scheduling/create') }}" method="post">
-                        @csrf
+                <form action="{{ url('scheduling/create') }}" method="post">
+                    @csrf
+                    <div class="modal-body overflow-auto" style="height: 60vh;">
                         <div class="mt-2">
                             <label for="task" class="form-label">Task:</label>
                             <input type="text" name="task" id="task" class="form-control">
@@ -139,12 +139,12 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="my-2 d-flex justify-content-around">
-                            <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
-                            <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer bg-secondary d-flex justify-content-around">
+                        <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                        <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
+                    </div>
+                </form>
             </div>
         </div>
     </div>

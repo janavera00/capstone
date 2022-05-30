@@ -27,7 +27,7 @@ Route::get('/home', function () {
     return view('dashboard');
 });
 
-Route::get('/user', [UserController::class, 'show']);
+Route::get('/users', [UserController::class, 'show']);
 
 Route::get('/filing', [FilingController::class, 'show']);
 Route::get('/filing/{project}', [FilingController::class, 'showFiles']);

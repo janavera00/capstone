@@ -18,8 +18,8 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
-            'client_id' => $this->faker->randomDigit()+1,
-            'user_id' => $this->faker->randomDigit()+1,
+            'client_id' => 1,
+            'user_id' => 1,
             'location' => $this->faker->address(),
             'survey_number' => 'Lot '.$this->faker->randomNumber(1, true).' Psd-'.$this->faker->randomNumber(2, true).'-'.$this->faker->randomNumber(6, true),
             'lot_area' => $this->faker->randomNumber(3).' sqr.m.',
