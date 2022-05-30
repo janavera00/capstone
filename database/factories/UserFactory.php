@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Spatie\LaravelIgnition\Support\Composer\FakeComposer;
 
@@ -24,8 +25,8 @@ class UserFactory extends Factory
             'contact' => '09'.$this->faker->randomNumber(9, true),
             'email' => $this->faker->unique()->safeEmail(),
             'username' => $this->faker->firstname(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'role' => $this->faker->randomElement(['Admin', 'Secretary', 'Engineer', 'Surveyor']),
+            'password' => Hash::make('password'),
+            'role' => $this->faker->randomElement(['Secretary', 'Engineer', 'Surveyor']),
         ];
     }
 }
