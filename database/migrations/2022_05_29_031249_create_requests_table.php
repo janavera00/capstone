@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained();
             $table->foreignId('file_id')->nullable()->constrained();
             $table->foreignId('task_id')->nullable()->constrained();
+            $table->string('remarks')->nullable();
+            $table->enum('status', ['Approved', 'Request', 'Denied']);
             $table->timestamps();
         });
     }

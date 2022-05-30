@@ -140,9 +140,9 @@
                         </div>
 
                         <div class="border-top py-3">
-                            <a href="" class="nav-link pt-3 mx-3 d-flex justify-content-center align-items-center">
+                            <a href="{{ url('users') }}" class="nav-link pt-3 mx-3 d-flex justify-content-center align-items-center">
                                 <i class="fa fa-solid fa-user fa-xl"></i>
-                                <h3 class="text-white text-center m-1 ms-3 text-break" style="width: 20rem;">{{ url()->current() }}</h3>
+                                <h3 class="text-white text-center m-1 ms-3 text-break" style="width: 20rem;">User</h3>
                             </a>
                             <div class="w-100 mb-3 d-flex justify-content-center">
                                 <a href="" class="btn btn-danger">Logout</a>
@@ -154,7 +154,7 @@
 
 
                 <div class="border-top">
-                    <a href="#" class="d-flex align-items-center justify-content-center m-3 p-3 link-dark text-decoration-none">
+                    <a href="{{ url('users') }}" class="d-flex align-items-center justify-content-center m-3 p-3 link-dark text-decoration-none">
                         <i class="fa fas fa-user fa-xl"></i>
                     </a>
                 </div>

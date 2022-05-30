@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FilingController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,8 @@ Route::get('/home', function () {
     return view('dashboard');
 });
 
+Route::get('/user', [UserController::class, 'show']);
+
 Route::get('/filing', [FilingController::class, 'show']);
 Route::get('/filing/{project}', [FilingController::class, 'showFiles']);
 Route::post('/filing/{project}/createFile', [FilingController::class, 'createFile']);
@@ -42,7 +45,7 @@ Route::post('/scheduling/update/{task}', [TaskController::class, 'updateTask']);
 Route::get('project/{client}', [ClientController::class, 'showProjects']);
 Route::get('project/{client}/{project}', [ClientController::class, 'showProjectDetail']);
 Route::post('project/{client}/{project}/submitFile', [ClientController::class, 'submitFile']);
-Route::get('schedule/{client}', [ClientController::class, 'showTasks']);
+Route::post('project/{client}/{project}/requestTask', [ClientController::class, 'requestTask']);
 
 Route::post('/home', function () {
     return view('dashboard');

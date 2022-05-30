@@ -22,6 +22,7 @@ class FileFactory extends Factory
             'description' => $this->faker->sentence(),
             'project_id' => $this->faker->randomDigit()+1,
             'status' => $this->faker->randomElement(['In Folder', 'Digital', 'Away']),
+            'image_path' => "1653914430_Cat.jpg",
         ];
     }
 }

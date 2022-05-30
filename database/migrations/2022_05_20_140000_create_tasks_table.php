@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('task');
             $table->string('date');
             $table->string('time');
-            $table->enum('status', ['Active', 'Done', 'Overdue']);
+            $table->enum('status', ['Active', 'Done', 'Overdue', 'Request']);
             $table->foreignId('project_id')->constrained();
             $table->timestamps();
         });
