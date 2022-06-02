@@ -5,7 +5,7 @@
     <a href="{{ url('project/'.$client->id) }}" class="btn bg-4 py-3 my-2" style="width: 5rem;">
         <i class="fas fa-arrow-left fa fa-2xl"></i>
     </a>
-    <div class="container text-white bg-2 overflow-auto" style="height: 80vh;">
+    <div class="container text-white bg-2 rounded overflow-auto" style="height: 80vh;">
         <!-- Project Information -->
         <div class="row mt-3">
             <div class="col-2">

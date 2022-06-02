@@ -8,6 +8,8 @@ use App\Models\Project;
 use App\Models\Request as ModelsRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
 {
@@ -20,6 +22,47 @@ class ClientController extends Controller
     public function showProjectDetail(Client $client, Project $project)
     {
         return view('clientProjectContent', ['client' => $client, 'project' => $project]);
+    }
+
+    public function create()
+    {
+        $request = request()->validate([
+            'name' => 'required|max:255',
+            'address' => 'max:255',
+            'contact' => 'numeric|regex:/(9)([0-9]{9})/',
+            'email' => 'required|max:255|email|unique:clients,email',
+            'image' => 'mimes:jpg,jpeg,png',
+        ]);
+
+        $client = new Client;
+        $client['name'] = $request['name'];
+        $client['address'] = $request['address'];
+        $client['contact'] = $request['contact'];
+        $client['email'] = $request['email'];
+        $client['password'] = Hash::make('password');
+
+        $newImageName = time().'_'.$request['name'].'.'.$request['image']->extension();
+
+        $request['image']->move(public_path('images/users'), $newImageName);
+
+        $client['image'] = $newImageName;
+        $client->save();
+
+        return redirect(url()->previous());
+    }
+
+    public function update(Client $client)
+    {
+        $request = request()->validate([
+            'address' => 'max:255',
+            'contact' => 'numeric|regex:/(09)([0-9]{9})/',
+        ]);
+
+        $client['address'] = $request['address'];
+        $client['contact'] = $request['contact'];
+        $client->save();
+
+        return redirect(url()->previous());
     }
 
     public function submitFile(Client $client, Project $project)

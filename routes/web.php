@@ -28,13 +28,15 @@ Route::get('/home', function () {
 });
 
 Route::get('/users', [UserController::class, 'show']);
+Route::post('/user/create', [UserController::class, 'create']);
 
-Route::get('/filing', [FilingController::class, 'show']);
-Route::get('/filing/{project}', [FilingController::class, 'showFiles']);
-Route::post('/filing/{project}/createFile', [FilingController::class, 'createFile']);
-Route::post('/file/update/{file}', [FilingController::class, 'updateFile']);
-Route::post('/filing/create', [FilingController::class, 'createProject']);
-Route::post('/project/update/{project}', [FilingController::class, 'updateProject']);
+Route::get('clients', [FilingController::class, 'show']);
+Route::get('projects/{client}', [FilingController::class, 'showProjects']);
+Route::get('projectContent/{project}', [FilingController::class, 'showProjectContent']);
+Route::post('project/{project}/createFile', [FilingController::class, 'createFile']);
+Route::post('file/update/{file}', [FilingController::class, 'updateFile']);
+Route::post('filing/create', [FilingController::class, 'createProject']);
+Route::post('project/update/{project}', [FilingController::class, 'updateProject']);
 
 Route::get('/scheduling', [TaskController::class, 'show']);
 Route::get('/scheduling/{project}', [TaskController::class, 'showProjectTask']);
@@ -42,6 +44,8 @@ Route::post('/scheduling/create', [TaskController::class, 'createTask']);
 Route::get('/task/{task}', [TaskController::class, 'openTask']);
 Route::post('/scheduling/update/{task}', [TaskController::class, 'updateTask']);
 
+Route::post('/client/create', [ClientController::class, 'create']);
+Route::post('client/{client}/update', [ClientController::class, 'update']);
 Route::get('project/{client}', [ClientController::class, 'showProjects']);
 Route::get('project/{client}/{project}', [ClientController::class, 'showProjectDetail']);
 Route::post('project/{client}/{project}/submitFile', [ClientController::class, 'submitFile']);

@@ -15,6 +15,7 @@ class Client extends Model
         'contact',
         'email',
         'password',
+        'image',
     ];
 
     public function projects()
