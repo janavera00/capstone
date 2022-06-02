@@ -4,7 +4,7 @@
 
     <div class="container mt-3 border border-2 p-3">
         <div class="container">
-            <button data-bs-toggle="modal" data-bs-target="#addUser" class="btn btn-primary">Add User</button>
+            <button data-bs-toggle="modal" data-bs-target="#addUser" id="addUserBtn" class="btn btn-primary">Add User</button>
         </div>
         <div class="container mt-3">
             <table class="table table-striped table-bordered table-hover">
@@ -39,32 +39,50 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-1"><h1 class="modal-title text-white">Add new User</h1></div>
-                <form action="" method="post">
+                <form action="../user/create" method="post">
                     @csrf
                     <div class="modal-body overflow-auto" style="height: 60vh;">
                         <div class="my-2">
                             <label for="name" class="form-label">Name:</label>
-                            <input type="text" name="name" id="name" class="form-control">
+                            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
+                            @error('name')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="my-2">
                             <label for="address" class="form-label">Address:</label>
-                            <input type="text" name="address" id="address" class="form-control">
+                            <input type="text" name="address" id="address" class="form-control" value="{{ old('address') }}">
+                            @error('address')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="my-2">
                             <label for="contact" class="form-label">Contact:</label>
-                            <input type="text" name="contact" id="contact" class="form-control">
+                            <input type="text" name="contact" id="contact" class="form-control" value="{{ old('contact') }}">
+                            @error('contact')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="my-2">
                             <label for="email" class="form-label">Email:</label>
-                            <input type="email" name="email" id="email" class="form-control">
+                            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
+                            @error('email')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="my-2">
                             <label for="user" class="form-label">Username:</label>
-                            <input type="text" name="user" id="user" class="form-control">
+                            <input type="text" name="user" id="user" class="form-control" value="{{ old('user') }}">
+                            @error('user')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="my-2">
                             <label for="pass" class="form-label">Password:</label>
                             <input type="password" name="pass" id="pass" class="form-control">
+                            @error('pass')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="my-2">
                             <label for="role" class="form-label">Position:</label>
@@ -74,6 +92,9 @@
                                 <option value="Engineer">Engineer</option>
                                 <option value="Surveyor">Surveyor</option>
                             </select>
+                            @error('role')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         
                     </div>
@@ -153,4 +174,10 @@
             }
         }
     </script>
+
+    @if($errors->any())
+    <script>
+        document.getElementById('addUserBtn').click();
+    </script>
+    @endif
 @endsection

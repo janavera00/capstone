@@ -2,46 +2,81 @@
 
 @section('content')
 
-<div class="container text-white bg-2 mt-5 overflow-auto" style="height: 80vh;">
-    <div class="d-flex justify-content-between p-3">
-        <div class="my-auto">
-            <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn bg-3 text-white">Add Project</button>
+<div class="container px-0">
+    <a href="/clients" class="btn btn-danger mt-4"><img src="{{asset('images/assets/arrow-left-solid-white.svg')}}" width="30rem"></a>
+</div>
+<div class="container text-white bg-2 mt-2 overflow-auto rounded" style="height: 80vh;">
+    <div class="row p-3">
+        <!-- buttons -->
+        <div class="col-2 d-flex justify-content-around flex-column border-end">
+            <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#clientInfo">Show more Info</button>
+            <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-primary w-100">Add Client</button>
         </div>
 
-        <form action="" method="post" class="my-auto w-75">
-            <div class="my-auto w-100 d-flex ms-auto">
-                <input type="text" name="search" id="search" class="form-control mx-2">
-                <input type="submit" value="Search" class="btn bg-3 text-white">
+        <!-- client's information -->
+        <div class="col">
+            <div class="d-flex justify-content-center">
+                <div style="width: fit-content;" class="my-auto">
+                    <img src="{{asset('images/users/'.$client->image)}}" class="rounded me-3" height="100rem">
+                </div>
+                <h1 class="text-center my-auto" style="width: fit-content;">{{$client->name}}</h1>
             </div>
-        </form>
+            <form action="../client/{{$client->id}}/update" method="post">
+                @csrf
+                <div class="collapse" id="clientInfo">
+                    <hr>
+                    <div class="row m-2 pt-2">
+                        <p class="col-2 h-100 my-auto">Address</p>
+                        <input type="text" name="address" id="address" class="col form-control" autocomplete="off" value="{{ $client->address }}">
+                    </div>
+                    <div class="row m-2 pt-2">
+                        <p class="col-2 h-100 my-auto">Contact Number</p>
+                        <input type="text" name="contact" id="contact" class="col form-control" autocomplete="off" maxlength="11" value="{{ $client->contact }}">
+                    </div>
+                    <div class="row m-2 pt-2">
+                        <p class="col-2 h-100 my-auto">Email Address</p>
+                        <div class="col p-2 border rounded bg-white text-black">{{ $client->email }}</div>
+                    </div>
+                    <hr>
+                    <div class="mt-3 d-flex">
+                        <input type="submit" value="Update" class="btn btn-primary mx-auto" style="width: 10rem;">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        
     </div>
 
-    <div>
-        <table class="table table-light table-bordered mt-3" style="margin-bottom: 0px;">
-            <tr class="text-center">
-                <th style="width: 10%;">Control No.</th>
-                <th style="width: 35%;">Client</th>
-                <th style="width: 55%;">Location</th>
-            </tr>
-        </table>
-        <div class="overflow-auto" style="height: 65vh;">
-            <table class="table table-light table-striped table-bordered table-hover">
-                @foreach($projects as $project)
-                <tr onclick="location.href = 'filing/{{ $project->id }}'" style="cursor: pointer;">
-                    <td style="width: 10%; text-align:center;"><?php printf('%05s', $project->id); ?></td>
-                    <td style="width: 35%;">{{ $project->client->name }}</td>
-                    <td style="width: 55%;">{{ $project->location }}</td>
-                </tr>
-                @endforeach
-            </table>
+    <hr>
+
+    <!-- projects List -->
+    <div class="row">
+        @foreach($client->projects as $project)
+        <div class="col-3 my-2">
+            <div class="card" onclick="location.href='../../projectContent/{{$project->id}}'" style="cursor: pointer;">
+                <div class="card-header">
+                    @php
+                        $lotNum = explode(' ', $project->survey_number);
+                        $surNum = explode('-', $lotNum[2]);
+                    @endphp
+                    <h4 class="text-black text-center">{{ 'Lot '.$lotNum[1] }}</h4>
+                    <h4 class="text-black text-center">{{ 'Psd-'.$surNum[1].'-'.$surNum[2] }}</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-black text-center">{{ $project->location }}</p>
+                </div> 
+            </div>
         </div>
+        @endforeach
     </div>
 </div>
 
 
 
-<!-- Modal for adding project -->
-<div class="modal" id="addProject">
+<!-- Modal for adding client -->
+<div class="modal" id="addClient">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
@@ -55,14 +90,10 @@
                     <div class="mt-2">
                         <label for="client">Client:</label>
                         <input type="text" name="client" id="client" class="form-control" list="clientList" value="{{ old('client') }}">
-                        @error('client') 
+                        @error('client')
                         <p class="text-danger">*{{ $message }}</p>
                         @enderror
-                        <datalist id="clientList">
-                            @foreach($clients as $client)
-                            <option value="{{ $client->name }}"></option>
-                            @endforeach
-                        </datalist>
+                       
                     </div>
 
                     <div class="collapse @error('address')show @enderror @error('contact')show @enderror @error('email')show @enderror" id="addClient">
@@ -121,39 +152,3 @@
 @endif
 
 @endsection
-
-
-
-<!-- <hr>
-<div class="mt-2">
-    <div class="d-flex justify-content-around py-2">
-        <div>
-            <label for="lot_number">Lot Number:</label>
-            <div class="d-flex">
-                <p class="m-2">Lot</p> <input type="text" name="lot_number" id="lot_number" class="form-control w-25" value="{{ old('lot_number') }}">
-            </div>
-        </div>
-        <div>
-            <label for="sur_number">Survey Number:</label>
-            <div class="d-flex justify-content-end">
-                <p class="m-2">Psd-</p>
-                <input type="text" name="sur_number1" id="sur_number1" class="form-control w-25" maxlength="2" value="{{ old('sur_number1') }}">
-                <p class="m-2">-</p>
-                <input type="text" name="sur_number2" id="sur_number2" class="form-control w-50" maxlength="6" value="{{ old('sur_number2') }}">
-            </div>
-        </div>
-    </div>
-</div>
-<hr>
-<div class="mt-2">
-    <label for="area">Lot Area:</label>
-    <div class="d-flex">
-        <input type="text" name="area" id="area" class="form-control w-25" value="{{ old('area') }}">
-        <p class="m-2">Sqr.M.</p>
-    </div>
-</div>
-<hr>
-<div class="mt-2">
-    <label for="owner">Registered Land Owner:</label>
-    <input type="text" name="owner" id="owner" class="form-control" value="{{ old('owner') }}">
-</div> -->

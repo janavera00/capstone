@@ -77,25 +77,25 @@
                         @endif
                     ">
                         <a href="{{ url('home') }}" class="nav-link py-4">
-                            <i class="fa fa-solid fa-gauge-high fa-xl"></i>
+                            <img src="{{ asset('images/assets/gauge-high-solid-white.svg') }}" width="25rem">
                         </a>
                     </li>
                     <li class="nav-item text-center border-bottom
-                        @if($url == 'filing')
-                            bg-3
+                        @if($url == 'clients')
+                        bg-3
                         @endif
                     ">
-                        <a href="{{ url('filing') }}" class="nav-link py-4">
-                            <i class="fa fa-solid fa-folder-open fa-xl"></i>
+                        <a href="{{ url('clients') }}" class="nav-link py-4">
+                            <img src="{{ asset('images/assets/folder-open-solid-white.svg') }}" width="25rem">
                         </a>
                     </li>
                     <li class="nav-item text-center border-bottom
                         @if($url == 'scheduling')
-                            bg-3
+                        bg-3
                         @endif
                     ">
                         <a href="{{ url('scheduling') }}" class="nav-link py-4">
-                            <i class="fa fa-solid fa-calendar fa-xl"></i>
+                            <img src="{{ asset('images/assets/calendar-days-solid-white.svg') }}" width="22rem">
                         </a>
                     </li>
                 </ul>
@@ -141,7 +141,7 @@
 
                         <div class="border-top py-3">
                             <a href="{{ url('users') }}" class="nav-link pt-3 mx-3 d-flex justify-content-center align-items-center">
-                                <i class="fa fa-solid fa-user fa-xl"></i>
+                                <img src="{{ asset('images/assets/user-solid-white.svg') }}" width="25rem">
                                 <h3 class="text-white text-center m-1 ms-3 text-break" style="width: 20rem;">User</h3>
                             </a>
                             <div class="w-100 mb-3 d-flex justify-content-center">
@@ -154,8 +154,8 @@
 
 
                 <div class="border-top">
-                    <a href="{{ url('users') }}" class="d-flex align-items-center justify-content-center m-3 p-3 link-dark text-decoration-none">
-                        <i class="fa fas fa-user fa-xl"></i>
+                    <a href="{{ url('users') }}" class="d-flex align-items-center justify-content-center m-3 p-2 link-dark text-decoration-none">
+                        <img src="{{ asset('images/assets/user-solid-white.svg') }}" height="20rem">
                     </a>
                 </div>
 

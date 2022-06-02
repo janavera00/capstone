@@ -15,18 +15,20 @@ class FilingController extends Controller
 {
     public function show()
     {
-        $projects = Project::all();
         $clients = Client::all();
 
-        // dd($projects);
-
-        return view('filing', ['projects' => $projects, 'clients' => $clients]);
+        return view('clientLists', ['clients' => $clients]);
     }
 
-    public function showFiles(Project $project)
+    public function showProjects(Client $client)
+    {
+        return view('projectsList', ['client' => $client]);
+    }
+
+    public function showProjectContent(Project $project)
     {
         $users = User::all();
-        return view('file', ['project' => $project, 'users' => $users]);
+        return view('projectContent', ['project' => $project, 'users' => $users]);
     }
 
     public function createProject()
@@ -90,21 +92,19 @@ class FilingController extends Controller
         $file['project_id'] = $project->id;
         $file->save();
 
-        return redirect('filing/'.$project->id);
+        return redirect(url()->previous());
     }
 
     public function updateFile(File $file)
     {
         $request = request()->validate([
-            'title' => 'required|max:255',
-            'description' => 'max:255',
+            'fileDescription' => 'max:255',
         ]);
 
-        $file['title'] = $request['title'];
-        $file['description'] = $request['description'];
+        $file['description'] = $request['fileDescription'];
         $file->save();
 
-        return redirect('filing/'.$file->project_id);
+        return redirect(url()->previous());
     }
 
     public function updateProject(Project $project)
@@ -119,20 +119,6 @@ class FilingController extends Controller
             'land_owner' => ['max:255',],
         ]);
 
-        // DB::table('projects')
-        //     ->where('id', $project)
-        //     ->limit(1)
-        //     ->update(
-        //         ['user_id' => $user->id],
-        //         ['location' => $request['location']],
-        //         ['survey_number' => 'Lot '.$request['lot_num'].' Psd-'.$request['sur_num1'].'-'.$request['sur_num2']],
-        //         ['lot_area' => $request['lot_area'].'sqr.m.'],
-        //         ['land_owner' => $request['land_owner']],
-        //     );
-
-        // $project = Project::find($project)->get();
-
-
         $project['user_id'] = $request['user'];
         $project['location'] = $request['location'];
         $project['survey_number'] = 'Lot '.$request['lot_num'].' Psd-'.$request['sur_num1'].'-'.$request['sur_num2'];
@@ -140,11 +126,10 @@ class FilingController extends Controller
         $project['land_owner'] = $request['land_owner'];
         $project->save();
 
-        // dd($project);
         
         session(['confirmPass' => 'false']);
 
-        return redirect('filing/'.$project->id);
+        return redirect(url()->previous());
     }
 
     // might remove
