@@ -34,13 +34,12 @@ class TaskController extends Controller
         return view('projectTask', ['projects' => $projects, 'proj' => $project, 'users' => $users]);
     }
 
-    public function createTask()
+    public function createTask(Project $project)
     {
         $request = request()->validate([
             'task' => 'required|max:255',
             'date' => 'required',
             'time' => 'required',
-            'project' => 'required',
             'employee' => 'required',
         ]);
 
@@ -48,7 +47,15 @@ class TaskController extends Controller
         $task['task'] = $request['task'];
         $task['date'] = $request['date'];
         $task['time'] = $request['time'];
-        $task['project_id'] = $request['project'];
+        if($project){
+            $task['project_id'] = $project->id;
+        }else{
+            $request += request()->validate([
+                'project' => 'required|exists:projects,id'
+            ]);
+            $task['project_id'] = $request['project'];
+        }
+
         $task->save();
 
         foreach($request['employee'] as $user)
@@ -91,6 +98,6 @@ class TaskController extends Controller
             }
         }
 
-        return redirect('/scheduling/'.$task->id);
+        return redirect(url()->previous());
     }
 }

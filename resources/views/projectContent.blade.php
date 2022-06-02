@@ -106,75 +106,69 @@
         <!-- documents list -->
         <div class="col-5 rounded mx-2 border border-2 overflow-auto d-flex flex-column mb-5" style="height: 56vh;">
             <h1 class="mx-auto pt-2">Documents</h1>
-            @if(count($project->files) < 1)
-            <div class="w-100 h-100 d-flex pb-5">
+            @if(count($project->files) < 1) <div class="w-100 h-100 d-flex pb-5">
                 <h1 class="m-auto text-secondary" style="width: fit-content; border-bottom:1px solid gray">Document list empty</h1>
-            </div>
-            @endif
-            <div class="row">
-                @foreach($project->files as $file)
-                @if($file->status != 'Request')
-                <div class="col-6">
-                    <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
-                        <div class="m-2 card bg-secondary overflow-auto">
-                            
-                            <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
-                            
-                            <div class="card-header">
-                                <h3 class="card-title">{{ $file->title }}</h3>
-                            </div>
-                            <div class="card-body">
-                                @if($file->image_path)
-                                <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
-                                @else
-                                <p class="text-center">No Image</p>
-                                @endif
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                @endif
-                @endforeach
-            </div>
         </div>
+        @endif
+        <div class="row">
+            @foreach($project->files as $file)
+            @if($file->status != 'Request')
+            <div class="col-6">
+                <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
+                    <div class="m-2 card bg-secondary overflow-auto">
 
-        <!-- tasks list -->
-        <div class="col-5 rounded mx-2 border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
-            <h1 class="mx-auto pt-2">Tasks</h1>
-                        
-            @if(count($project->tasks) < 1)
-            <div class="w-100 h-100 d-flex pb-5">
-                <h1 class="m-auto text-secondary" style="width: fit-content; border-bottom:1px solid gray">No Tasks scheduled</h1>
-            </div>
-            @endif
+                        <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
 
-            @foreach($project->tasks as $task)
-            @if($task->status != "Request")
-            <div class="border-top my-2 d-flex flex-column">
-                @php
-                $dateTime = $task->date."|".$task->time;
-                $link = "showTask('".$task->task."', '".$dateTime."'";
-
-                for($i = 0;$i < count($task->employees);$i++){
-                    $link .= ", '".$task->employees[$i]->role ." - ". $task->employees[$i]->name ."'";
-                    }
-                    $link .= ")";
-                    @endphp
-                    <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}">
-                        @php
-                        $time = explode(':', $task->time);
-                        $date = explode('-', $task->date);
-                        @endphp
-                        <h2>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h2>
-                        <p>{{ $task->task }}</p>
-                    </button>
-                    <button data-bs-toggle="modal" data-bs-target="#showTask" id="showTaskBtn" hidden></button>
+                        <div class="card-header">
+                            <h3 class="card-title">{{ $file->title }}</h3>
+                        </div>
+                        <div class="card-body">
+                            @if($file->image_path)
+                            <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
+                            @else
+                            <p class="text-center">No Image</p>
+                            @endif
+                        </div>
+                    </div>
+                </a>
             </div>
             @endif
             @endforeach
-
         </div>
     </div>
+
+    <!-- tasks list -->
+    <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
+        <h1 class="mx-auto pt-2">Tasks</h1>
+
+        @foreach($project->tasks as $task)
+        @if($task->status != "Request")
+        <div class="border-top my-2 d-flex flex-column">
+            @php
+            $dateTime = $task->date."|".$task->time;
+            $link = "showTask('".$task->task."', '".$dateTime."'";
+
+            for($i = 0;$i < count($task->employees);$i++){
+                $link .= ", '".$task->employees[$i]->role ." - ". $task->employees[$i]->name ."'";
+                }
+                $link .= ")";
+                @endphp
+                <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}">
+                    @php
+                    $time = explode(':', $task->time);
+                    $date = explode('-', $task->date);
+                    @endphp
+                    <h2>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h2>
+                    <p>{{ $task->task }}</p>
+                </button>
+                <button data-bs-toggle="modal" data-bs-target="#showTask" id="showTaskBtn" hidden></button>
+                <button data-bs-toggle="modal" data-bs-target="#task-{{$task->id}}" id="editTask-{{$task->id}}" hidden></button>
+        </div>
+        @endif
+        @endforeach
+
+</div>
+</div>
 </div>
 
 
@@ -237,10 +231,10 @@
         <div class="modal-content">
 
             <div class="modal-header text-white bg-1">
-                <h2 class="modal-title">Request task schedule</h2>
+                <h2 class="modal-title">Schedule a new task</h2>
             </div>
 
-            <form action="{{ url('') }}" method="post">
+            <form action="{{ url('scheduling/create/'.$project->id) }}" method="post">
                 @csrf
                 <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="m-2 p-2 border rounded">
@@ -248,7 +242,7 @@
                             <p class="text-danger">*</p>
                             <label for="task" class="form-label">Task:</label>
                         </div>
-                        <input type="text" name="task" id="task" class="form-control">
+                        <input type="text" name="task" id="task" class="form-control" autocomplete="off">
                     </div>
                     <div class="m-2 p-2 border rounded">
                         <div class="d-flex">
@@ -260,13 +254,41 @@
                             <input type="time" name="time" id="time" class="form-control" style="width: 49%;">
                         </div>
                     </div>
+
                     <div class="m-2 p-2 border rounded">
-                        <label for="remark" class="form-label">Remarks:</label>
-                        <input type="text" name="remark" id="remark" class="form-control">
+                        <label for="employee" class="fomr-label">Employee/s Assigned:</label>
+                        <div>
+                            <table id="dynamicField" class="w-100">
+                                <tr id="toClone" hidden>
+                                    <td>
+                                        <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
+                                        <select name="employee[]" class="form-control employee">
+                                            <option selected hidden></option>
+                                            @foreach($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
+                                        <select name="employee[]" class="form-control employee">
+                                            <option selected hidden></option>
+                                            @foreach($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee('dynamicField')">+</a></td>
+                                    <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee('dynamicField')">-</a></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
 
                 </div>
-                <div class="modal-footer d-flex justify-content-around">
+                <div class="modal-footer bg-secondary">
                     <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
                     <input type="submit" value="Submit" class="btn btn-primary" style="width: 200px;">
                 </div>
@@ -291,7 +313,7 @@
                     </div>
                     <div class="m-2 p-2 border rounded p-2 bg-white rounded">
                         <p class="my-2">Description: </p>
-                        <input type="text" name="fileDescription" id="fileDescription" class="form-control" value="{{ $file->description }}">
+                        <input type="text" name="fileDescription" id="fileDescription" class="form-control" autocomplete="off" value="{{ $file->description }}">
                     </div>
                 </div>
                 <div class="modal-footer bg-secondary">
@@ -303,7 +325,7 @@
 </div>
 @endforeach
 
-<!-- showing and updating task's information -->
+<!-- showing task's information -->
 <div class="modal" id="showTask">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -320,9 +342,87 @@
                     <ul class="border rounded" id="taskEmployees"></ul>
                 </div>
             </div>
+            <div class="modal-footer bg-secondary">
+                <button class="btn btn-primary" onclick="editTask('{{$task->id}}')">Edit Task</button>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- modal for editing task -->
+@foreach($project->tasks as $task)
+<div class="modal" id="task-{{$task->id}}">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header text-white bg-1">
+                <h2 class="modal-title">Edit task</h2>
+            </div>
+
+            <form action="{{ url('scheduling/update/'.$task->id) }}" method="post">
+                @csrf
+                <div class="modal-body overflow-auto" style="height: 60vh;">
+                    <div class="m-2 p-2 border rounded">
+                        <div class="d-flex">
+                            <p class="text-danger">*</p>
+                            <label for="title" class="form-label">Task:</label>
+                        </div>
+                        <input type="text" name="title" id="title" class="form-control" autocomplete="off" value="{{$task->task}}">
+                    </div>
+                    <div class="m-2 p-2 border rounded">
+                        <div class="d-flex">
+                            <p class="text-danger">*</p>
+                            <label for="date" class="form-label">Date and Time:</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <input type="date" name="date" id="date" class="form-control" style="width: 49%;" value="{{$task->date}}">
+                            <input type="time" name="time" id="time" class="form-control" style="width: 49%;" value="{{$task->time}}">
+                        </div>
+                    </div>
+
+                    <div class="m-2 p-2 border rounded">
+                        <label for="employee" class="fomr-label">Employee/s Assigned:</label>
+                        <div>
+                            <table id="editDynamicField" class="w-100">
+                                <tr id="toClone" hidden>
+                                    <td>
+                                        <select name="employee[]" class="form-control employee">
+                                            <option hidden selected></option>
+                                            @foreach($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
+                                @for($i = 0;$i < count($task->employees);$i++)
+                                <tr>
+                                    <td>
+                                        <select name="employee[]" class="form-control employee">
+                                            @foreach($users as $user)
+                                            <option value="{{ $user->id }}" {{($task->employees[$i]->id == $user->id)?'selected':''}}>{{ $user->name }} - {{ $user->role }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    @if($i == 0)
+                                    <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee('editDynamicField')">+</a></td>
+                                    <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee('editDynamicField')">-</a></td>
+                                    @endif
+                                </tr>
+                                @endfor
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer bg-secondary">
+                    <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                    <input type="submit" value="Submit" class="btn btn-primary" style="width: 200px;">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
 
 <script>
     function showInfo() {
@@ -330,8 +430,7 @@
         btn.textContent = (btn.textContent == 'Show More Info' ? 'Hide Info' : 'Show More Info');
     }
 
-    function showFile()
-    {
+    function showFile() {
         document.getElementById('showFileBtn').click();
         const node = document.getElementById(arguments[0]).classList;
         node.remove('d-node');
@@ -365,7 +464,26 @@
             parent.removeChild(parent.firstChild);
         }
     }
-</script>
 
+    function editTask(task){
+        document.getElementById('editTask-'+task).click();
+    }
+
+    
+    function addEmployee(name) {
+        let field = document.getElementById(name);
+        const elmt = field.childNodes[1].childNodes[0];
+        const newElmt = elmt.cloneNode(true);
+        newElmt.hidden = false;
+
+        field.childNodes[1].appendChild(newElmt);
+    }
+
+    function removeEmployee(name) {
+        let field = document.getElementById(name).childNodes[1];
+        if (field.childElementCount > 2)
+            field.removeChild(field.lastElementChild);
+    }
+</script>
 
 @endsection

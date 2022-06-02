@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid w-75">
 
-    <a href="{{ url('scheduling') }}" class="btn bg-4 px-4 py-3 my-4">
+    <a href="{{ url('') }}" class="btn bg-4 px-4 py-3 my-4">
         <i class="fas fa-arrow-left fa fa-2xl"></i>
     </a>
 
