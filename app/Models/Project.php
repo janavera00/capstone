@@ -10,6 +10,8 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
+        'service_id',
+        'stepNo',
         'client_id',
         'engineer',
         'location',
@@ -27,6 +29,11 @@ class Project extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
     }
 
     public function requests()
