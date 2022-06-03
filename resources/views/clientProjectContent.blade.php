@@ -10,10 +10,8 @@
         <div class="row mt-3">
             <div class="col-2">
                 <!-- buttons -->
-                <div class="d-flex flex-column justify-content-around h-100">
+                <div class="d-flex flex-column h-100">
                     <button class="btn btn-success w-100" onclick="showInfo()" id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#showInfo">Show More Info</button>
-                    <button data-bs-toggle="modal" data-bs-target="#submitDocument" class="btn bg-3 text-white w-100" id="addFileBtn">Submit a document</button>
-                    <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-3 text-white w-100" id="addScheduleBtn">Request a Schedule</button>
                     <button data-bs-toggle="modal" data-bs-target="#updateFile" id="updateBtn" hidden></button>
                 </div>
             </div>
@@ -34,19 +32,13 @@
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto"></p>
                         <div class="col-10 row w-75 ">
-                            @php
-                            if($project->survey_number)
-                            {
-                            $survey_num = explode(" ", $project->survey_number);
-                            }
-                            @endphp
                             <div class="col">
                                 <label for="sur_num">Lot Number:</label>
-                                <div class="col-10 p-2 rounded bg-white text-black">{{ ($project->survey_number)?$survey_num[0].' '.$survey_num[1]:'' }}</div>
+                                <div class="col-10 p-2 rounded bg-white text-black">{{ ($project->lot_number)?$project->lot_number:'' }}</div>
                             </div>
                             <div class="col">
                                 <label for="sur_num">Survey Number:</label>
-                                <div class="col-10 p-2 rounded bg-white text-black">{{ ($project->survey_number)?$survey_num[2]:'' }}</div>
+                                <div class="col-10 p-2 rounded bg-white text-black">{{ ($project->survey_number)?$project->survey_number:'' }}</div>
                             </div>
                         </div>
 
@@ -72,63 +64,79 @@
         <hr>
 
 
-        <div class="row justify-content-around">
-            <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
-                <h1 class="mx-auto pt-2">Documents</h1>
-                <hr style="margin: 0px;">
-                <div class="row">
-                    @foreach($project->files as $file)
-                    @if($file->status != 'Request')
-                    <div class="col-6">
-                        <div class="m-2 card bg-secondary overflow-auto" onclick="showFile('{{$file->title}}', '{{$file->description}}', '{{$file->image_path}}')" style="cursor: pointer;">
+        <div class="row justify-content-center">
+            <div class="col-5 rounded border border-2 d-flex flex-column mx-2">
+                <div class="row border-bottom m-2 pb-2">
+                    <div class="col">
+                        <button data-bs-toggle="modal" data-bs-target="#submitDocument" class="btn btn-primary w-100" id="addFileBtn">Submit a document</button>
+                    </div>
+                    <h1 class="mx-auto pt-2 col">Documents</h1>
+                    <div class="col"></div>
+                </div>    
 
-                            <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
-
-                            <div class="card-header">
-                                <h3 class="card-title">{{ $file->title }}</h3>
-                            </div>
-                            <div class="card-body">
-                                @if($file->image_path)
-                                <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
-                                @else
-                                <p class="text-center">No Image</p>
-                                @endif
+                <div class="overflow-auto p-2" style="height: 50vh;">
+                    <div class="row">
+                        @foreach($project->files as $file)
+                        @if($file->status != 'Request')
+                        <div class="col-6">
+                            <div class="m-2 card bg-secondary overflow-auto" onclick="showFile('{{$file->title}}', '{{$file->description}}', '{{$file->image_path}}')" style="cursor: pointer;">
+    
+                                <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
+    
+                                <div class="card-header">
+                                    <h3 class="card-title">{{ $file->title }}</h3>
+                                </div>
+                                <div class="card-body">
+                                    @if($file->image_path)
+                                    <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
+                                    @else
+                                    <p class="text-center">No Image</p>
+                                    @endif
+                                </div>
                             </div>
                         </div>
+                        @endif
+                        @endforeach
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-5 rounded border border-2 d-flex flex-column mx-2">
+                <div class="row border-bottom m-2 pb-2">
+                    <div class="col">
+                        <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn btn-primary w-100" id="addScheduleBtn">Request a Schedule</button>
+                    </div>
+                    <h1 class="mx-auto pt-2 col">Tasks</h1>
+                    <div class="col"></div>
+                </div>
+
+                <div class="overflow-auto p-2" style="height: 50vh;">
+                    @foreach($project->tasks as $task)
+                    @if($task->status != "Request")
+                    <div class="my-2 d-flex flex-column">
+                        @php
+                        $dateTime = $task->date."|".$task->time;
+                        $link = "showTask('".$task->task."', '".$dateTime."'";
+
+                        for($i = 0;$i < count($task->employees);$i++){
+                            $link .= ", '".$task->employees[$i]->role ." - ". $task->employees[$i]->name ."'";
+                            }
+                            $link .= ")";
+                            @endphp
+                            <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}">
+                                @php
+                                $time = explode(':', $task->time);
+                                $date = explode('-', $task->date);
+                                @endphp
+                                <h2>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h2>
+                                <p>{{ $task->task }}</p>
+                            </button>
+                            <button data-bs-toggle="modal" data-bs-target="#showTask" id="showTaskBtn" hidden></button>
                     </div>
                     @endif
                     @endforeach
                 </div>
-            </div>
-
-            <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
-                <h1 class="mx-auto pt-2">Tasks</h1>
-
-                @foreach($project->tasks as $task)
-                @if($task->status != "Request")
-                <div class="border-top my-2 d-flex flex-column">
-                    @php
-                    $dateTime = $task->date."|".$task->time;
-                    $link = "showTask('".$task->task."', '".$dateTime."'";
-
-                    for($i = 0;$i < count($task->employees);$i++){
-                        $link .= ", '".$task->employees[$i]->role ." - ". $task->employees[$i]->name ."'";
-                        }
-                        $link .= ")";
-                        @endphp
-                        <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}">
-                            @php
-                            $time = explode(':', $task->time);
-                            $date = explode('-', $task->date);
-                            @endphp
-                            <h2>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h2>
-                            <p>{{ $task->task }}</p>
-                        </button>
-                        <button data-bs-toggle="modal" data-bs-target="#showTask" id="showTaskBtn" hidden></button>
-                </div>
-                @endif
-                @endforeach
-
             </div>
         </div>
     </div>

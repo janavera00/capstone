@@ -43,11 +43,12 @@ class TaskController extends Controller
             'employee' => 'required',
         ]);
 
+
         $task = new Task();
         $task['task'] = $request['task'];
         $task['date'] = $request['date'];
         $task['time'] = $request['time'];
-        if($project){
+        if($project->id){
             $task['project_id'] = $project->id;
         }else{
             $request += request()->validate([

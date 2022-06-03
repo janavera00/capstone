@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('location');
+            $table->string('lot_number')->nullable();
             $table->string('survey_number')->nullable()->unique();
             $table->string('lot_area')->nullable();
             $table->string('land_owner')->nullable();

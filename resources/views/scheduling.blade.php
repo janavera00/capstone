@@ -30,7 +30,7 @@
                 <div class="bg-white p-2 overflow-auto rounded-bottom" style="height: 25vh;">
                     <table class="table table-light table-hover">
                         @foreach($projects as $project)
-                        <tr onclick="location.href='../scheduling/{{$project->id}}'" style="cursor: pointer;">
+                        <tr onclick="location.href='../projectContent/{{$project->id}}'" style="cursor: pointer;">
                             <td>{{ $project->client->name }}</td>
                             <td>{{ $project->location }}</td>
                         </tr>
@@ -63,8 +63,6 @@
                         <div class="m-auto" id="selectedDateMessage">
                             <h2 class="text-secondary text-center" style="border-bottom: 1px solid gray; width: fit-content;">No Task Scheduled for this day</h2>
                         </div>
-
-
 
                         @foreach($tasks as $task)
                             <div class="selectedDate" id="{{ $task->date }}">
@@ -123,6 +121,16 @@
                             <label for="employee" class="fomr-label">Employee/s Assigned:</label>
                             <div>
                                 <table id="dynamicField" class="w-100">
+                                    <tr id="toClone" hidden>
+                                        <td>
+                                            <select name="employee[]" class="form-control employee">
+                                                <option selected hidden></option>
+                                                @foreach($users as $user)
+                                                    <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
                                             <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
@@ -133,8 +141,8 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee()">+</a></td>
-                                        <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee()">-</a></td>
+                                        <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee('dynamicField')">+</a></td>
+                                        <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee('dynamicField')">-</a></td>
                                     </tr>
                                 </table>
                             </div>
@@ -150,15 +158,18 @@
     </div>
 
     <script>
-        let field = document.getElementById('dynamicField');
-        const elmt = document.getElementsByTagName('td')[0];
-        function addEmployee(){
-            const row = document.createElement('tr');
-            row.appendChild(elmt.cloneNode(true));
-            field.appendChild(row);
+        function addEmployee(name) {
+            let field = document.getElementById(name);
+            const elmt = field.childNodes[1].childNodes[0];
+            const newElmt = elmt.cloneNode(true);
+            newElmt.hidden = false;
+            // console.log(newElmt.childNodes);
+            field.childNodes[1].appendChild(newElmt);
         }
-        function removeEmployee(){
-            if(field.childElementCount > 1)
+
+        function removeEmployee(name) {
+            let field = document.getElementById(name).childNodes[1];
+            if (field.childElementCount > 2)
                 field.removeChild(field.lastElementChild);
         }
     </script>
