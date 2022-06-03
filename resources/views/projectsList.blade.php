@@ -8,9 +8,8 @@
 <div class="container text-white bg-2 mt-2 overflow-auto rounded" style="height: 80vh;">
     <div class="row p-3">
         <!-- buttons -->
-        <div class="col-2 d-flex justify-content-around flex-column border-end">
-            <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#clientInfo">Show more Info</button>
-            <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-primary w-100">Add Client</button>
+        <div class="col-2 border-end">
+            <button class="btn btn-success w-100" onclick="showInfo()" id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#clientInfo">Show More Info</button>
         </div>
 
         <!-- client's information -->
@@ -44,39 +43,51 @@
                 </div>
             </form>
         </div>
-
-
         
     </div>
 
     <hr>
 
     <!-- projects List -->
-    <div class="row">
-        @foreach($client->projects as $project)
-        <div class="col-3 my-2">
-            <div class="card" onclick="location.href='../../projectContent/{{$project->id}}'" style="cursor: pointer;">
-                <div class="card-header">
-                    @php
-                        $lotNum = explode(' ', $project->survey_number);
-                        $surNum = explode('-', $lotNum[2]);
-                    @endphp
-                    <h4 class="text-black text-center">{{ 'Lot '.$lotNum[1] }}</h4>
-                    <h4 class="text-black text-center">{{ 'Psd-'.$surNum[1].'-'.$surNum[2] }}</h4>
+    <div class="container rounded border border-2 mb-2">
+        <!-- header -->
+        <div class="mx-2 row py-2 border-bottom">
+            <div class="col d-flex">
+                <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-primary my-auto ms-auto" style="width: 15rem;">Add a Project</button>
+            </div>
+            <h1 class="col text-center">Projects</h1>
+            <div class="col"></div>
+        </div>
+
+        <div class="overflow-auto" style="height: 53vh;">
+            <div class="row">
+                @foreach($client->projects as $project)
+                <div class="col-3 my-2">
+                    <a href="{{ url('projectContent/'.$project->id) }}" class="text-decoration-none text-black">
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="text-black text-center"><?php printf('%05d', $project->id); ?></h1>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="text-black text-center">{{ ($project->lot_number)?$project->lot_number:'' }}</h5>
+                                <h5 class="text-black text-center">{{ ($project->survey_number)?$project->survey_number:'' }}</h5>
+                            </div> 
+                            <div class="card-footer">
+                                <p class="text-black text-center">{{ $project->location }}</p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-                <div class="card-body">
-                    <p class="text-black text-center">{{ $project->location }}</p>
-                </div> 
+                @endforeach
             </div>
         </div>
-        @endforeach
     </div>
 </div>
 
 
 
-<!-- Modal for adding client -->
-<div class="modal" id="addClient">
+<!-- Modal for adding project -->
+<div class="modal" id="addProject">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
@@ -84,59 +95,77 @@
                 <h2 class="modal-title">Add Project</h2>
             </div>
 
-            <form action="{{ url('filing/create') }}" method="post">
+            <form action="{{ url('filing/create/'.$client->id) }}" method="post">
                 @csrf
                 <div class="modal-body overflow-auto" style="height: 60vh;">
-                    <div class="mt-2">
-                        <label for="client">Client:</label>
-                        <input type="text" name="client" id="client" class="form-control" list="clientList" value="{{ old('client') }}">
-                        @error('client')
-                        <p class="text-danger">*{{ $message }}</p>
+                    <div class="p-2 my-2 border rounded">
+                        <label for="loc">Engineer In Charge:</label>
+                        <select name="engr" id="engr" class="form-control">
+                            <option selected hidden></option>
+                            @foreach($users as $user)
+                            <option value="{{$user->id}}" {{($user->id == old('engr'))?'selected':''}}>{{$user->role}} - {{$user->name}}</option>
+                            @endforeach
+                        </select>
+                        
+                        @error('loc')
+                        <p class="text-danger">*{{$message}}</p>
                         @enderror
-                       
                     </div>
 
-                    <div class="collapse @error('address')show @enderror @error('contact')show @enderror @error('email')show @enderror" id="addClient">
-                        <hr style="height: 5px;">
-                        <p class="text-danger">*You've entered a new client name, please enter the required info for that client</p>
-                        <div>
-                            <label for="address">Client's Address:</label>
-                            <input type="text" name="address" id="address" class="form-control" value="{{ old('address') }}">
-                            @error('address')
-                            <p class="text-danger">*{{$message}}</p>
-                            @enderror
-                        </div>
-                        <hr>
-                        <div>
-                            <label for="contact">Contact Number: </label>
-                            <div class="d-flex">
-                                <p class="m-2">+63</p>
-                                <input type="text" name="contact" id="contact" maxlength="9" class="form-control" value="{{ old('contact') }}">
-                            </div>
-                            @error('contact')
-                            <p class="text-danger">*{{$message}}</p>
-                            @enderror
-                        </div>
-                        <hr>
-                        <div>
-                            <label for="email">Email Address:</label>
-                            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
-                            @error('email')
-                            <p class="text-danger">*{{$message}}</p>
-                            @enderror
-                        </div>
-                        <hr style="height: 5px;">
+                    <div class="p-2 my-2 border rounded">
+                        <label for="loc">*Location:</label>
+                        <input type="text" name="loc" id="loc" class="form-control" value="{{ old('loc') }}" autocomplete="off">
+                        @error('loc')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
                     </div>
-                    <div class="mt-2">
-                        <label for="location">Subject Property Location:</label>
-                        <input type="text" name="location" id="location" class="form-control" value="{{ old('location') }}">
-                        @error('location')
+
+                    <div class="p-2 my-2 border rounded">
+                        <div class="row">
+                            <div class="col-4 border-end">
+                                <label for="lotNum">Lot Number:</label>
+                                <div class="d-flex">
+                                    <p class="py-1 me-2  mb-0">Lot</p>
+                                    <input type="text" name="lotNum" id="lotNum" class="form-control" value="{{ old('lotNum') }}" autocomplete="off" style="height: 2.3rem;">
+                                </div>
+                                @error('lotNum')
+                                <p class="text-danger">*{{$message}}</p>
+                                @enderror
+                            </div>
+                            <div class="col-8">
+                                <label for="surNum">Survey Number:</label>
+                                <div class="d-flex">
+                                    <p class="py-1 me-2 mb-0">Psd-</p>
+                                    <input type="text" name="surNum" id="surNum" class="form-control" value="{{ old('surNum') }}" autocomplete="off" maxlength="9" placeholder="xx-xxxxxx" style="height: 2.3rem;">
+                                </div>
+                                @error('surveyNo')
+                                <p class="text-danger">*{{$message}}</p>
+                                @enderror
+                                @error('surNum')
+                                <p class="text-danger">*{{$message}}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-2 my-2 border rounded">
+                        <label for="lotArea">Lot Area:</label>
+                        <input type="text" name="lotArea" id="lotArea" class="form-control" value="{{ old('lotArea') }}" autocomplete="off">
+                        @error('lotArea')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
+                    </div>
+
+                    <div class="p-2 my-2 border rounded">
+                        <label for="landOwn">Registered Land Owner:</label>
+                        <input type="text" name="landOwn" id="landOwn" class="form-control" value="{{ old('landOwn') }}" autocomplete="off">
+                        @error('landOwn')
                         <p class="text-danger">*{{$message}}</p>
                         @enderror
                     </div>
 
                 </div>
-                <div class="modal-footer bg-secondary d-flex justify-content-around">
+                <div class="modal-footer bg-secondary">
                     <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
                     <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
                 </div>
@@ -144,6 +173,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function showInfo() {
+        const btn = document.getElementById('collapseBtn');
+        btn.textContent = (btn.textContent == 'Show More Info' ? 'Hide Info' : 'Show More Info');
+    }
+</script>
 
 @if($errors->any())
 <script>

@@ -35,7 +35,7 @@ Route::get('projects/{client}', [FilingController::class, 'showProjects']);
 Route::get('projectContent/{project}', [FilingController::class, 'showProjectContent']);
 Route::post('project/{project}/createFile', [FilingController::class, 'createFile']);
 Route::post('file/update/{file}', [FilingController::class, 'updateFile']);
-Route::post('filing/create', [FilingController::class, 'createProject']);
+Route::post('filing/create/{client}', [FilingController::class, 'createProject']);
 Route::post('project/update/{project}', [FilingController::class, 'updateProject']);
 
 Route::get('/scheduling', [TaskController::class, 'show']);

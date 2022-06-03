@@ -22,7 +22,8 @@ class FilingController extends Controller
 
     public function showProjects(Client $client)
     {
-        return view('projectsList', ['client' => $client]);
+        $users = User::all();
+        return view('projectsList', ['client' => $client, 'users' => $users]);
     }
 
     public function showProjectContent(Project $project)
@@ -31,46 +32,44 @@ class FilingController extends Controller
         return view('projectContent', ['project' => $project, 'users' => $users]);
     }
 
-    public function createProject()
+    public function createProject(Client $client)
     {
         $request = request()->validate([
-            'client' => ['required', 'max:255',],
-            'location' => ['required', 'max:255',],
+            'engr' => ['exists:users,id', 'nullable'],
+            'loc' => ['required', 'max:255',],
+            'lotNum' => ['numeric', 'nullable'],
+            'surNum' => ['regex:/[0-9]{2}(-)[0-9]{6}/', 'nullable'],
+            'lotArea' => ['numeric', 'nullable'],
+            'landOwn' => ['max:255', 'nullable'],
         ]);
 
-        $project = new Project();
-        $project['location'] = $request['location'];
+        $project = Project::all();
+        $exist = true;
 
-        $client = Client::where('name', $request['client'])->first();
-        
-        if(!$client)
-        {   
-            $request += request()->validate([
-                'address' => ['required', 'max:255',],
-                'contact' => ['required', 'numeric',],
-                'email' => ['required', 'max:255', 'email', 'unique:clients,email'],
-            ]);
-            
-            $newClient = new Client();
-            
-            $newClient['name'] = $request['client'];
-            $newClient['address'] = $request['address'];
-            $newClient['contact'] = '09'.$request['contact'];
-            $newClient['email'] = $request['email'];
-            $newClient['password'] = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
-            
-            $newClient->save();
-
-            $project['client_id'] = $newClient['id'];
-            $project->save();
-            
-            return redirect('filing');
+        foreach($project as $proj)
+        {
+            if(('Psd-'.$request['surNum']) == $proj->survey_number)
+            {
+                $exist = false;
+            }
         }
 
-        $project['client_id'] = $client->id;
-        $project->save();
+        if($exist){
+            $project = new Project();
 
-        return redirect('filing');
+            $project['client_id'] = $client->id;
+            $project['user_id'] = $request['engr'];
+            $project['location'] = $request['loc'];
+            $project['lot_number'] = ($request['lotNum'])?'Lot '.$request['lotNum']:'';
+            $project['survey_number'] = ($request['surNum'])?'Psd-'.$request['surNum']:'';
+            $project['lot_area'] = $request['lotArea'];
+            $project['land_owner'] = $request['landOwn'];
+            $project->save();
+    
+            return redirect('projectContent/'.$project->id);
+        }
+
+        throw ValidationException::withMessages(['surveyNo' => 'Survey Number already exist']);
     }
 
     public function createFile(Project $project)
@@ -119,9 +118,12 @@ class FilingController extends Controller
             'land_owner' => ['max:255',],
         ]);
 
+        // dd($request);
+
         $project['user_id'] = $request['user'];
         $project['location'] = $request['location'];
-        $project['survey_number'] = 'Lot '.$request['lot_num'].' Psd-'.$request['sur_num1'].'-'.$request['sur_num2'];
+        $project['lot_number'] = ($request['lot_num'])?'Lot '.$request['lot_num']:'';
+        $project['survey_number'] = ($request['sur_num1'] && $request['sur_num2'])?'Psd-'.$request['sur_num1'].'-'.$request['sur_num2']:'';
         $project['lot_area'] = $request['lot_area'].' sqr.m.';
         $project['land_owner'] = $request['land_owner'];
         $project->save();

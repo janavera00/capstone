@@ -82,6 +82,7 @@ class ClientController extends Controller
         $file['title'] = $request['title'];
         $file['description'] = $request['description'];
         $file['status'] = "Request";
+        $file['project_id'] = $project->id;
         $file['image_path'] = $newImageName;
 
         $file->save();
