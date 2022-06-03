@@ -46,6 +46,31 @@
         
     </div>
 
+
+    <button hidden data-bs-toggle="modal" data-bs-target="#message" id="messageBtn"></button>
+    <!-- toast TESTING MIGHT REMOVE -->
+    <div class="modal text-black" id="message">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body alert-success">
+                    You have successfully updated the client information
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @if(session()->has('success'))
+    <script>
+        document.querySelector('#messageBtn').click();
+    </script>
+    @endif
+
+    
+
+
     <hr>
 
     <!-- projects List -->
@@ -181,10 +206,14 @@
     }
 </script>
 
+
 @if($errors->any())
 <script>
     document.getElementById('addProjectBtn').click();
 </script>
 @endif
+
+
+
 
 @endsection

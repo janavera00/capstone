@@ -62,7 +62,7 @@ class ClientController extends Controller
         $client['contact'] = $request['contact'];
         $client->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with('success', 'ahhaha');
     }
 
     public function submitFile(Client $client, Project $project)

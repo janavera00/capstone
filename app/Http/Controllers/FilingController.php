@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\File;
 use App\Models\Project;
+use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -130,6 +131,14 @@ class FilingController extends Controller
 
         
         session(['confirmPass' => 'false']);
+
+        return redirect(url()->previous());
+    }
+
+    public function updateStep(Project $project, $step)
+    {
+        $project['stepNo'] = $step;
+        $project->save();
 
         return redirect(url()->previous());
     }

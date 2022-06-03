@@ -31,6 +31,7 @@ Route::get('/users', [UserController::class, 'show']);
 Route::post('/user/create', [UserController::class, 'create']);
 
 Route::get('clients', [FilingController::class, 'show']);
+Route::get('updateProject/step/{project}/{stepNo}', [FilingController::class, 'updateStep']);
 Route::get('projects/{client}', [FilingController::class, 'showProjects']);
 Route::get('projectContent/{project}', [FilingController::class, 'showProjectContent']);
 Route::post('project/{project}/createFile', [FilingController::class, 'createFile']);

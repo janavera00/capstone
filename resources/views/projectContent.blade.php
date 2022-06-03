@@ -16,8 +16,26 @@
                 <h1 class="m-auto"><?php printf('%05d', $project->id); ?></h1>
             </div>
             <div class="">
-                <button class="btn btn-success w-100" onclick="showInfo()" id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#showInfo">Show More Info</button>
+                <button class="btn btn-primary w-100" onclick="showInfo()" id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#showInfo">Show More Info</button>
                 <button data-bs-toggle="modal" data-bs-target="#updateFile" id="updateBtn" hidden></button>
+                <button data-bs-toggle="collapse" data-bs-target="#progress" id="progressBtn" hidden></button>
+            </div>
+            <div class="collapse" id="progress">
+                <hr>
+                <h4 class="text-center">{{ $project->service->name }}</h4>
+                <div class="overflow-auto mt-2" style="height: 230px;">
+                    <div class="d-flex flex-column p-2">
+                        @foreach($project->service->steps as $step)
+                        <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn {{($step->stepNo <= $project->stepNo)?'btn-success':'btn-dark'}}">{{ $step->name }}</a>
+                        @if($step->name != "Done")
+                        <div class="mx-auto" style="width: 30px; height: 30px;">
+                            <div class="bg-1 mx-auto" style="width: 5px; height: 40px;"></div>
+                        </div>
+                        @endif
+                        @endforeach
+                        
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -162,7 +180,7 @@
             </div>
             @endif
             @foreach($project->tasks as $task)
-            <div class="border-top my-2 d-flex flex-column">
+            <div class="my-2 d-flex flex-column">
                 @php
                 $dateTime = $task->date."|".$task->time;
                 $link = "showTask('".$task->task."', '".$dateTime."'";
@@ -448,11 +466,13 @@
 <script>
     function showInfo() {
         const btn = document.getElementById('collapseBtn');
+        document.getElementById('progressBtn').click();
         btn.textContent = (btn.textContent == 'Show More Info' ? 'Hide Info' : 'Show More Info');
     }
 
     function showFile() {
         document.getElementById('showFileBtn').click();
+        
         const node = document.getElementById(arguments[0]).classList;
         node.remove('d-node');
     }

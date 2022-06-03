@@ -18,6 +18,8 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
+            'service_id' => rand(1, 4),
+            'stepNo' => 1,
             'client_id' => 1,
             'user_id' => 1,
             'location' => $this->faker->address(),
