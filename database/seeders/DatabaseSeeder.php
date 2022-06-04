@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(4)->create();
         Client::factory(4)->create();
+        $this->call(ServiceSeeder::class);
     }
 }

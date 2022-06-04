@@ -27,6 +27,8 @@ Route::get('/home', function () {
     return view('dashboard');
 });
 
+Route::get('/logout', [UserController::class, 'destroy']);
+Route::post('/home', [UserController::class, 'authenticate'])->name('login');
 Route::get('/users', [UserController::class, 'show']);
 Route::post('/user/create', [UserController::class, 'create']);
 
@@ -52,6 +54,3 @@ Route::get('project/{client}/{project}', [ClientController::class, 'showProjectD
 Route::post('project/{client}/{project}/submitFile', [ClientController::class, 'submitFile']);
 Route::post('project/{client}/{project}/requestTask', [ClientController::class, 'requestTask']);
 
-Route::post('/home', function () {
-    return view('dashboard');
-})->name('login');

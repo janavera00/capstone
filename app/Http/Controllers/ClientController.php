@@ -9,6 +9,7 @@ use App\Models\Request as ModelsRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
@@ -24,15 +25,29 @@ class ClientController extends Controller
         return view('clientProjectContent', ['client' => $client, 'project' => $project]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $request = request()->validate([
+        $request = $request->validate([
             'name' => 'required|max:255',
-            'address' => 'max:255',
-            'contact' => 'numeric|regex:/(9)([0-9]{9})/',
+            'address' => 'nullable|max:255',
+            'contact' => 'nullable|numeric|regex:/(9)([0-9]{9})/',
             'email' => 'required|max:255|email|unique:clients,email',
-            'image' => 'mimes:jpg,jpeg,png',
+            'img' => 'nullable',
+            'duplicate' => 'nullable',
         ]);
+
+        if(is_null($request['duplicate'])){
+            $exist = Client::where('name', '=', $request['name'])->first();
+            
+            if(!is_null($exist->id))
+            {
+                throw ValidationException::withMessages(['duplicate' => 'duplicate']); 
+            }
+        }
+
+        if($request['duplicate'] != 'password'){
+            return redirect(url()->previous());
+        }
 
         $client = new Client;
         $client['name'] = $request['name'];
@@ -41,11 +56,15 @@ class ClientController extends Controller
         $client['email'] = $request['email'];
         $client['password'] = Hash::make('password');
 
-        $newImageName = time().'_'.$request['name'].'.'.$request['image']->extension();
+        if (count($request) > 5) {
+            $newImageName = time() . '_' . $request['name'] . '.' . $request['img']->extension();
+            $request['img']->move(public_path('images/users'), $newImageName);
 
-        $request['image']->move(public_path('images/users'), $newImageName);
+            $client['image'] = $newImageName;
+        } else {
+            $client['image'] = "default.svg";
+        }
 
-        $client['image'] = $newImageName;
         $client->save();
 
         return redirect(url()->previous());
@@ -74,8 +93,7 @@ class ClientController extends Controller
             'remark' => 'max:255',
         ]);
 
-        $newImageName = time().'_'.$request['title'].'.'.$request['img']->extension();
-
+        $newImageName = time() . '_' . $request['title'] . '.' . $request['img']->extension();
         $request['img']->move(public_path('documents'), $newImageName);
 
         $file = new File;

@@ -124,6 +124,20 @@
                 @csrf
                 <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="p-2 my-2 border rounded">
+                        <label for="type">*Type of service:</label>
+                        <select name="type" id="type" class="form-control">
+                            <option selected hidden></option>
+                            @foreach($services as $service)
+                            <option value="{{$service->id}}" {{($service->id == old('type'))?'selected':''}}>{{$service->name}}</option>
+                            @endforeach
+                        </select>
+                        
+                        @error('type')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
+                    </div>
+
+                    <div class="p-2 my-2 border rounded">
                         <label for="loc">Engineer In Charge:</label>
                         <select name="engr" id="engr" class="form-control">
                             <option selected hidden></option>
@@ -132,7 +146,7 @@
                             @endforeach
                         </select>
                         
-                        @error('loc')
+                        @error('engr')
                         <p class="text-danger">*{{$message}}</p>
                         @enderror
                     </div>
