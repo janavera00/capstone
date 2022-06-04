@@ -24,7 +24,8 @@ class FilingController extends Controller
     public function showProjects(Client $client)
     {
         $users = User::all();
-        return view('projectsList', ['client' => $client, 'users' => $users]);
+        $services = Service::all();
+        return view('projectsList', ['client' => $client, 'users' => $users, 'services' => $services]);
     }
 
     public function showProjectContent(Project $project)
@@ -36,6 +37,7 @@ class FilingController extends Controller
     public function createProject(Client $client)
     {
         $request = request()->validate([
+            'type' => ['exists:services,id', 'required'],
             'engr' => ['exists:users,id', 'nullable'],
             'loc' => ['required', 'max:255',],
             'lotNum' => ['numeric', 'nullable'],
@@ -59,6 +61,8 @@ class FilingController extends Controller
             $project = new Project();
 
             $project['client_id'] = $client->id;
+            $project['service_id'] = $request['type'];
+            $project['stepNo'] = 1;
             $project['user_id'] = $request['engr'];
             $project['location'] = $request['loc'];
             $project['lot_number'] = ($request['lotNum'])?'Lot '.$request['lotNum']:'';
@@ -75,16 +79,18 @@ class FilingController extends Controller
 
     public function createFile(Project $project)
     {
+        // validate input
         $request = request()->validate([
             'title' => 'required|max:255',
             'description' => 'max:255',
-            'img' => 'required|mimes:jpg,png,jpeg',
+            'img' => 'required',
         ]);
 
+        // change filename of image
         $newImageName = time().'_'.$request['title'].'.'.$request['img']->extension();
-
         $request['img']->move(public_path('documents'), $newImageName);
 
+        // save 
         $file = new File();
         $file['title'] = $request['title'];
         $file['description'] = $request['description'];
@@ -110,13 +116,13 @@ class FilingController extends Controller
     public function updateProject(Project $project)
     {
         $request = request()->validate([
-            'user' => ['exists:users,id'],
+            'user' => ['exists:users,id', 'nullable'],
             'location' => ['max:255',],
-            'lot_num' => ['numeric',],
-            'sur_num1' => ['numeric',],
-            'sur_num2' => ['numeric',],
-            'lot_area' => ['numeric',],
-            'land_owner' => ['max:255',],
+            'lot_num' => ['numeric', 'nullable'],
+            'sur_num1' => ['numeric', 'nullable'],
+            'sur_num2' => ['numeric', 'nullable'],
+            'lot_area' => ['numeric', 'nullable'],
+            'land_owner' => ['max:255', 'nullable'],
         ]);
 
         // dd($request);
@@ -137,7 +143,13 @@ class FilingController extends Controller
 
     public function updateStep(Project $project, $step)
     {
+        
         $project['stepNo'] = $step;
+
+        if(count($project->service->steps) == $step)
+        {
+            $project['status'] = "Completed";
+        }
         $project->save();
 
         return redirect(url()->previous());

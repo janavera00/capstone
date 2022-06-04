@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -38,5 +40,26 @@ class UserController extends Controller
         $user->save();
 
         return redirect(url()->previous());
+    }
+
+    public function authenticate()
+    {
+        return redirect('home');
+        $request = request()->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
+        if(Auth::guard('web')->attempt($request)) {
+        }
+        
+        throw ValidationException::withMessages(['username' => 'Your provided credentials could not be verified.']);
+    }
+
+    public function destroy()
+    {
+        auth()->logout();
+
+        return redirect('/');
     }
 }

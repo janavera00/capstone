@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'contact' => '09'.$this->faker->randomNumber(9, true),
             'email' => $this->faker->unique()->safeEmail(),
             'username' => $this->faker->firstname(),
-            'password' => Hash::make('password'),
+            'password' => bcrypt('password'),
             'role' => $this->faker->randomElement(['Secretary', 'Engineer', 'Surveyor']),
         ];
     }

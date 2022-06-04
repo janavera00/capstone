@@ -10,11 +10,31 @@
         <div class="row mt-3">
             <div class="col-2">
                 <!-- buttons -->
-                <div class="d-flex flex-column h-100">
+                <div class="d-flex flex-column">
                     <button class="btn btn-success w-100" onclick="showInfo()" id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#showInfo">Show More Info</button>
                     <button data-bs-toggle="modal" data-bs-target="#updateFile" id="updateBtn" hidden></button>
+                    <button data-bs-toggle="collapse" data-bs-target="#progress" id="progressBtn" hidden></button>
+                </div>
+                
+                <!-- progress tracking -->
+                <div class="collapse" id="progress">
+                    <hr>
+                    <h4 class="text-center">{{ $project->service->name }}</h4>
+                    <div class="overflow-auto mt-2" style="height: 260px;">
+                        <div class="d-flex flex-column p-2">
+                            @foreach($project->service->steps as $step)
+                            <div class="btn text-white {{ ($step->stepNo <= $project->stepNo)?'bg-success':'bg-dark' }} mt-2" style="cursor: default;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
+                            @if($step->stepNo < count($project->service->steps))
+                            <div class="mx-auto" style="width: 30px; height: 30px;">
+                                <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
+                            </div>
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="col-10">
                 <div class="row m-2 pt-2">
                     <p class="col-2 h-100 my-auto">Client</p>
@@ -46,23 +66,16 @@
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Lot Area</p>
                         <div class="col-10 p-2 rounded bg-white text-black">{{ ($project->lot_area)?$project->lot_area:'' }}</div>
-                        <!-- <div class="col-10 d-flex" style="padding-left: 0px;">
-                                    <input type="text" name="lot_area" id="lot_area" class="form-control w-25" value="{{ ($project->lot_area)?(explode(' ', $project->lot_area))[0]:'' }}">
-                                    <p class="p-2 my-auto">sqr.m.</p>
-                                </div> -->
                     </div>
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Registered Land Owner</p>
                         <div class="col-10 p-2 rounded bg-white text-black">{{ ($project->land_owner)?$project->land_owner:'' }}</div>
-                        <!-- <input type="text" name="land_owner" id="land_owner" class="form-control col-10 w-75" value="{{ ($project->land_owner)?$project->land_owner:'' }}"> -->
                     </div>
                 </div>
             </div>
         </div>
 
-
         <hr>
-
 
         <div class="row justify-content-center">
             <div class="col-5 rounded border border-2 d-flex flex-column mx-2">
@@ -72,7 +85,7 @@
                     </div>
                     <h1 class="mx-auto pt-2 col">Documents</h1>
                     <div class="col"></div>
-                </div>    
+                </div>
 
                 <div class="overflow-auto p-2" style="height: 50vh;">
                     <div class="row">
@@ -88,7 +101,7 @@
                                 </div>
                                 <div class="card-body">
                                     @if($file->image_path)
-                                    <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
+                                    <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image">
                                     @else
                                     <p class="text-center">No Image</p>
                                     @endif
@@ -282,6 +295,7 @@
 <script>
     function showInfo() {
         const btn = document.getElementById('collapseBtn');
+        document.getElementById('progressBtn').click();
         btn.textContent = (btn.textContent == 'Show More Info' ? 'Hide Info' : 'Show More Info');
     }
 

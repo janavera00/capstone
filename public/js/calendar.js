@@ -32,16 +32,14 @@ document.getElementsByTagName('hr')[0].remove();
 let displayDate = `<h1>${weekdaysFull[date.getDay()]}</h1><p>${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}</p>`;
 currentDateDisplay.innerHTML = displayDate;
 
-let displayTaskDate = `${date.getFullYear()}-${((date.getMonth()+1)<10)?'0'+(date.getMonth()+1):date.getMonth()+1}-${date.getDate()}`;
+let displayTaskDate = `${date.getFullYear()}-${((date.getMonth()+1)<10)?'0'+(date.getMonth()+1):date.getMonth()+1}-${((date.getDate()+1)<10)?'0'+(date.getDate()):date.getDate()}`;
 const displayTaskNode = document.getElementsByClassName('selectedDate');
 let selectedDateMessage = "block";
 // console.log(displayTaskNode);
 for(let i = 0;i < displayTaskNode.length;i++)
 {
     displayTaskNode[i].style.display = "none";
-    
     if(displayTaskDate == displayTaskNode[i].id){
-        console.log("check");
         selectedDateMessage = "none";
         displayTaskNode[i].style.display = "block"
     }
@@ -106,10 +104,10 @@ function constructCalendar(){
 
             // console.log(hasEvent(dispDate));
 
-            if(dispDate == today)
-                dateMarker = "current";
-            else if(dispDate == selectedDate)
+            if(dispDate == selectedDate)
                 dateMarker = "active";
+            else if(dispDate == today)
+                dateMarker = "current";
             else if(hasEvent(dispDate))
                 dateMarker = "hasEvent";
 

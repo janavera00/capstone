@@ -6,6 +6,7 @@
 <div class="container px-0">
     <a href="{{ url('projects/'.$project->client->id) }}" class="btn btn-danger mt-4"><img src="{{asset('images/assets/arrow-left-solid-white.svg')}}" width="30rem"></a>
 </div>
+<!-- header -->
 <div class="container text-white bg-2 rounded overflow-auto mt-2" style="height: 80vh;">
     <!-- Project Information -->
     <div class="row mt-3">
@@ -16,24 +17,30 @@
                 <h1 class="m-auto"><?php printf('%05d', $project->id); ?></h1>
             </div>
             <div class="">
-                <button class="btn btn-primary w-100" onclick="showInfo()" id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#showInfo">Show More Info</button>
+                <button class="btn btn-primary w-100" onclick="showInfo()">Show More Info</button>
+                <button id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#showInfo" hidden></button>
                 <button data-bs-toggle="modal" data-bs-target="#updateFile" id="updateBtn" hidden></button>
                 <button data-bs-toggle="collapse" data-bs-target="#progress" id="progressBtn" hidden></button>
             </div>
+
+            <!-- progress tracking -->
             <div class="collapse" id="progress">
                 <hr>
                 <h4 class="text-center">{{ $project->service->name }}</h4>
                 <div class="overflow-auto mt-2" style="height: 230px;">
                     <div class="d-flex flex-column p-2">
                         @foreach($project->service->steps as $step)
-                        <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn {{($step->stepNo <= $project->stepNo)?'btn-success':'btn-dark'}}">{{ $step->name }}</a>
-                        @if($step->name != "Done")
+                        @if($step->stepNo <= $project->stepNo)
+                        <div class="btn text-white bg-success mt-2" style="cursor: default;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
+                        @else
+                        <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2">{{ $step->name }}</a>
+                        @endif
+                        @if($step->stepNo < count($project->service->steps))
                         <div class="mx-auto" style="width: 30px; height: 30px;">
-                            <div class="bg-1 mx-auto" style="width: 5px; height: 40px;"></div>
+                            <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
                         </div>
                         @endif
                         @endforeach
-                        
                     </div>
                 </div>
             </div>
@@ -56,6 +63,7 @@
 
                 <!-- collapsible part -->
                 <div class="collapse" id="showInfo">
+                    
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Engineer In-charge</p>
                         <select name="user" id="user" class="col form-control">
@@ -123,7 +131,7 @@
             <!-- header -->
             <div class="mx-2 row pt-2 border-bottom">
                 <div class="col">
-                    <button data-bs-toggle="modal" data-bs-target="#addDocument" class="btn bg-3 text-white w-100" id="addFileBtn">Add</button>
+                    <button data-bs-toggle="modal" data-bs-target="#addDocument" class="btn bg-primary text-white w-100" id="addFileBtn">Add</button>
                 </div>
                 <h1 class="col text-center">Documents</h1>
                 <div class="col"></div>
@@ -147,11 +155,13 @@
                                     <h3 class="card-title">{{ $file->title }}</h3>
                                 </div>
                                 <div class="card-body">
-                                    @if($file->image_path)
-                                    <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="{{ $file->image_path }}">
-                                    @else
-                                    <p class="text-center">No Image</p>
-                                    @endif
+                                    <div class="w-50 m-auto bg-white rounded p-2">
+                                        @if($file->image_path)
+                                        <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image">
+                                        @else
+                                        <p class="text-center">No Image</p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </a>
@@ -165,7 +175,7 @@
     <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
         <div class="mx-2 row pt-2 border-bottom">
             <div class="col">
-                <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-3 text-white w-100" id="addScheduleBtn">Schedule a Task</button>
+                <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-primary text-white w-100" id="addScheduleBtn">Schedule a Task</button>
             </div>
             <h1 class="col text-center">Tasks</h1>
             <div class="col">
@@ -345,13 +355,13 @@
                     <h2 class="modal-title" id="fileTitle">{{ $file->title }}</h2>
                 </div>
                 <div class="modal-body overflow-auto" style="height: 60vh;">
-                    <div class="m-2 p-2 border rounded">
-                        <img class="w-100" id="fileImage" src="{{ asset('documents/'.$file->image_path) }}">
-                    </div>
-                    <div class="m-2 p-2 border rounded p-2 bg-white rounded">
-                        <p class="my-2">Description: </p>
-                        <input type="text" name="fileDescription" id="fileDescription" class="form-control" autocomplete="off" value="{{ $file->description }}">
-                    </div>
+                <div class="m-2 p-2 border rounded p-2 bg-white rounded">
+                    <p class="my-2">Description: </p>
+                    <input type="text" name="fileDescription" id="fileDescription" class="form-control" autocomplete="off" value="{{ $file->description }}">
+                </div>
+                <div class="m-2 p-2 border rounded">
+                    <img class="w-100" id="fileImage" src="{{ asset('documents/'.$file->image_path) }}">
+                </div>
                 </div>
                 <div class="modal-footer bg-secondary">
                     <input type="submit" value="Update" class="btn btn-primary" style="width: 15rem;">
@@ -466,6 +476,7 @@
 <script>
     function showInfo() {
         const btn = document.getElementById('collapseBtn');
+        btn.click();
         document.getElementById('progressBtn').click();
         btn.textContent = (btn.textContent == 'Show More Info' ? 'Hide Info' : 'Show More Info');
     }
@@ -526,5 +537,7 @@
             field.removeChild(field.lastElementChild);
     }
 </script>
+
+
 
 @endsection
