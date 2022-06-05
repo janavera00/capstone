@@ -31,6 +31,7 @@ class FilingController extends Controller
     public function showProjectContent(Project $project)
     {
         $users = User::all();
+        // dd($project);
         return view('projectContent', ['project' => $project, 'users' => $users]);
     }
 
@@ -120,7 +121,7 @@ class FilingController extends Controller
             'location' => ['max:255',],
             'lot_num' => ['numeric', 'nullable'],
             'sur_num1' => ['numeric', 'nullable'],
-            'sur_num2' => ['numeric', 'nullable'],
+            'sur_num2' => ['numeric', 'nullable', 'min:100000'],
             'lot_area' => ['numeric', 'nullable'],
             'land_owner' => ['max:255', 'nullable'],
         ]);
@@ -131,7 +132,7 @@ class FilingController extends Controller
         $project['location'] = $request['location'];
         $project['lot_number'] = ($request['lot_num'])?'Lot '.$request['lot_num']:'';
         $project['survey_number'] = ($request['sur_num1'] && $request['sur_num2'])?'Psd-'.$request['sur_num1'].'-'.$request['sur_num2']:'';
-        $project['lot_area'] = $request['lot_area'].' sqr.m.';
+        $project['lot_area'] = ($request['lot_area'])?$request['lot_area'].' sqr.m.':'';
         $project['land_owner'] = $request['land_owner'];
         $project->save();
 

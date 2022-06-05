@@ -70,24 +70,24 @@ class TaskController extends Controller
     public function updateTask(Task $task)
     {
         $request = request()->validate([
-            'title' => 'required',
-            'date' => 'required',
-            'time' => 'required',
-            'employee' => 'required',
+            'taskTitle' => 'required',
+            'taskDate' => 'required',
+            'taskTime' => 'required',
+            'taskEmployee' => 'required',
         ]);
         // dd($task->employees);
 
-        $task['task'] = $request['title'];
-        $task['date'] = $request['date'];
-        $task['time'] = $request['time'];
+        $task['task'] = $request['taskTitle'];
+        $task['date'] = $request['taskDate'];
+        $task['time'] = $request['taskTime'];
         $task->save();
 
-        for($i = 0;$i < count($request['employee']);$i++)
+        for($i = 0;$i < count($request['taskEmployee']);$i++)
         {
             $exist = false;
             for($j = 0;$j < count($task->employees);$j++)
             {
-                if($request['employee'][$i] == $task->employees[$j]->id)
+                if($request['taskEmployee'][$i] == $task->employees[$j]->id)
                 {
                     $exist = true;
                 }
@@ -95,7 +95,7 @@ class TaskController extends Controller
 
             if(!$exist)
             {
-                $task->employees()->attach($request['employee'][$i]);
+                $task->employees()->attach($request['taskEmployee'][$i]);
             }
         }
 
