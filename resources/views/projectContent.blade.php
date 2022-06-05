@@ -31,16 +31,16 @@
                     <div class="d-flex flex-column p-2">
                         @foreach($project->service->steps as $step)
                         @if($step->stepNo <= $project->stepNo)
-                        <div class="btn text-white bg-success mt-2" style="cursor: default;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
-                        @else
-                        <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2">{{ $step->name }}</a>
-                        @endif
-                        @if($step->stepNo < count($project->service->steps))
-                        <div class="mx-auto" style="width: 30px; height: 30px;">
-                            <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
-                        </div>
-                        @endif
-                        @endforeach
+                            <div class="btn text-white bg-success mt-2" style="cursor: default;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
+                            @else
+                            <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2">{{ $step->name }}</a>
+                            @endif
+                            @if($step->stepNo < count($project->service->steps))
+                                <div class="mx-auto" style="width: 30px; height: 30px;">
+                                    <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
+                                </div>
+                                @endif
+                                @endforeach
                     </div>
                 </div>
             </div>
@@ -54,70 +54,58 @@
                 <div class="col-10 p-2 rounded bg-white text-black">{{ $project->client->name }}</div>
             </div>
             <!-- project updating form -->
-            <form action="{{ url('project/update/'.$project->id) }}" method="post">
-                @csrf
+            
                 <div class="row m-2 pt-2">
                     <p class="col-2 h-100 my-auto">Subject Property Location</p>
-                    <input type="text" name="location" id="location" class="col form-control" autocomplete="off" value="{{$project->location}}">
+                    <div class="col-10 p-2 rounded bg-white text-black">{{ $project->location }}</div>
                 </div>
 
                 <!-- collapsible part -->
                 <div class="collapse" id="showInfo">
-                    
+
+                    @if($project->user_id)
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Engineer In-charge</p>
-                        <select name="user" id="user" class="col form-control">
-                            @if(!$project->user_id)
-                            <option selected hidden></option>
-                            @endif
-                            @foreach($users as $user)
-                            <option value="{{$user->id}}" {{($project->user_id == $user->id)?'selected':''}}>{{$user->name}}</option>
-                            @endforeach
-                        </select>
+                        <div class="col-10 p-2 rounded bg-white text-black" style="height: 2.7rem;">{{ $project->user->name }}</div>
                     </div>
+                    @endif
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto"></p>
                         <div class="col-10 row w-75 ">
                             <div class="col">
+                                @if($project->lot_number)
                                 <label>Lot Number:</label>
-                                <div class="d-flex">
-                                    <p class="p-2">Lot </p>
-                                    <input type="text" name="lot_num" id="lot_num" class="form-control" style="height: 2.5rem;" autocomplete="off" value="{{($project->lot_number)?explode(' ', $project->lot_number)[1]:''}}">
-                                </div>
+                                <div class="col-10 p-2 rounded bg-white text-black">{{ $project->lot_number }}</div>
+                                @endif
                             </div>
                             <div class="col">
-
+                                @if($project->survey_number)
                                 <label for="sur_num">Survey Number:</label>
-                                <div class="d-flex">
-                                    <p class="py-2">Psd-</p>
-                                    <input type="text" name="sur_num1" id="sur_num1" class="form-control" style="height: 2.5rem; width: 3rem;" maxlength="2" autocomplete="off" value="{{($project->survey_number)?explode('-', $project->survey_number)[1]:''}}">
-                                    
-                                    <p class="py-2">-</p>
-                                    <input type="text" name="sur_num2" id="sur_num2" class="form-control" style="height: 2.5rem;" maxlength="6" autocomplete="off" value="{{($project->survey_number)?explode('-', $project->survey_number)[2]:''}}">
-                                </div>
+                                <div class="col-10 p-2 rounded bg-white text-black">{{ $project->survey_number }}</div>
+                                @endif
                             </div>
                         </div>
 
                     </div>
+                    @if($project->lot_area)
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Lot Area</p>
-
-                        <div class="col-10 d-flex" style="padding-left: 0px;">
-                            <input type="text" name="lot_area" id="lot_area" class="form-control w-25" value="{{ ($project->lot_area)?(explode(' ', $project->lot_area))[0]:'' }}">
-                            <p class="p-2 my-auto">sqr.m.</p>
-                        </div>
+                        <div class="col-10 p-2 rounded bg-white text-black" style="height: 2.7rem;">{{ $project->lot_area }}</div>
                     </div>
+                    @endif
+                    @if($project->land_owner)
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Registered Land Owner</p>
-                        <input type="text" name="land_owner" id="land_owner" class="form-control col" value="{{ ($project->land_owner)?$project->land_owner:'' }}">
+                        <div class="col-10 p-2 rounded bg-white text-black">{{ $project->land_owner }}</div>
                     </div>
+                    @endif
                     <hr>
                     <!-- update button -->
                     <div class="my-2 d-flex justify-content-center">
-                        <input type="submit" value="Update" class="btn bg-3 text-white" style="width: 12rem;">
+                        <button class="btn btn-primary" id="projectUpdateBtn" data-bs-toggle="modal" data-bs-target="#projectUpdate">Update</button>    
                     </div>
                 </div>
-            </form>
+            
         </div>
     </div>
 
@@ -148,9 +136,9 @@
                     <div class="col-6">
                         <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
                             <div class="m-2 card bg-secondary overflow-auto">
-    
+
                                 <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
-    
+
                                 <div class="card-header">
                                     <h3 class="card-title">{{ $file->title }}</h3>
                                 </div>
@@ -171,22 +159,21 @@
             </div>
         </div>
 
-    <!-- tasks list -->
-    <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
-        <div class="mx-2 row pt-2 border-bottom">
-            <div class="col">
-                <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-primary text-white w-100" id="addScheduleBtn">Schedule a Task</button>
+        <!-- tasks list -->
+        <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
+            <div class="mx-2 row pt-2 border-bottom">
+                <div class="col">
+                    <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-primary text-white w-100" id="addScheduleBtn">Schedule a Task</button>
+                </div>
+                <h1 class="col text-center">Tasks</h1>
+                <div class="col">
+                    <a href="{{ url('scheduling') }}" class="btn btn-success w-100">Show all task</a>
+                </div>
             </div>
-            <h1 class="col text-center">Tasks</h1>
-            <div class="col">
-                <a href="{{ url('scheduling') }}" class="btn btn-success w-100">Show all task</a>
-            </div>
-        </div>
-        
-        <div class="overflow-auto m-1" style="height: 50vh;">
-            @if(count($project->tasks) < 1) 
-            <div class="w-100 h-100 d-flex pb-5">
-                <h1 class="m-auto text-secondary text-center" style="width: fit-content; border-bottom:1px solid gray">No tasks scheduled</h1>
+
+            <div class="overflow-auto m-1" style="height: 50vh;">
+                @if(count($project->tasks) < 1) <div class="w-100 h-100 d-flex pb-5">
+                    <h1 class="m-auto text-secondary text-center" style="width: fit-content; border-bottom:1px solid gray">No tasks scheduled</h1>
             </div>
             @endif
             @foreach($project->tasks as $task)
@@ -194,7 +181,7 @@
                 @php
                 $dateTime = $task->date."|".$task->time;
                 $link = "showTask('".$task->task."', '".$dateTime."'";
-    
+
                 for($i = 0;$i < count($task->employees);$i++){
                     $link .= ", '".$task->employees[$i]->role ." - ". $task->employees[$i]->name ."'";
                     }
@@ -212,14 +199,124 @@
                     <button data-bs-toggle="modal" data-bs-target="#task-{{$task->id}}" id="editTask-{{$task->id}}" hidden></button>
             </div>
             @endforeach
-        </div>
+            </div>
 
+        </div>
     </div>
 </div>
+
+
+<!-- start of modals -->
+<!-- ---------------------------------------------------------------------------------------------------------------------- -->
+<!-- Modal for updateing project details -->
+<div class="modal" id="projectUpdate">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header text-white bg-1">
+                <h2 class="modal-title">Update project details</h2>
+            </div>
+
+            <form action="{{ url('project/update/'.$project->id) }}" method="post">
+                @csrf
+                <div class="modal-body">
+                    <div class="m-2 p-2 border rounded">
+                        <label>Subject Property Location</label>
+                        <input type="text" name="location" id="location" class="form-control" autocomplete="off" value="{{$project->location}}">
+                        @error('location')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
+                    </div>
+    
+                    <div class="m-2 p-2 border rounded">
+                        <label>Engineer In Charge</label>
+                        <select name="user" id="user" class="form-control">
+                            @if(!$project->user_id)
+                            <option selected hidden></option>
+                            @endif
+                            @foreach($users as $user)
+                            <option value="{{$user->id}}" {{($project->user_id == $user->id)?'selected':''}}>{{$user->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('user')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="m-2 p-2 border rounded">
+
+                        <div class="col-10 row w-75 ">
+                            <div class="col border-end">
+                                <label>Lot Number</label>
+                                <div class="d-flex">
+                                    <p class="p-2">Lot </p>
+                                    <input type="text" name="lot_num" id="lot_num" class="form-control" style="height: 2.5rem;" autocomplete="off" value="{{($project->lot_number)?explode(' ', $project->lot_number)[1]:''}}">
+                                </div>
+                                @error('lot_num')
+                                <p class="text-danger">*{{$message}}</p>
+                                @enderror
+                            </div>
+                            <div class="col">
+    
+                                <label for="sur_num">Survey Number</label>
+                                <div class="d-flex">
+                                    <p class="py-2">Psd-</p>
+                                    <input type="text" name="sur_num1" id="sur_num1" class="form-control" style="height: 2.5rem; width: 3rem;" maxlength="2" autocomplete="off" value="{{($project->survey_number)?explode('-', $project->survey_number)[1]:''}}">
+    
+                                    <p class="py-2">-</p>
+                                    <input type="text" name="sur_num2" id="sur_num2" class="form-control" style="height: 2.5rem;" maxlength="6" autocomplete="off" value="{{($project->survey_number)?explode('-', $project->survey_number)[2]:''}}">
+                                </div>
+                                @error('sur_num1')
+                                <p class="text-danger">*{{$message}}</p>
+                                @enderror
+                                @error('sur_num2')
+                                <p class="text-danger">*{{$message}}</p>
+                                @enderror
+                            </div>
+                        </div>
+    
+                    </div>
+                    <div class="m-2 p-2 border rounded">
+                        <label>Lot Area</label>
+    
+                        <div class="col-10 d-flex" style="padding-left: 0px;">
+                            <input type="text" name="lot_area" id="lot_area" class="form-control w-25" value="{{ ($project->lot_area)?(explode(' ', $project->lot_area))[0]:'' }}">
+                            <p class="p-2 my-auto">sqr.m.</p>
+                            @error('lot_area')
+                            <p class="text-danger">*{{$message}}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="m-2 p-2 border rounded">
+                        <label>Registered Land Owner</label>
+                        <input type="text" name="land_owner" id="land_owner" class="form-control col" value="{{ ($project->land_owner)?$project->land_owner:'' }}">
+                        @error('land_owner')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
+                    </div>
+
+                </div>
+                
+                
+                <!-- update button -->
+                <div class="modal-footer bg-secondary">
+                    <input type="submit" value="Update" class="btn bg-3 text-white" style="width: 12rem;">
+                </div>
+                
+            </form>
+        </div>
+    </div>
 </div>
+<!-- automatically open the modal if any of the following errors exists -->
+@if($errors->has('location') || $errors->has('user') || $errors->has('lot_num') || $errors->has('sur_num1') || $errors->has('sur_num2') || $errors->has('lot_area') || $errors->has('land_owner')) 
+<script>
+    document.querySelector('#projectUpdateBtn').click();
+</script>
+@endif
 
 
 
+
+<!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- modal for adding a document -->
 <div class="modal" id="addDocument">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -237,7 +334,7 @@
                             <p class="text-danger">*</p>
                             <label for="title">Title:</label>
                         </div>
-                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" autocomplete="off" required>
+                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" autocomplete="off">
                         @error('title')
                         <p class="text-danger">* {{ $message }}</p>
                         @enderror
@@ -259,7 +356,7 @@
                         <p class="text-danger">* {{ $message }}</p>
                         @enderror
                     </div>
-
+                    
                 </div>
                 <div class="modal-footer bg-secondary">
                     <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
@@ -270,13 +367,21 @@
         </div>
     </div>
 </div>
+<!-- automatically open the modal if any of the following errors exists -->
+@if($errors->has('title') || $errors->has('description') || $errors->has('img')) 
+<script>
+    document.querySelector('#addFileBtn').click();
+</script>
+@endif
 
 
+
+<!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- Modal for adding schedule -->
 <div class="modal" id="newSched">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-
+            
             <div class="modal-header text-white bg-1">
                 <h2 class="modal-title">Schedule a new task</h2>
             </div>
@@ -290,15 +395,28 @@
                             <label for="task" class="form-label">Task:</label>
                         </div>
                         <input type="text" name="task" id="task" class="form-control" autocomplete="off">
+                        @error('task')
+                        <p class="text-danger">* {{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="m-2 p-2 border rounded">
                         <div class="d-flex">
                             <p class="text-danger">*</p>
                             <label for="date" class="form-label">Date and Time:</label>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <input type="date" name="date" id="date" class="form-control" style="width: 49%;">
-                            <input type="time" name="time" id="time" class="form-control" style="width: 49%;">
+                        <div class="row">
+                            <div class="col border-end">
+                                <input type="date" name="date" id="date" class="form-control w-100">
+                                @error('date')
+                                <p class="text-danger">* {{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="col">
+                                <input type="time" name="time" id="time" class="form-control  w-100">
+                                @error('time')
+                                <p class="text-danger">* {{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -331,6 +449,9 @@
                                     <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee('dynamicField')">-</a></td>
                                 </tr>
                             </table>
+                            @error('employee')
+                            <p class="text-danger">* {{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 
@@ -343,7 +464,16 @@
         </div>
     </div>
 </div>
+@if($errors->has('task') || $errors->has('date') || $errors->has('time') || $errors->has('employee')) 
+<script>
+    document.querySelector('#addScheduleBtn').click();
+</script>
+@endif
 
+
+
+
+<!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- showing and updating document's information -->
 @foreach($project->files as $file)
 <div class="modal" id="file-{{$file->id}}">
@@ -355,13 +485,13 @@
                     <h2 class="modal-title" id="fileTitle">{{ $file->title }}</h2>
                 </div>
                 <div class="modal-body overflow-auto" style="height: 60vh;">
-                <div class="m-2 p-2 border rounded p-2 bg-white rounded">
-                    <p class="my-2">Description: </p>
-                    <input type="text" name="fileDescription" id="fileDescription" class="form-control" autocomplete="off" value="{{ $file->description }}">
-                </div>
-                <div class="m-2 p-2 border rounded">
-                    <img class="w-100" id="fileImage" src="{{ asset('documents/'.$file->image_path) }}">
-                </div>
+                    <div class="m-2 p-2 border rounded p-2 bg-white rounded">
+                        <p class="my-2">Description: </p>
+                        <input type="text" name="fileDescription" id="fileDescription" class="form-control" autocomplete="off" value="{{ $file->description }}">
+                    </div>
+                    <div class="m-2 p-2 border rounded">
+                        <img class="w-100" id="fileImage" src="{{ asset('documents/'.$file->image_path) }}">
+                    </div>
                 </div>
                 <div class="modal-footer bg-secondary">
                     <input type="submit" value="Update" class="btn btn-primary" style="width: 15rem;">
@@ -371,7 +501,31 @@
     </div>
 </div>
 @endforeach
+@error('fileDescription')
+<div class="modal" id="fileError">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h1 class="modal-title">File Update Error</h1>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>{{$message}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<button id="fileErrorBtn" data-bs-toggle="modal" data-bs-target="#fileError" hidden></button>
+<script>
+    document.querySelector('#fileErrorBtn').click();
+</script>
+@enderror
 
+
+
+
+<!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- showing task's information -->
 @if(count($project->tasks) > 0)
 <div class="modal" id="showTask">
@@ -398,6 +552,11 @@
 </div>
 @endif
 
+
+
+
+
+<!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- modal for editing task -->
 @foreach($project->tasks as $task)
 <div class="modal" id="task-{{$task->id}}">
@@ -416,7 +575,7 @@
                             <p class="text-danger">*</p>
                             <label for="title" class="form-label">Task:</label>
                         </div>
-                        <input type="text" name="title" id="title" class="form-control" autocomplete="off" value="{{$task->task}}">
+                        <input type="text" name="taskTitle" id="taskTitle" class="form-control" autocomplete="off" value="{{$task->task}}">
                     </div>
                     <div class="m-2 p-2 border rounded">
                         <div class="d-flex">
@@ -424,8 +583,8 @@
                             <label for="date" class="form-label">Date and Time:</label>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <input type="date" name="date" id="date" class="form-control" style="width: 49%;" value="{{$task->date}}">
-                            <input type="time" name="time" id="time" class="form-control" style="width: 49%;" value="{{$task->time}}">
+                            <input type="date" name="taskDate" id="taskDate" class="form-control" style="width: 49%;" value="{{$task->date}}">
+                            <input type="time" name="taskTime" id="taskTime" class="form-control" style="width: 49%;" value="{{$task->time}}">
                         </div>
                     </div>
 
@@ -435,7 +594,7 @@
                             <table id="editDynamicField" class="w-100">
                                 <tr id="toClone" hidden>
                                     <td>
-                                        <select name="employee[]" class="form-control employee">
+                                        <select name="taskEmployee[]" class="form-control employee">
                                             <option hidden selected></option>
                                             @foreach($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
@@ -446,7 +605,7 @@
                                 @for($i = 0;$i < count($task->employees);$i++)
                                     <tr>
                                         <td>
-                                            <select name="employee[]" class="form-control employee">
+                                            <select name="taskEmployee[]" class="form-control employee">
                                                 @foreach($users as $user)
                                                 <option value="{{ $user->id }}" {{($task->employees[$i]->id == $user->id)?'selected':''}}>{{ $user->name }} - {{ $user->role }}</option>
                                                 @endforeach
@@ -473,6 +632,44 @@
 </div>
 @endforeach
 
+@if($errors->has('taskTitle') || $errors->has('taskDate') || $errors->has('taskTime') || $errors->has('taskEmployee'))
+<div class="modal" id="taskError">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h1 class="modal-title">Task Update Error</h1>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    @error('taskTitle')
+                    <li>{{$message}}</li>
+                    @enderror
+                    @error('taskDate')
+                    <li>{{$message}}</li>
+                    @enderror
+                    @error('taskTime')
+                    <li>{{$message}}</li>
+                    @enderror
+                    @error('taskEmployee')
+                    <li>{{$message}}</li>
+                    @enderror
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<button id="taskErrorBtn" data-bs-toggle="modal" data-bs-target="#taskError" hidden></button>
+<script>
+    document.querySelector('#taskErrorBtn').click();
+</script>
+@endif
+
+
+
+
+
+<!-- ---------------------------------------------------------------------------------------------------------------------- -->
+<!-- JavaScript -->
 <script>
     function showInfo() {
         const btn = document.getElementById('collapseBtn');
@@ -483,7 +680,7 @@
 
     function showFile() {
         document.getElementById('showFileBtn').click();
-        
+
         const node = document.getElementById(arguments[0]).classList;
         node.remove('d-node');
     }
