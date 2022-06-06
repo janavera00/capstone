@@ -280,7 +280,7 @@
     
                         <div class="col-10 d-flex" style="padding-left: 0px;">
                             <input type="text" name="lot_area" id="lot_area" class="form-control w-25" value="{{ ($project->lot_area)?(explode(' ', $project->lot_area))[0]:'' }}">
-                            <p class="p-2 my-auto">sqr.m.</p>
+                            <p class="px-2 my-auto">sqr.m.</p>
                             @error('lot_area')
                             <p class="text-danger">*{{$message}}</p>
                             @enderror

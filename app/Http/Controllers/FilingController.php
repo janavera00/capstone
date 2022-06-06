@@ -37,6 +37,7 @@ class FilingController extends Controller
 
     public function createProject(Client $client)
     {
+        // dd(request()->all());
         $request = request()->validate([
             'type' => ['exists:services,id', 'required'],
             'engr' => ['exists:users,id', 'nullable'],
