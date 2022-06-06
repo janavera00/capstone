@@ -55,7 +55,7 @@
 
                 <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="mt-2">
-                        <label for="name">Name:</label>
+                        <label for="name">*Name:</label>
                         <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" autocomplete="off">
                         @error('name')
                         <p class="text-danger">*{{ $message }}</p>
@@ -79,7 +79,7 @@
                         @enderror
                     </div>
                     <div class="mt-2">
-                        <label for="email">Email:</label>
+                        <label for="email">*Email:</label>
                         <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" autocomplete="off">
                         @error('email')
                         <p class="text-danger">*{{$message}}</p>
