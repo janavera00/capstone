@@ -59,9 +59,7 @@
                         </ul>
                     </div>
                     <div class="my-auto">
-                        <a data-bs-toggle="modal" href="#editSched" class="mb-3 btn bg-3 px-5">
-                            <p class="text-white h4 pt-2">Edit Schedule</p>
-                        </a>
+                        <button class="btn btn-primary" id="editSchedBtn" data-bs-toggle="modal" data-bs-target="#editSched" style="width: 200px;">Edit Schedule</button>
                     </div>
 
                 </div>
@@ -85,16 +83,25 @@
                 @csrf
                 <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="mt-2">
-                        <label for="title" class="form-label">Title:</label>
-                        <input type="text" name="title" id="title" class="form-control" value="{{ ($task->task)?$task->task:'' }}">
+                        <label for="taskTitle" class="form-label">Title:</label>
+                        <input type="text" name="taskTitle" id="taskTitle" class="form-control" value="{{ ($task->task)?$task->task:'' }}">
+                        @error('taskTitle')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="date" class="form-label">Date:</label>
-                        <input type="date" name="date" id="date" class="form-control" value="{{ ($task->date)?$task->date:'' }}">
+                        <label for="taskDate" class="form-label">Date:</label>
+                        <input type="date" name="taskDate" id="taskDate" class="form-control" value="{{ ($task->date)?$task->date:'' }}">
+                        @error('taskDate')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="time" class="form-label">Time:</label>
-                        <input type="time" name="time" id="time" class="form-control" value="{{ ($task->time)?$task->time:'' }}">
+                        <label for="taskTime" class="form-label">Time:</label>
+                        <input type="time" name="taskTime" id="taskTime" class="form-control" value="{{ ($task->time)?$task->time:'' }}">
+                        @error('time')
+                        <p class="taskText-danger">*{{$message}}</p>
+                        @enderror
                     </div>
                     <hr>
                     <div>
@@ -117,7 +124,7 @@
                                 @endphp
                                     <tr>
                                         <td>
-                                            <select name="employee[]" class="form-control employee">
+                                            <select name="taskEmployee[]" class="form-control employee">
                                                 @foreach($users as $user)
                                                 <option value="{{ $user->id }}" {{ ($usr->id == $user->id)?'selected':'' }}>{{ $user->name }} - {{ $user->role }}</option>
                                                 @endforeach
@@ -133,7 +140,11 @@
                                     $usr = null;
                                 @endphp
                             </table>
+                            @error('employee')
+                            <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
+                        
                     </div>
                     <hr>
                 </div>
@@ -145,6 +156,16 @@
         </div>
     </div>
 </div>
+
+@if($errors->any())
+<script>
+    document.getElementById('editSchedBtn').click();
+</script>
+@endif
+
+
+
+
 <script>
         let field = document.getElementById('dynamicField');
         const elmt = document.getElementsByTagName('td')[0];

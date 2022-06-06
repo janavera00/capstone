@@ -43,7 +43,7 @@
                 <div class="container">
                     <div class="row text-white mx-auto mt-2 p-2">
                         <div class="col d-flex">
-                            <button class="btn btn-primary m-auto" style="width: 8rem;" data-bs-toggle="modal" data-bs-target="#newSched">Schedule new task</button>
+                            <button class="btn btn-primary m-auto" style="width: 200px;" data-bs-toggle="modal" data-bs-target="#newSched" id="newSchedBtn">Schedule new task</button>
                         </div>
                         <div class="col d-flex">
                             <div class="m-auto text-center" id="date"></div>
@@ -98,27 +98,43 @@
                     @csrf
                     <div class="modal-body overflow-auto" style="height: 60vh;">
                         <div class="mt-2">
-                            <label for="task" class="form-label">Task:</label>
+                            <label for="task" class="form-label">*Task:</label>
                             <input type="text" name="task" id="task" class="form-control">
+                            @error('task')
+                            <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="mt-2">
-                            <label for="date" class="form-label">Date and Time:</label>
-                            <div class="d-flex justify-content-between">
-                                <input type="date" name="date" id="date" class="form-control" style="width: 49%;">
-                                <input type="time" name="time" id="time" class="form-control" style="width: 49%;">
+                            <label for="date" class="form-label">*Date and Time:</label>
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <input type="date" name="date" id="date" class="form-control w-100">
+                                    @error('date')
+                                    <p class="text-danger">*{{$message}}</p>
+                                    @enderror
+                                </div>
+                                <div class="col">
+                                    <input type="time" name="time" id="time" class="form-control w-100">
+                                    @error('time')
+                                    <p class="text-danger">*{{$message}}</p>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                         <div class="mt-2">
-                            <label for="project" class="form-label">Project(client and location):</label>
+                            <label for="project" class="form-label">*Project(client and location):</label>
                             <select name="project" id="project" class="form-control">
                                 <option disabled selected hidden></option>
                                 @foreach($projects as $project)
                                     <option value="{{ $project->id }}">{{ $project->client->name }} - {{ $project->location }}</option>
                                 @endforeach
                             </select>
+                            @error('project')
+                            <p class="text-danger">*{{$message}}</p>
+                            @enderror
                         </div>
                         <div class="mt-2">
-                            <label for="employee" class="fomr-label">Employee/s Assigned:</label>
+                            <label for="employee" class="fomr-label">*Employee/s Assigned:</label>
                             <div>
                                 <table id="dynamicField" class="w-100">
                                     <tr id="toClone" hidden>
@@ -145,6 +161,9 @@
                                         <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee('dynamicField')">-</a></td>
                                     </tr>
                                 </table>
+                                @error('employee')
+                                <p class="text-danger">*{{$message}}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -156,6 +175,13 @@
             </div>
         </div>
     </div>
+    @if($errors->any())
+    <script>
+        document.getElementById('newSchedBtn').click();
+    </script>
+    @endif
+
+
 
     <script>
         function addEmployee(name) {
