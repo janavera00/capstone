@@ -23,12 +23,10 @@ Route::get('/', function () {
 });
 
 
-Route::get('/home', function () {
-    return view('dashboard');
-});
+Route::post('home', [UserController::class, 'authenticate']);
+Route::get('home', [UserController::class, 'authenticate']);
 
 Route::get('/logout', [UserController::class, 'destroy']);
-Route::post('/home', [UserController::class, 'authenticate'])->name('login');
 Route::get('/users', [UserController::class, 'show']);
 Route::post('/user/create', [UserController::class, 'create']);
 
@@ -44,7 +42,7 @@ Route::post('project/update/{project}', [FilingController::class, 'updateProject
 Route::get('/scheduling', [TaskController::class, 'show']);
 Route::get('/scheduling/{project}', [TaskController::class, 'showProjectTask']);
 Route::post('scheduling/create/{project?}', [TaskController::class, 'createTask']);
-Route::get('task/{task}', [TaskController::class, 'openTask']);
+Route::get('task/{task}/{from}', [TaskController::class, 'openTask']);
 Route::post('scheduling/update/{task}', [TaskController::class, 'updateTask']);
 Route::post('reschedule/{task}', [TaskController::class, 'resched']);
 Route::get('deleteTask/{task}', [TaskController::class, 'delete']);
