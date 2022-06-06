@@ -47,6 +47,10 @@
             font-size: 1.4rem;
             padding-bottom: 0px;
         }
+
+        .btn{
+            width: 200px;
+        }
     </style>
 </head>
 
@@ -182,6 +186,8 @@
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
+
+        
     </script>
 
 </body>

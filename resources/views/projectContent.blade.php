@@ -30,17 +30,18 @@
                 <div class="overflow-auto mt-2" style="height: 230px;">
                     <div class="d-flex flex-column p-2">
                         @foreach($project->service->steps as $step)
-                        @if($step->stepNo <= $project->stepNo)
-                            <div class="btn text-white bg-success mt-2" style="cursor: default;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
+                            @if($step->stepNo <= $project->stepNo)
+                            <div class="btn text-white bg-success mt-2 mx-auto" style="cursor: default; width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
                             @else
-                            <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2">{{ $step->name }}</a>
+                            <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" style="width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2 mx-auto">{{ $step->name }}</a>
                             @endif
+                        
                             @if($step->stepNo < count($project->service->steps))
-                                <div class="mx-auto" style="width: 30px; height: 30px;">
-                                    <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
-                                </div>
-                                @endif
-                                @endforeach
+                            <div class="mx-auto" style="width: 30px; height: 30px;">
+                                <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
+                            </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -187,7 +188,7 @@
                     }
                     $link .= ")";
                     @endphp
-                    <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}">
+                    <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}" style="width: fit-content;">
                         @php
                         $time = explode(':', $task->time);
                         $date = explode('-', $task->date);

@@ -39,16 +39,15 @@ class ClientController extends Controller
         if(is_null($request['duplicate'])){
             $exist = Client::where('name', '=', $request['name'])->first();
             
-            if(!is_null($exist->id))
+            if(!($exist === null))
             {
                 throw ValidationException::withMessages(['duplicate' => 'duplicate']); 
             }
-        }
-
-        if($request['duplicate'] != 'password'){
+        }else if($request['duplicate'] != 'password'){
             return redirect(url()->previous());
         }
-
+        
+        // dd('asjkdhsj');
         $client = new Client;
         $client['name'] = $request['name'];
         $client['address'] = $request['address'];
@@ -139,4 +138,5 @@ class ClientController extends Controller
 
         return redirect(url()->previous());
     }
+
 }

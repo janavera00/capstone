@@ -54,3 +54,4 @@ Route::get('project/{client}/{project}', [ClientController::class, 'showProjectD
 Route::post('project/{client}/{project}/submitFile', [ClientController::class, 'submitFile']);
 Route::post('project/{client}/{project}/requestTask', [ClientController::class, 'requestTask']);
 
+Route::post('search', [FilingController::class, 'search']);

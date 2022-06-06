@@ -157,6 +157,21 @@ class FilingController extends Controller
         return redirect(url()->previous());
     }
 
+    public function search(Request $request)
+    {
+        if($request->search === null){
+            return redirect('clients');
+        }
+
+        $clients = Client::where("name", "LIKE", "%{$request->search}%")
+                    ->orWhere("address", "LIKE", "%{$request->search}%")->get();
+        
+        $projects = Project::where("survey_number", "LIKE", "%{$request->search}%")
+                    ->orWhere("land_owner", "LIKE", "%{$request->search}%")->get();
+
+        return view('clientLists', ['clients' => $clients, 'projects' => $projects]);
+    }
+
     // might remove
     public function confirmPass(Request $request, Project $project)
     {
