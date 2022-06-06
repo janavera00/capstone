@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
+use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +47,17 @@ class UserController extends Controller
 
     public function authenticate()
     {
-        return redirect('home');
+        $projects = Project::where('status', '=', 'Active')->get()->sortByDesc('updated_at');
+        $clients = Client::all()->sortByDesc('updated_at');
+        $tasks = Task::where('status', '=', 'Active')
+                ->orwhere('status', '=', 'Overdue')
+                ->get()
+                ->sortByDesc('date')
+                ->sortByDesc('time');        
+
+        return view('dashboard', ['projects' => $projects, 'clients' => $clients, 'tasks' => $tasks]);
+        
+        
         $request = request()->validate([
             'username' => 'required',
             'password' => 'required',

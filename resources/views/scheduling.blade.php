@@ -66,13 +66,13 @@
                     @if($task->status == "Active" || $task->status == "Overdue")
 
                     <div class="selectedDate" id="{{ $task->date }}">
-                        <button class="btn btn-{{($task->status == 'Overdue')?'danger':'primary'}} w-100 text-start" style="width: fit-content;" data-bs-toggle="modal" data-bs-target="#task-{{$task->id}}">
+                        <a href="{{ url('task/'.$task->id.'/sched') }}" class="btn btn-{{($task->status == 'Overdue')?'danger':'primary'}} w-100 text-start" style="width: fit-content;">
                             @php
                             $time = explode(':', $task->time);
                             @endphp
                             <h2>{{ date("g:i a", mktime($time[0],$time[1])) }} - {{ $task->task }}</h2>
                             <p>{{ $task->project->client->name }}<br>{{ $task->project->location }}</p>
-                        </button>
+                        </a>
                         <hr>
                     </div>
                     @endif
@@ -187,161 +187,6 @@
     document.getElementById('newSchedBtn').click();
 </script>
 @endif
-
-
-<!-- ---------------------------------------------------------------------------------------------------------------------- -->
-<!-- showing task's information -->
-@foreach($tasks as $task)
-<div class="modal fade" id="task-{{$task->id}}">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-1 text-white">
-                <h2 class="modal-title">{{ $task->task }}</h2>
-            </div>
-            <div class="modal-body">
-                <div class="my-2 row">
-                    <p class="col-2 pt-2">Schedule:</p>
-                    <h2 class="col-9 p-2 border rounded">{{ $task->task }}</h2>
-                </div>
-                <div class="my-2 row">
-                    <p class="col-2 pt-2">Client:</p>
-                    <div class="col-9 p-2 border rounded">{{ $task->project->client->name }}</div>
-                </div>
-                <div class="my-2 row">
-                    <p class="col-2 pt-2">Project Location:</p>
-                    <div class="col-9 p-2 border rounded">{{ $project->location }}</div>
-                </div>
-                <div class="my-2">
-                    <p>Employees Assigned:</p>
-                    <ul class="border rounded">
-                        @foreach($task->employees as $emp)
-                        <li>{{ $emp->name }} - {{ $emp->role }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer bg-secondary">
-                @if($task->status == "Overdue")
-                <a href="{{ url('deleteTask/'.$task->id) }}" class="btn btn-danger">Delete</a>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resched-{{$task->id}}">Reschedule</button>
-                @else
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editTask-{{$task->id}}">Edit Task</button>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="resched-{{$task->id}}">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-1"><h1 class="modal-title text-white">Reschedule Task</h1></div>
-            <form action="{{ url('reschedule/'.$task->id) }}" method="post">
-                @csrf
-                <div class="modal-body">
-                    <div class="m-2 p-2 border rounded">
-                        <label for="taskDate">Date</label>
-                        <input type="date" name="taskDate" id="taskDate" class="form-control">
-                    </div>
-                    <div class="m-2 p-2 border rounded">
-                        <label for="taskTime">Time</label>
-                        <input type="time" name="taskTime" id="taskTime" class="form-control">
-                    </div>
-                </div>
-                <div class="modal-footer bg-secondary">
-                    <input type="submit" value="Update" class="btn btn-primary">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- ---------------------------------------------------------------------------------------------------------------------- -->
-<!-- modal for editing task -->
-<div class="modal fade" id="editTask-{{$task->id}}">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-
-            <div class="modal-header text-white bg-1">
-                <h2 class="modal-title">Edit task</h2>
-            </div>
-
-            <form action="{{ url('scheduling/update/'.$task->id) }}" method="post">
-                @csrf
-                <div class="modal-body overflow-auto" style="height: 60vh;">
-                    <div class="m-2 p-2 border rounded">
-                        <div class="d-flex">
-                            <p class="text-danger">*</p>
-                            <label for="title" class="form-label">Task:</label>
-                        </div>
-                        <input type="text" name="taskTitle" id="taskTitle" class="form-control" autocomplete="off" value="{{$task->task}}">
-                    </div>
-                    <div class="m-2 p-2 border rounded">
-                        <div class="d-flex">
-                            <p class="text-danger">*</p>
-                            <label for="date" class="form-label">Date and Time:</label>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <input type="date" name="taskDate" id="taskDate" class="form-control" style="width: 49%;" value="{{$task->date}}">
-                            <input type="time" name="taskTime" id="taskTime" class="form-control" style="width: 49%;" value="{{$task->time}}">
-                        </div>
-                    </div>
-
-                    <div class="m-2 p-2 border rounded">
-                        <label for="client" class="form-label">Client:</label>
-                        <input type="text" class="form-control" disabled value="{{$task->project->client->name}}">
-                    </div>
-                    <div class="m-2 p-2 border rounded">
-                        <label for="location" class="form-label">Project's Location:</label>
-                        <input type="text" class="form-control" disabled value="{{$task->project->location}}">
-                    </div>
-
-                    <div class="m-2 p-2 border rounded">
-                        <label for="employee" class="fomr-label">Employee/s Assigned:</label>
-                        <div>
-                            <table id="editDynamicField" class="w-100">
-                                <tr id="toClone" hidden>
-                                    <td>
-                                        <select name="taskEmployee[]" class="form-control employee">
-                                            <option hidden selected></option>
-                                            @foreach($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                </tr>
-                                @for($i = 0;$i < count($task->employees);$i++)
-                                    <tr>
-                                        <td>
-                                            <select name="taskEmployee[]" class="form-control employee">
-                                                @foreach($users as $user)
-                                                <option value="{{ $user->id }}" {{($task->employees[$i]->id == $user->id)?'selected':''}}>{{ $user->name }} - {{ $user->role }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        @if($i == 0)
-                                        <td class="d-flex justify-content-around" style="width: 80px;">
-                                            <a class="btn btn-success" onclick="addEmployee('dynamicField')" style="width: fit-content;">+</a>
-                                            <a class="btn btn-danger" onclick="removeEmployee('dynamicField')" style="width: fit-content;">-</a>
-                                        </td>
-                                        @endif
-                                    </tr>
-                                    @endfor
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer bg-secondary">
-                    <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
-                    <input type="submit" value="Submit" class="btn btn-primary" style="width: 200px;">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endforeach
-
 
 <script>
     function addEmployee(name) {

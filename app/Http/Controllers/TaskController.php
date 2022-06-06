@@ -31,10 +31,10 @@ class TaskController extends Controller
         return view('scheduling', ['tasks' => $tasks, 'projects' => $projects, 'users' => $users]);
     }
 
-    public function openTask(Task $task)
+    public function openTask(Task $task, $from)
     {
         $users = User::all();
-        return view('schedDetails', ['task' => $task, 'users' => $users]);
+        return view('schedDetails', ['task' => $task, 'users' => $users, 'from' => $from]);
     }
 
     public function showProjectTask(Project $project)
@@ -93,22 +93,13 @@ class TaskController extends Controller
         $task['time'] = $request['taskTime'];
         $task['status'] = "Active";
         $task->save();
+        
+        $task->employees()->detach();
 
         for($i = 0;$i < count($request['taskEmployee']);$i++)
-        {
-            $exist = false;
-            for($j = 0;$j < count($task->employees);$j++)
-            {
-                if($request['taskEmployee'][$i] == $task->employees[$j]->id)
-                {
-                    $exist = true;
-                }
-            }
-
-            if(!$exist)
-            {
-                $task->employees()->attach($request['taskEmployee'][$i]);
-            }
+        {  
+            $task->employees()->attach($request['taskEmployee'][$i]);
+         
         }
 
         return redirect(url()->previous());

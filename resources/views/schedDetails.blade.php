@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid w-75">
 
-    <a href="{{ url('scheduling') }}" class="btn bg-4 px-4 py-3 my-4">
+    <a href="{{ ($from == 'project')?url('projectContent/'.$task->project->id):url('scheduling') }}" class="btn bg-4 px-4 py-3 my-4">
         <i class="fas fa-arrow-left fa fa-2xl"></i>
     </a>
 
@@ -69,7 +69,6 @@
     </div>
 </div>
 
-
 <!-- Modal for editing schedule -->
 <div class="modal" id="editSched">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -99,7 +98,7 @@
                     <div>
                         <label for="taskTime" class="form-label">Time:</label>
                         <input type="time" name="taskTime" id="taskTime" class="form-control" value="{{ ($task->time)?$task->time:'' }}">
-                        @error('time')
+                        @error('taskTime')
                         <p class="taskText-danger">*{{$message}}</p>
                         @enderror
                     </div>
@@ -117,44 +116,74 @@
                         <label for="assigned" class="form-label">Assigned To:</label>
                         <div>
                             <table id="dynamicField" class="w-100">
+                                <tr id="toClone" hidden>
+                                    <td>
+                                        <select name="taskEmployee[]" class="form-control employee" style="width: 680px;"> 
+                                            <option selected hidden></option>
+                                            @foreach($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
+                                
+                                @if($task->employees === null)
+                                <tr class="d-flex justify-content-around">
+                                    <td>
+                                        <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
+                                        <select name="taskEmployee[]" class="form-control employee" style="width: 680px;">
+                                            <option selected hidden></option>
+                                            @foreach($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td class="d-flex justify-content-around" style="width: 80px;">
+                                        <a class="btn btn-success" onclick="addEmployee('dynamicField')" style="width: fit-content;">+</a>
+                                        <a class="btn btn-danger" onclick="removeEmployee('dynamicField')" style="width: fit-content;">-</a>
+                                    </td>
+                                </tr>
+                                @endif
                                 @php
                                     for($i = 0;$i < count($task->employees);$i++)
                                     {
                                     $usr = $task->employees[$i]; 
                                 @endphp
-                                    <tr>
-                                        <td>
-                                            <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
-                                            <select name="employee[]" class="form-control employee" style="width: 680px;">
-                                                <option selected hidden></option>
-                                                @foreach($users as $user)
-                                                    <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        @if($i == 0)
-                                        <td class="d-flex justify-content-around" style="width: 80px;">
-                                            <a class="btn btn-success" onclick="addEmployee('dynamicField')" style="width: fit-content;">+</a>
-                                            <a class="btn btn-danger" onclick="removeEmployee('dynamicField')" style="width: fit-content;">-</a>
-                                        </td>
-                                        @endif
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
+                                        <select name="taskEmployee[]" class="form-control employee" style="width: 680px;">
+                                            <option value=""></option>
+                                            @foreach($users as $user)
+                                            <option value="{{ $user->id }}" {{ ($usr->id == $user->id)?'selected':'' }}>{{ $user->name }} - {{ $user->role }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+
+                                    @if($i == 0)
+                                    <td class="d-flex justify-content-around" style="width: 80px;">
+                                        <a class="btn btn-success" onclick="addEmployee('dynamicField')" style="width: fit-content;">+</a>
+                                        <a class="btn btn-danger" onclick="removeEmployee('dynamicField')" style="width: fit-content;">-</a>
+                                    </td>
+                                    @endif
+                                </tr>
                                 @php
                                     }
                                     $usr = null;
                                 @endphp
                             </table>
-                            @error('employee')
+
+                            @error('taskEmployee')
                             <p class="text-danger">*{{$message}}</p>
                             @enderror
                         </div>
                         
                     </div>
-                    <hr>
+                   
                 </div>
-                <div class="modal-footer bg-secondary d-flex justify-content-around">
-                    <a class="btn bg-4 text-white" style="width: 45%;" data-bs-dismiss="modal">Cancel</a>
-                    <input type="submit" value="Update" class="btn btn-primary" style="width: 45%;">
+                <div class="modal-footer bg-secondary">
+                    <a class="btn bg-4 text-white" data-bs-dismiss="modal">Cancel</a>
+                    <input type="submit" value="Update" class="btn btn-primary">
                 </div>
             </form>
         </div>
@@ -171,24 +200,19 @@
 
 
 <script>
-        let field = document.getElementById('dynamicField');
-        const elmt = document.getElementsByTagName('td')[0];
-        function addEmployee(){
-            const row = document.createElement('tr');
-            let inp = elmt.cloneNode(true);
-            let empt = document.createElement('option');
-            empt.hidden = true;
-            empt.selected = true;
-            // let selectNode = ;
-            inp.childNodes[1].appendChild(empt);
+    function addEmployee(name) {
+        let field = document.getElementById(name);
+        const elmt = field.childNodes[1].childNodes[0];
+        const newElmt = elmt.cloneNode(true);
+        newElmt.hidden = false;
+        // console.log(newElmt.childNodes);
+        field.childNodes[1].appendChild(newElmt);
+    }
 
-            // console.log(selectNode);
-            row.appendChild(inp);
-            field.appendChild(row);
-        }
-        function removeEmployee(){
-            if(field.childElementCount > 1)
-                field.removeChild(field.lastElementChild);
-        }
-    </script>
+    function removeEmployee(name) {
+        let field = document.getElementById(name).childNodes[1];
+        if (field.childElementCount > 2)
+            field.removeChild(field.lastElementChild);
+    }
+</script>
 @endsection
