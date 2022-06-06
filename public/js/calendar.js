@@ -110,9 +110,12 @@ function constructCalendar(){
                 dateMarker = "current";
             else if(hasEvent(dispDate))
                 dateMarker = "hasEvent";
-
+                
             days += `<div class="day ${dateMarker}" onclick="changeDate('${i}', '${date.getMonth()}', '${date.getFullYear()}')" id="${dispDate}">${i}</div>`;
             monthDays.innerHTML = days;
+
+            document.getElementById(dispDate);
+            
         } 
     }
     

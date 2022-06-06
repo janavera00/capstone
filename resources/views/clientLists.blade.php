@@ -3,22 +3,31 @@
 @section('content')
 
 <div class="container text-white bg-2 mt-5 overflow-auto rounded" style="height: 80vh;">
-    <div class="d-flex justify-content-between p-3">
+    <div class="d-flex justify-content-between p-3 border-bottom">
         <!-- buttons -->
         <div class="my-auto">
             <button data-bs-toggle="modal" data-bs-target="#addClient" id="addProjectBtn" class="btn bg-3 text-white">Add Client</button>
         </div>
 
         <!-- search box -->
-        <form action="" method="post" class="my-auto w-75">
+        <form action="{{ url('search') }}" method="post">
+            @csrf
             <div class="my-auto w-100 d-flex ms-auto">
+                <!-- <input type="submit" value="Search" class="btn bg-3 text-white"> -->
+                <button class="btn btn-primary" style="width: fit-content;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
                 <input type="text" name="search" id="search" class="form-control mx-2" autocomplete="off">
-                <input type="submit" value="Search" class="btn bg-3 text-white">
+                <a href="{{ url('clients') }}" class="btn btn-danger" style="width: fit-content;">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                </a>
             </div>
         </form>
     </div>
 
-    <hr>
+    @if(isset($clients))
+    <h1 class="text-center mt-2">Clients List</h1>
+    <hr class="w-75 mx-auto">
     <!-- Clients List -->
     <div class="row">
         @foreach($clients as $client)
@@ -38,6 +47,34 @@
         </div>
         @endforeach
     </div>
+    @endif
+    
+    @if(isset($projects))
+    <h1 class="text-center mt-2">Projects List</h1>
+    <hr class="w-75 mx-auto">
+    <!-- Projects List -->
+    <div class="row">
+        @foreach($projects as $project)
+        <div class="col-3 my-2">
+            <a href="{{ url('projectContent/'.$project->id) }}" class="text-decoration-none text-black">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="text-black text-center"><?php printf('%05d', $project->id); ?></h1>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="text-black text-center">{{ ($project->lot_number)?$project->lot_number:'' }}</h5>
+                        <h5 class="text-black text-center">{{ ($project->survey_number)?$project->survey_number:'' }}</h5>
+                    </div> 
+                    <div class="card-footer">
+                        <p class="text-black text-center">{{ $project->location }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        @endforeach
+    </div>
+    @endif
+
 </div>
 
 
@@ -45,7 +82,7 @@
 <!-- Modal for adding client -->
 <form action="{{ url('client/create') }}" method="post" enctype="multipart/form-data">
     @csrf
-    <div class="modal" id="addClient">
+    <div class="modal fade" id="addClient">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
 
@@ -102,7 +139,7 @@
             </div>
         </div>
     </div>
-    <div class="modal" id="duplicate">
+    <div class="modal fade" id="duplicate">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
 

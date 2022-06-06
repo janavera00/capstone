@@ -30,17 +30,18 @@
                 <div class="overflow-auto mt-2" style="height: 230px;">
                     <div class="d-flex flex-column p-2">
                         @foreach($project->service->steps as $step)
-                        @if($step->stepNo <= $project->stepNo)
-                            <div class="btn text-white bg-success mt-2" style="cursor: default;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
+                            @if($step->stepNo <= $project->stepNo)
+                            <div class="btn text-white bg-success mt-2 mx-auto" style="cursor: default; width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
                             @else
-                            <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2">{{ $step->name }}</a>
+                            <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" style="width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2 mx-auto">{{ $step->name }}</a>
                             @endif
+                        
                             @if($step->stepNo < count($project->service->steps))
-                                <div class="mx-auto" style="width: 30px; height: 30px;">
-                                    <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
-                                </div>
-                                @endif
-                                @endforeach
+                            <div class="mx-auto" style="width: 30px; height: 30px;">
+                                <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
+                            </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -131,8 +132,10 @@
                     <h1 class="m-auto text-secondary" style="width: fit-content; border-bottom:1px solid gray">Document list empty</h1>
                 </div>
                 @endif
+            
                 <div class="row">
                     @foreach($project->files as $file)
+                    @if($file->status != "Request")
                     <div class="col-6">
                         <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
                             <div class="m-2 card bg-secondary overflow-auto">
@@ -154,8 +157,50 @@
                             </div>
                         </a>
                     </div>
+                    @endif
                     @endforeach
                 </div>
+
+                @php
+                    $request = 0;
+                    foreach($project->files as $file){
+                        if($file->status == "Request"){
+                            $request++;
+                        }
+                    } 
+                @endphp
+                @if($request > 0)
+                <div class="d-flex">
+                    <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Submitted</h1>
+                </div>
+                <div class="row">
+                    @foreach($project->files as $file)
+                    @if($file->status == "Request")
+                    <div class="col-6">
+                        <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
+                            <div class="m-2 card bg-secondary overflow-auto">
+
+                                <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
+
+                                <div class="card-header">
+                                    <h3 class="card-title">{{ $file->title }}</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="w-50 m-auto bg-white rounded p-2">
+                                        @if($file->image_path)
+                                        <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image">
+                                        @else
+                                        <p class="text-center">No Image</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @endif
+                    @endforeach
+                </div>
+                @endif
             </div>
         </div>
 
@@ -176,7 +221,8 @@
                     <h1 class="m-auto text-secondary text-center" style="width: fit-content; border-bottom:1px solid gray">No tasks scheduled</h1>
             </div>
             @endif
-            @foreach($project->tasks as $task)
+            @foreach($project->tasks->sortByDesc('status') as $task)
+            @if($task->status == "Active" || $task->status == "Overdue")
             <div class="my-2 d-flex flex-column">
                 @php
                 $dateTime = $task->date."|".$task->time;
@@ -187,7 +233,7 @@
                     }
                     $link .= ")";
                     @endphp
-                    <button class="mx-auto btn btn-primary bg-3 text-start mt-2" onclick="{{$link}}">
+                    <button class="mx-auto btn btn-{{($task->status == 'Overdue')?'danger':'primary'}} text-start mt-2" onclick="{{$link}}" style="width: fit-content;">
                         @php
                         $time = explode(':', $task->time);
                         $date = explode('-', $task->date);
@@ -198,6 +244,7 @@
                     <button data-bs-toggle="modal" data-bs-target="#showTask" id="showTaskBtn" hidden></button>
                     <button data-bs-toggle="modal" data-bs-target="#task-{{$task->id}}" id="editTask-{{$task->id}}" hidden></button>
             </div>
+            @endif
             @endforeach
             </div>
 
@@ -209,7 +256,7 @@
 <!-- start of modals -->
 <!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- Modal for updateing project details -->
-<div class="modal" id="projectUpdate">
+<div class="modal fade" id="projectUpdate">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
@@ -318,7 +365,7 @@
 
 <!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- modal for adding a document -->
-<div class="modal" id="addDocument">
+<div class="modal fade" id="addDocument">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-1 text-white">
@@ -378,7 +425,7 @@
 
 <!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- Modal for adding schedule -->
-<div class="modal" id="newSched">
+<div class="modal fade" id="newSched">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             
@@ -445,8 +492,10 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee('dynamicField')">+</a></td>
-                                    <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee('dynamicField')">-</a></td>
+                                    <td class="d-flex justify-content-around" style="width: 80px;">
+                                        <a class="btn btn-success" onclick="addEmployee('dynamicField')" style="width: fit-content;">+</a>
+                                        <a class="btn btn-danger" onclick="removeEmployee('dynamicField')" style="width: fit-content;">-</a>
+                                    </td>
                                 </tr>
                             </table>
                             @error('employee')
@@ -476,7 +525,7 @@
 <!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- showing and updating document's information -->
 @foreach($project->files as $file)
-<div class="modal" id="file-{{$file->id}}">
+<div class="modal fade" id="file-{{$file->id}}">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <form action="{{ url('file/update/'.$file->id) }}" method="post">
@@ -494,7 +543,12 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-secondary">
+                    @if($file->status == "Request")
+                    <a href="{{ url('fileReject/'.$file->id) }}" class="btn btn-danger">Reject</a>
+                    <a href="{{ url('fileAccept/'.$file->id) }}" class="btn btn-primary">Accept</a>
+                    @else
                     <input type="submit" value="Update" class="btn btn-primary" style="width: 15rem;">
+                    @endif
                 </div>
             </form>
         </div>
@@ -502,7 +556,7 @@
 </div>
 @endforeach
 @error('fileDescription')
-<div class="modal" id="fileError">
+<div class="modal fade" id="fileError">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
@@ -528,7 +582,7 @@
 <!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- showing task's information -->
 @if(count($project->tasks) > 0)
-<div class="modal" id="showTask">
+<div class="modal fade" id="showTask">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-1 text-white">
@@ -545,21 +599,48 @@
                 </div>
             </div>
             <div class="modal-footer bg-secondary">
+                @if($task->status == "Overdue")
+                <a href="{{ url('deleteTask/'.$task->id) }}" class="btn btn-danger">Delete</a>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resched-{{$task->id}}">Reschedule</button>
+                @else
                 <button class="btn btn-primary" onclick="editTask('{{$task->id}}')">Edit Task</button>
+                @endif
             </div>
         </div>
     </div>
 </div>
 @endif
 
-
+<div class="modal fade" id="resched-{{$task->id}}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-1"><h1 class="modal-title text-white">Reschedule Task</h1></div>
+            <form action="{{ url('reschedule/'.$task->id) }}" method="post">
+                @csrf
+                <div class="modal-body">
+                    <div class="m-2 p-2 border rounded">
+                        <label for="taskDate">Date</label>
+                        <input type="date" name="taskDate" id="taskDate" class="form-control">
+                    </div>
+                    <div class="m-2 p-2 border rounded">
+                        <label for="taskTime">Time</label>
+                        <input type="time" name="taskTime" id="taskTime" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer bg-secondary">
+                    <input type="submit" value="Update" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 
 <!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- modal for editing task -->
 @foreach($project->tasks as $task)
-<div class="modal" id="task-{{$task->id}}">
+<div class="modal fade" id="task-{{$task->id}}">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
@@ -605,15 +686,17 @@
                                 @for($i = 0;$i < count($task->employees);$i++)
                                     <tr>
                                         <td>
-                                            <select name="taskEmployee[]" class="form-control employee">
+                                            <select name="taskEmployee[]" class="form-control employee" style="width: 640px;">
                                                 @foreach($users as $user)
                                                 <option value="{{ $user->id }}" {{($task->employees[$i]->id == $user->id)?'selected':''}}>{{ $user->name }} - {{ $user->role }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
                                         @if($i == 0)
-                                        <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee('editDynamicField')">+</a></td>
-                                        <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee('editDynamicField')">-</a></td>
+                                        <td class="d-flex justify-content-around" style="width: 80px;">
+                                            <a class="btn btn-success" onclick="addEmployee('dynamicField')" style="width: fit-content;">+</a>
+                                            <a class="btn btn-danger" onclick="removeEmployee('dynamicField')" style="width: fit-content;">-</a>
+                                        </td>
                                         @endif
                                     </tr>
                                     @endfor
@@ -633,7 +716,7 @@
 @endforeach
 
 @if($errors->has('taskTitle') || $errors->has('taskDate') || $errors->has('taskTime') || $errors->has('taskEmployee'))
-<div class="modal" id="taskError">
+<div class="modal fade" id="taskError">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">

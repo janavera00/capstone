@@ -81,15 +81,22 @@
         <!-- header -->
         <div class="mx-2 row py-2 border-bottom">
             <div class="col d-flex">
-                <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-primary my-auto ms-auto" style="width: 15rem;">Add a Project</button>
+                <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-primary my-auto ms-auto">Add a Project</button>
             </div>
             <h1 class="col text-center">Projects</h1>
-            <div class="col"></div>
+            <div class="col">
+                <button data-bs-toggle="collapse" data-bs-target="#archivedProjects" id="archivedProjectsBtn" class="btn btn-success my-auto ms-auto">Show All Projects</button>
+            </div>
         </div>
 
         <div class="overflow-auto" style="height: 53vh;">
+            
+            <div class="d-flex">
+                <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Active</h1>
+            </div>
             <div class="row">
                 @foreach($client->projects as $project)
+                @if($project->status != "Archived")
                 <div class="col-3 my-2">
                     <a href="{{ url('projectContent/'.$project->id) }}" class="text-decoration-none text-black">
                         <div class="card">
@@ -106,7 +113,35 @@
                         </div>
                     </a>
                 </div>
+                @endif
                 @endforeach
+            </div>
+            <div class="collapse" id="archivedProjects">
+                <div class="d-flex">
+                    <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Archived</h1>
+                </div>
+                <div class="row">
+                    @foreach($client->projects as $project)
+                    @if($project->status == "Archived")
+                    <div class="col-3 my-2">
+                        <a href="{{ url('projectContent/'.$project->id) }}" class="text-decoration-none text-black">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h1 class="text-black text-center"><?php printf('%05d', $project->id); ?></h1>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="text-black text-center">{{ ($project->lot_number)?$project->lot_number:'' }}</h5>
+                                    <h5 class="text-black text-center">{{ ($project->survey_number)?$project->survey_number:'' }}</h5>
+                                </div> 
+                                <div class="card-footer">
+                                    <p class="text-black text-center">{{ $project->location }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @endif
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
@@ -159,7 +194,7 @@
 <!-- -------------------------------------------------------- -->
 <!-- Modal for adding project -->
 <div>
-    <div class="modal" id="addProject">
+    <div class="modal fade" id="addProject">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
     

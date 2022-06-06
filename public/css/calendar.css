@@ -98,3 +98,9 @@
     border-radius: 50%;
     color: white;
   }
+
+  .days .overdue{
+    background-color: #cf2626;
+    border-radius: 50%;
+    color: white;
+  }
