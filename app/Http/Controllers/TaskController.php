@@ -12,8 +12,19 @@ class TaskController extends Controller
     public function show()
     {
         $tasks = Task::all();
+
+        // dd(date('Y-m-d') < $tasks[0]->date);
+
+        foreach($tasks as $task){
+            if(date('Y-m-d') > $task->date && $task->status != "Done")
+            {
+                $task['status'] = "Overdue";
+                $task->save();
+            }
+        }
+
         $users = User::all();
-        $projects = Project::all();
+        $projects = Project::all()->sortByDesc('updated_at');
 
         $tasks = $tasks->sortBy('date')->sortBy('time');
 
@@ -80,6 +91,7 @@ class TaskController extends Controller
         $task['task'] = $request['taskTitle'];
         $task['date'] = $request['taskDate'];
         $task['time'] = $request['taskTime'];
+        $task['status'] = "Active";
         $task->save();
 
         for($i = 0;$i < count($request['taskEmployee']);$i++)
@@ -99,6 +111,39 @@ class TaskController extends Controller
             }
         }
 
+        return redirect(url()->previous());
+    }
+
+    public function resched(Task $task)
+    {
+        $request = request()->validate([
+            'taskDate' => 'required',
+            'taskTime' => 'required',
+        ]);
+
+        $task['date'] = $request['taskDate'];
+        $task['time'] = $request['taskTime'];
+        $task['status'] = "Active";
+        $task->save();
+
+        return redirect(url()->previous());
+    }
+
+    public function delete(Task $task){
+        $task->employees()->detach();
+        $task->delete();
+
+        return redirect(url()->previous());
+    }
+
+    public function reject(Task $task){
+        $task['status'] = "Reject";
+        $task->save();
+        return redirect(url()->previous());
+    }
+    public function accept(Task $task){
+        $task['status'] = "Active";
+        $task->save();
         return redirect(url()->previous());
     }
 }

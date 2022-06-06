@@ -82,7 +82,7 @@
 <!-- Modal for adding client -->
 <form action="{{ url('client/create') }}" method="post" enctype="multipart/form-data">
     @csrf
-    <div class="modal" id="addClient">
+    <div class="modal fade" id="addClient">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
 
@@ -139,7 +139,7 @@
             </div>
         </div>
     </div>
-    <div class="modal" id="duplicate">
+    <div class="modal fade" id="duplicate">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
 

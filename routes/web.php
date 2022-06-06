@@ -45,7 +45,9 @@ Route::get('/scheduling', [TaskController::class, 'show']);
 Route::get('/scheduling/{project}', [TaskController::class, 'showProjectTask']);
 Route::post('scheduling/create/{project?}', [TaskController::class, 'createTask']);
 Route::get('task/{task}', [TaskController::class, 'openTask']);
-Route::post('/scheduling/update/{task}', [TaskController::class, 'updateTask']);
+Route::post('scheduling/update/{task}', [TaskController::class, 'updateTask']);
+Route::post('reschedule/{task}', [TaskController::class, 'resched']);
+Route::get('deleteTask/{task}', [TaskController::class, 'delete']);
 
 Route::post('/client/create', [ClientController::class, 'create']);
 Route::post('client/{client}/update', [ClientController::class, 'update']);
@@ -55,3 +57,5 @@ Route::post('project/{client}/{project}/submitFile', [ClientController::class, '
 Route::post('project/{client}/{project}/requestTask', [ClientController::class, 'requestTask']);
 
 Route::post('search', [FilingController::class, 'search']);
+Route::get('fileReject/{file}', [FilingController::class, 'reject']);
+Route::get('fileAccept/{file}', [FilingController::class, 'accept']);

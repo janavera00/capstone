@@ -124,15 +124,19 @@
                                 @endphp
                                     <tr>
                                         <td>
-                                            <select name="taskEmployee[]" class="form-control employee">
+                                            <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
+                                            <select name="employee[]" class="form-control employee" style="width: 680px;">
+                                                <option selected hidden></option>
                                                 @foreach($users as $user)
-                                                <option value="{{ $user->id }}" {{ ($usr->id == $user->id)?'selected':'' }}>{{ $user->name }} - {{ $user->role }}</option>
+                                                    <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
                                         @if($i == 0)
-                                            <td style="width: 1rem;"><a class="btn btn-success" onclick="addEmployee()">+</a></td>
-                                            <td style="width: 1rem;"><a class="btn btn-danger" onclick="removeEmployee()">-</a></td>
+                                        <td class="d-flex justify-content-around" style="width: 80px;">
+                                            <a class="btn btn-success" onclick="addEmployee('dynamicField')" style="width: fit-content;">+</a>
+                                            <a class="btn btn-danger" onclick="removeEmployee('dynamicField')" style="width: fit-content;">-</a>
+                                        </td>
                                         @endif
                                     </tr>
                                 @php

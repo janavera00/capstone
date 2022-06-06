@@ -16,8 +16,8 @@ class FilingController extends Controller
 {
     public function show()
     {
-        $clients = Client::all();
-
+        $clients = Client::all()->sortByDesc('updated_at');
+        // dd($clients);
         return view('clientLists', ['clients' => $clients]);
     }
 
@@ -30,7 +30,16 @@ class FilingController extends Controller
 
     public function showProjectContent(Project $project)
     {
-        $users = User::all();
+        $users = User::all()->sortByDesc('updated_at');
+
+        foreach($project->tasks as $task){
+            if(date('Y-m-d') > $task->date && $task->status != "Done")
+            {
+                $task['status'] = "Overdue";
+                $task->save();
+            }
+        }
+
         // dd($project);
         return view('projectContent', ['project' => $project, 'users' => $users]);
     }
@@ -182,5 +191,16 @@ class FilingController extends Controller
             // dd(session('confirmPass'));
             return redirect('filing/'.$project->id);
         }
+    }
+
+    public function reject(File $file){
+        $file['status'] = "Reject";
+        $file->save();
+        return redirect(url()->previous());
+    }
+    public function accept(File $file){
+        $file['status'] = "Digital";
+        $file->save();
+        return redirect(url()->previous());
     }
 }
