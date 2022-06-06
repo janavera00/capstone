@@ -222,7 +222,7 @@
                         <div class="p-2 my-2 border rounded">
                             <label for="loc">Engineer In Charge:</label>
                             <select name="engr" id="engr" class="form-control">
-                                <option selected hidden></option>
+                                <option selected></option>
                                 @foreach($users as $user)
                                 <option value="{{$user->id}}" {{($user->id == old('engr'))?'selected':''}}>{{$user->role}} - {{$user->name}}</option>
                                 @endforeach
