@@ -155,15 +155,13 @@
     </div>
 </div>
 
-
-
 <div class="modal" id="submitDocument">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
                 <div class="modal-header bg-1 text-white">
                     <h1 class="modal-title">Submit a documment</h1>
                 </div>
-                <form action="{{ url('project/'.$client->id.'/'.$project->id.'/submitFile') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url('project/'.$project->id.'/submitFile') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body overflow-auto" style="height: 60vh;">
                         <p>Enter the name of the document, a short description of it, and a scanned/photograph copy of the document</p>
@@ -206,6 +204,11 @@
         </div>
     </div>
 </div>
+@if($errors->has('title') || $errors->has('description') || $errors->has('img'))
+<script>
+    document.getElementById('addFileBtn').click();
+</script>
+@endif
 
 
 <!-- Modal for adding schedule -->
@@ -217,7 +220,7 @@
                 <h2 class="modal-title">Request task schedule</h2>
             </div>
             
-            <form action="{{ url('project/'.$client->id.'/'.$project->id.'/requestTask') }}" method="post">
+            <form action="{{ url('project/'.$project->id.'/requestTask') }}" method="post">
                 @csrf
                 <div class="modal-body overflow-auto" style="height: 60vh;">
                     <div class="m-2 p-2 border rounded">
@@ -226,6 +229,9 @@
                             <label for="task" class="form-label">Task:</label>
                         </div>
                         <input type="text" name="task" id="task" class="form-control">
+                        @error('task')
+                        <p class="text-danger">* {{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="m-2 p-2 border rounded">
                         <div class="d-flex">
@@ -233,13 +239,27 @@
                             <label for="date" class="form-label">Date and Time:</label>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <input type="date" name="date" id="date" class="form-control" style="width: 49%;">
-                            <input type="time" name="time" id="time" class="form-control" style="width: 49%;">
+                            <div class="w-100 pe-2 border-end">
+                                <input type="date" name="date" id="date" class="form-control">
+                                @error('date')
+                                <p class="text-danger">* {{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="w-100 ps-2">
+                                <input type="time" name="time" id="time" class="form-control">
+                                @error('time')
+                                <p class="text-danger">* {{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     <div class="m-2 p-2 border rounded">
                         <label for="remark" class="form-label">Remarks:</label>
                         <input type="text" name="remark" id="remark" class="form-control">
+                        @error('remark')
+                        <p class="text-danger">* {{ $message }}</p>
+                        @enderror
                     </div>
 
                 </div>
@@ -251,6 +271,11 @@
         </div>
     </div>
 </div>
+@if($errors->has('task') || $errors->has('date') || $errors->has('time') || $errors->has('remark'))
+<script>
+    document.getElementById('addScheduleBtn').click();
+</script>
+@endif
 
 
 <div class="modal" id="showFile">

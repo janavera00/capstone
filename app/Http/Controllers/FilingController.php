@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\File;
+use App\Models\Log;
 use App\Models\Project;
 use App\Models\Service;
 use App\Models\User;
@@ -16,21 +17,28 @@ class FilingController extends Controller
 {
     public function show()
     {
-        $clients = Client::all()->sortByDesc('updated_at');
+        $clients = DB::table('users')->where('role', '=', 'Client')->orderBy('updated_at', 'desc')->get();
         // dd($clients);
         return view('clientLists', ['clients' => $clients]);
     }
 
-    public function showProjects(Client $client)
+    public function showProjects(User $client)
     {
-        $users = User::all();
-        $services = Service::all();
+        $users = DB::table('users')->whereNot('role', '=', 'Client')->get();
+        $services = DB::table('services')->get();
+        
+        if($client->id === null){
+            $projects = DB::table('projects')->orderBy('updated_at')->get();
+            return view('projectsList', ['projects' => $projects, 'users' => $users, 'services' => $services]);
+        }
+        
+        // dd($projects);
         return view('projectsList', ['client' => $client, 'users' => $users, 'services' => $services]);
     }
 
     public function showProjectContent(Project $project)
     {
-        $users = User::all()->sortByDesc('updated_at');
+        $users = DB::table('users')->whereNot('role', '=', 'Client')->get();
 
         foreach($project->tasks as $task){
             if(date('Y-m-d') > $task->date && $task->status != "Done")
@@ -44,7 +52,7 @@ class FilingController extends Controller
         return view('projectContent', ['project' => $project, 'users' => $users]);
     }
 
-    public function createProject(Client $client)
+    public function createProject(User $client)
     {
         // dd(request()->all());
         $request = request()->validate([
@@ -57,18 +65,9 @@ class FilingController extends Controller
             'landOwn' => ['max:255', 'nullable'],
         ]);
 
-        $project = Project::all();
-        $exist = true;
+        $project = DB::table('projects')->where('survey_number', '=', 'Psd-'.$request['surNum'])->get();
 
-        foreach($project as $proj)
-        {
-            if(('Psd-'.$request['surNum']) == $proj->survey_number)
-            {
-                $exist = false;
-            }
-        }
-
-        if($exist){
+        if(count($project) == 0){
             $project = new Project();
 
             $project['client_id'] = $client->id;
@@ -81,11 +80,17 @@ class FilingController extends Controller
             $project['lot_area'] = $request['lotArea'];
             $project['land_owner'] = $request['landOwn'];
             $project->save();
+
+            $log = new Log();
+            $log['actor'] = Auth()->user()->id;
+            $log['project_id'] = $project->id;
+            $log['remarks'] = "created a project";
+            $log->save();
     
             return redirect('projectContent/'.$project->id);
         }
 
-        throw ValidationException::withMessages(['surveyNo' => 'Survey Number already exist']);
+        throw ValidationException::withMessages(['surveyNumber' => 'Survey Number already exist']);
     }
 
     public function createFile(Project $project)
@@ -109,6 +114,12 @@ class FilingController extends Controller
         $file['project_id'] = $project->id;
         $file->save();
 
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['file_id'] = $file->id;
+        $log['remarks'] = "created a file";
+        $log->save();
+
         return redirect(url()->previous());
     }
 
@@ -120,6 +131,12 @@ class FilingController extends Controller
 
         $file['description'] = $request['fileDescription'];
         $file->save();
+
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['file_id'] = $file->id;
+        $log['remarks'] = "updated a file";
+        $log->save();
 
         return redirect(url()->previous());
     }
@@ -146,8 +163,11 @@ class FilingController extends Controller
         $project['land_owner'] = $request['land_owner'];
         $project->save();
 
-        
-        session(['confirmPass' => 'false']);
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['project_id'] = $project->id;
+        $log['remarks'] = "updated a project";
+        $log->save();
 
         return redirect(url()->previous());
     }
@@ -162,6 +182,11 @@ class FilingController extends Controller
             $project['status'] = "Completed";
         }
         $project->save();
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['project_id'] = $project->id;
+        $log['remarks'] = "updated a project";
+        $log->save();
 
         return redirect(url()->previous());
     }
@@ -172,7 +197,8 @@ class FilingController extends Controller
             return redirect('clients');
         }
 
-        $clients = Client::where("name", "LIKE", "%{$request->search}%")
+        $clients = User::where('role', '=', 'Client')
+                    ->where("name", "LIKE", "%{$request->search}%")
                     ->orWhere("address", "LIKE", "%{$request->search}%")->get();
         
         $projects = Project::where("survey_number", "LIKE", "%{$request->search}%")
@@ -196,11 +222,25 @@ class FilingController extends Controller
     public function reject(File $file){
         $file['status'] = "Reject";
         $file->save();
+
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['file_id'] = $file->id;
+        $log['remarks'] = "rejected a submitted file";
+        $log->save();
+
         return redirect(url()->previous());
     }
     public function accept(File $file){
         $file['status'] = "Digital";
         $file->save();
+
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['file_id'] = $file->id;
+        $log['remarks'] = "accepted a submitted file";
+        $log->save();
+
         return redirect(url()->previous());
     }
 }

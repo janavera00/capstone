@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
     public function show()
     {
-        $tasks = Task::all();
-
+        $tasks = Task::all()
+            ->sortBy('date')
+            ->sortBy('time');
+     
         // dd(date('Y-m-d') < $tasks[0]->date);
 
         foreach($tasks as $task){
@@ -23,24 +28,23 @@ class TaskController extends Controller
             }
         }
 
-        $users = User::all();
+        
+        $users = DB::table('users')->whereNot('role', '=', 'Client')->get();
         $projects = Project::all()->sortByDesc('updated_at');
-
-        $tasks = $tasks->sortBy('date')->sortBy('time');
 
         return view('scheduling', ['tasks' => $tasks, 'projects' => $projects, 'users' => $users]);
     }
 
     public function openTask(Task $task, $from)
     {
-        $users = User::all();
+        $users = User::whereNot('role', '=', 'Client')->get();
         return view('schedDetails', ['task' => $task, 'users' => $users, 'from' => $from]);
     }
 
     public function showProjectTask(Project $project)
     {
         $projects = Project::all();
-        $users = User::all();
+        $users = User::whereNot('role', '=', 'Client')->get();
 
         return view('projectTask', ['projects' => $projects, 'proj' => $project, 'users' => $users]);
     }
@@ -75,6 +79,12 @@ class TaskController extends Controller
             $task->employees()->attach($user);
         }
 
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "Scheduled a task";
+        $log->save();
+
         return redirect(url()->previous());
     }
 
@@ -102,6 +112,12 @@ class TaskController extends Controller
          
         }
 
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "updated a task";
+        $log->save();
+
         return redirect(url()->previous());
     }
 
@@ -117,6 +133,12 @@ class TaskController extends Controller
         $task['status'] = "Active";
         $task->save();
 
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "rescheduled overdue task";
+        $log->save();
+
         return redirect(url()->previous());
     }
 
@@ -124,17 +146,37 @@ class TaskController extends Controller
         $task->employees()->detach();
         $task->delete();
 
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "deleted overdue task";
+        $log->save();
+
         return redirect(url()->previous());
     }
 
     public function reject(Task $task){
         $task['status'] = "Reject";
         $task->save();
+
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "rejected requested task";
+        $log->save();
+
         return redirect(url()->previous());
     }
     public function accept(Task $task){
         $task['status'] = "Active";
         $task->save();
+
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "accepted requested task";
+        $log->save();
+
         return redirect(url()->previous());
     }
 }

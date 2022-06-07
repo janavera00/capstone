@@ -4,9 +4,17 @@
 <div class="container bg-2 mt-3 px-5 rounded">
     <div class="row" style="height: 90vh;">
         <div class="col-4">
-
+            @php
+                if(Auth()->user()->role != "Admin" && Auth()->user()->role != "Secretary"){
+                    $projects = Auth()->user()->clientProjects;
+                }
+            @endphp    
             <div class="bg-white mt-4 rounded pb-4" style="height: fit-content;">
+                @if(Auth()->user()->role == "Surveyor")
+                <div class="container overflow-auto pt-3" style="height: 80vh; width: fit-content;">
+                @else
                 <div class="container overflow-auto pt-3" style="height: 50vh; width: fit-content;">
+                @endif
                     @for($i = 0;$i < 10;$i++) <hr class="text-black">
 
                         <div class="calendar mt-2" id="{{$i}}">
@@ -22,26 +30,30 @@
                 </div>
             </div>
 
+            @if(Auth()->user()->role != "Surveyor")
             <div class="d-flex bg-white mt-2 p-2 rounded-top" style="border-bottom: 1px black solid;">
                 <h2 class="mx-auto">Projects</h2>
             </div>
             <div class="bg-white p-2 overflow-auto rounded-bottom" style="height: 25vh;">
                 <table class="table table-light table-hover">
                     @foreach($projects as $project)
+                    @if($project->status == "Active")
                     <tr onclick="location.href='../projectContent/{{$project->id}}'" style="cursor: pointer;">
                         <td>{{ $project->client->name }}</td>
                         <td>{{ $project->location }}</td>
                     </tr>
+                    @endif
                     @endforeach
                 </table>
             </div>
+            @endif
         </div>
 
         <div class="col mt-3">
             <div class="container">
                 <div class="row text-white mx-auto mt-2 p-2">
                     <div class="col d-flex">
-                        <button class="btn btn-primary m-auto" style="width: 200px;" data-bs-toggle="modal" data-bs-target="#newSched" id="newSchedBtn">Schedule new task</button>
+                        <button class="btn btn-{{(Auth()->user()->role == 'Surveyor' || Auth()->user()->role == 'Engineer')?'secondary':'primary'}} m-auto" style="width: 200px;" data-bs-toggle="modal" data-bs-target="#newSched" id="newSchedBtn" {{(Auth()->user()->role == "Surveyor" || Auth()->user()->role == "Engineer")?'disabled':''}}>Schedule new task</button>
                     </div>
                     <div class="col d-flex">
                         <div class="m-auto text-center" id="date"></div>
@@ -51,6 +63,13 @@
 
                 <div class="bg-white p-3 rounded overflow-auto d-flex flex-column" style="height: 70vh;">
                     <ul id="eventsOnCalendar" hidden>
+
+                        @php
+                            if(Auth()->user()->role != "Admin" && Auth()->user()->role != "Secretary"){
+                                $tasks = Auth()->user()->tasks;
+                            }
+                        @endphp    
+
 
                         @foreach($tasks as $task)
                         <li>{{$task->date}}</li>

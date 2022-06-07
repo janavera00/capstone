@@ -59,7 +59,7 @@
                         </ul>
                     </div>
                     <div class="my-auto">
-                        <button class="btn btn-primary" id="editSchedBtn" data-bs-toggle="modal" data-bs-target="#editSched" style="width: 200px;">Edit Schedule</button>
+                        <button class="btn btn-{{(Auth()->user()->role == 'Surveyor' || Auth()->user()->role == 'Engineer')?'secondary':'primary'}}" id="editSchedBtn" data-bs-toggle="modal" data-bs-target="#editSched" style="width: 200px;" {{(Auth()->user()->role == 'Surveyor' || Auth()->user()->role == 'Engineer')?'disabled':''}}>Edit Schedule</button>
                     </div>
 
                 </div>

@@ -54,9 +54,17 @@
     <!-- this page contains the nav bar and side bar if there are any
     this page will serve as the layout, this page will make sure
     that the page looks the same way in every tab -->
-    <nav class="navbar bg-1">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand bg-1 navbar-dark">
+        <div class="container">
             <a href="/" class="navbar-brand text-white fw-bolder ps-4">SProMAp</a>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ Auth()->user()->name }}</a>
+                    <ul class="dropdown-menu bg-danger">
+                        <li><a href="{{url('logout')}}" class="dropdown-item text-white">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </nav>
 

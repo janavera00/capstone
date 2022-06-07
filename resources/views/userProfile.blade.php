@@ -39,11 +39,11 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-1"><h1 class="modal-title text-white">Add new User</h1></div>
-                <form action="../user/create" method="post">
+                <form action="../user/create" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body overflow-auto" style="height: 60vh;">
                         <div class="my-2">
-                            <label for="name" class="form-label">Name:</label>
+                            <label for="name" class="form-label">*Name:</label>
                             <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}">
                             @error('name')
                                 <p class="text-danger">*{{$message}}</p>
@@ -58,7 +58,7 @@
                         </div>
                         <div class="my-2">
                             <label for="contact" class="form-label">Contact:</label>
-                            <input type="text" name="contact" id="contact" class="form-control" value="{{ old('contact') }}">
+                            <input type="text" name="contact" id="contact" class="form-control" maxlength="11" value="{{ old('contact') }}">
                             @error('contact')
                                 <p class="text-danger">*{{$message}}</p>
                             @enderror
@@ -71,21 +71,28 @@
                             @enderror
                         </div>
                         <div class="my-2">
-                            <label for="user" class="form-label">Username:</label>
+                            <label for="user" class="form-label">*Username:</label>
                             <input type="text" name="user" id="user" class="form-control" value="{{ old('user') }}">
                             @error('user')
                                 <p class="text-danger">*{{$message}}</p>
                             @enderror
                         </div>
                         <div class="my-2">
-                            <label for="pass" class="form-label">Password:</label>
+                            <label for="pass" class="form-label">*Password:</label>
                             <input type="password" name="pass" id="pass" class="form-control">
                             @error('pass')
                                 <p class="text-danger">*{{$message}}</p>
                             @enderror
                         </div>
                         <div class="my-2">
-                            <label for="role" class="form-label">Position:</label>
+                            <label for="img" class="form-label">Photo:</label>
+                            <input type="file" name="img" id="img" accept="image/*" class="form-control">
+                            @error('img')
+                                <p class="text-danger">*{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="my-2">
+                            <label for="role" class="form-label">*Position:</label>
                             <select name="role" id="role" class="form-control">
                                 <option selected hidden></option>
                                 <option value="Secretary">Secretary</option>
@@ -98,7 +105,7 @@
                         </div>
                         
                     </div>
-                    <div class="modal-footer d-flex justify-content-around bg-secondary">
+                    <div class="modal-footer bg-secondary">
                         <button class="btn btn-danger" data-bs-dismiss="modal" style="width: 10rem;">Cancel</button>
                         <input type="submit" value="Add" class="btn btn-primary" style="width: 10rem;">
                     </div>

@@ -16,12 +16,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('address');
-            $table->string('contact');
-            $table->string('email')->unique();
+            $table->string('address')->nullable();
+            $table->string('contact')->nullable();
+            $table->string('email')->nullable()->unique();
             $table->string('username');
             $table->string('password');
-            $table->enum('role', ['Admin', 'Secretary', 'Engineer', 'Surveyor']);
+            $table->string('image');
+            $table->enum('role', ['Admin', 'Secretary', 'Engineer', 'Surveyor', 'Client']);
             $table->timestamps();
         });
     }

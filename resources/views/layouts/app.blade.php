@@ -51,6 +51,12 @@
         .btn{
             width: 200px;
         }
+
+        .profilePic{
+            max-width: 100px;
+            max-height: 100px;
+            overflow: hidden;
+        }
     </style>
 </head>
 
@@ -61,16 +67,6 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container-fluid">
             <a href="/" class="navbar-brand text-white fw-bolder ps-4">SProMAp</a>
-            @auth
-            <ul class="ms-auto nav">
-                <li class="nav-item text-white dropdown">
-                    <a href="#" class="dropdown-toggle nav-link text-white" data-bs-toggle="dropdown">{{ auth()->user()->name }}</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ url('logout') }}" class="dropdown-item">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-            @endauth
         </div>
     </nav>
 
@@ -97,11 +93,23 @@
                     <li class="nav-item text-center border-bottom
                         @if($url == 'clients')
                         bg-3
+                        @elseif(Auth()->user()->role == 'Surveyor')
+                        bg-secondary
                         @endif
                     ">
-                        <a href="{{ url('clients') }}" class="nav-link py-4">
+                        @if(Auth()->user()->role == "Surveyor")
+                        <div class="py-4">
+                            <img src="{{ asset('images/assets/folder-open-solid-white.svg') }}" width="25rem">
+                        </div>
+                        @else
+                            @if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
+                                <a href="{{ url('clients') }}" class="nav-link py-4">
+                            @else
+                                <a href="{{ url('projects') }}" class="nav-link py-4">
+                            @endif
                             <img src="{{ asset('images/assets/folder-open-solid-white.svg') }}" width="25rem">
                         </a>
+                        @endif
                     </li>
                     <li class="nav-item text-center border-bottom
                         @if($url == 'scheduling')
@@ -134,10 +142,17 @@
                                 </a>
                             </li>
                             <li class="nav-item text-start border-bottom">
+                            @if(Auth()->user()->role == 'Surveyor')   
+                                <div class=" bg-secondary nav-link py-3 d-flex align-items-center">
+                                    <i class="fa fa-solid fa-folder-open fa-xl"></i>
+                                    <h3 class="text-white m-1 ms-3">Filing</h3>
+                                </div>
+                            @else                     
                                 <a href="" class="nav-link py-3 d-flex align-items-center">
                                     <i class="fa fa-solid fa-folder-open fa-xl"></i>
                                     <h3 class="text-white m-1 ms-3">Filing</h3>
                                 </a>
+                            @endif
                             </li>
                             <li class="nav-item text-start border-bottom">
                                 <a href="" class="nav-link py-3 d-flex align-items-center">
@@ -155,11 +170,11 @@
 
                         <div class="border-top py-3">
                             <a href="{{ url('users') }}" class="nav-link pt-3 mx-3 d-flex justify-content-center align-items-center">
-                                <img src="{{ asset('images/assets/user-solid-white.svg') }}" width="25rem">
-                                <h3 class="text-white text-center m-1 ms-3 text-break" style="width: 20rem;">User</h3>
+                            <img src="{{ asset('images/users/'.Auth()->user()->image) }}" class="rounded-circle border profilePic">
+                                <h3 class="text-white text-center m-1 ms-3 text-break" style="width: 20rem;">{{ Auth()->user()->name }}</h3>
                             </a>
                             <div class="w-100 mb-3 d-flex justify-content-center">
-                                <a href="" class="btn btn-danger">Logout</a>
+                                <a href="{{ url('logout') }}" class="btn btn-danger">Logout</a>
                             </div>
                         </div>
                     </div>
@@ -169,7 +184,7 @@
 
                 <div class="border-top">
                     <a href="{{ url('users') }}" class="d-flex align-items-center justify-content-center m-3 p-2 link-dark text-decoration-none">
-                        <img src="{{ asset('images/assets/user-solid-white.svg') }}" height="20rem">
+                        <img src="{{ asset('images/users/'.Auth()->user()->image) }}" class="rounded-circle border profilePic">
                     </a>
                 </div>
 

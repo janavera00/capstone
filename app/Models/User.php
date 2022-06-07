@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'image',
         'role',
     ];
 
@@ -41,8 +42,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Task::class);
     }
 
-    public function projects()
+    public function clientProjects()
     {
-        return $this->hasMany(Project::class);
+        return $this->hasMany(Project::class, 'client_id');
+    }
+    public function engrProjects()
+    {
+        return $this->hasMany(Project::class, 'user_id');
     }
 }

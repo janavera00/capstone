@@ -430,7 +430,7 @@
                             <p class="text-danger">*</p>
                             <label for="task" class="form-label">Task:</label>
                         </div>
-                        <input type="text" name="task" id="task" class="form-control" autocomplete="off">
+                        <input type="text" name="task" id="task" class="form-control" value="{{ old('task') }}" autocomplete="off">
                         @error('task')
                         <p class="text-danger">* {{ $message }}</p>
                         @enderror
@@ -442,13 +442,13 @@
                         </div>
                         <div class="row">
                             <div class="col border-end">
-                                <input type="date" name="date" id="date" class="form-control w-100">
+                                <input type="date" name="date" id="date" class="form-control w-100" value="{{ old('date') }}">
                                 @error('date')
                                 <p class="text-danger">* {{ $message }}</p>
                                 @enderror
                             </div>
                             <div class="col">
-                                <input type="time" name="time" id="time" class="form-control  w-100">
+                                <input type="time" name="time" id="time" class="form-control  w-100" value="{{ old('time') }}">
                                 @error('time')
                                 <p class="text-danger">* {{ $message }}</p>
                                 @enderror
@@ -477,7 +477,7 @@
                                         <select name="employee[]" class="form-control employee">
                                             <option selected hidden></option>
                                             @foreach($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            <option value="{{ $user->id }}" {{(old('task') == $user->id)?'selected':''}}>{{ $user->name }} - {{ $user->role }}</option>
                                             @endforeach
                                         </select>
                                     </td>
