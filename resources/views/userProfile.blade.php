@@ -2,35 +2,83 @@
 
 @section('content')
 
-    <div class="container mt-3 border border-2 p-3">
-        <div class="container">
-            <button data-bs-toggle="modal" data-bs-target="#addUser" id="addUserBtn" class="btn btn-primary">Add User</button>
-        </div>
-        <div class="container mt-3">
-            <table class="table table-striped table-bordered table-hover">
-                <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Contact Number</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Username</th>
-            </tr>
-            <tbody>
-                @foreach($users as $user)
-                    <tr id="{{ 'user-'.$user->id}}" onclick="showInfo('{{ $user->id}}')">
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->address }}</td>
-                        <td>{{ $user->contact }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->role }}</td>
-                        <td>{{ $user->username }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    <div class="container mt-5 border rounded p-3">
+        <div class="row">
+            <div class="col-2">
+                <button class="w-100 mb-2 btn btn-success" onclick="showInfo('{{ Auth()->user()->id}}')">Edit Profile</button>
+                @if(Auth()->user()->role == 'Head of Office' || Auth()->user()->role == 'Secretary')
+                    <button class="w-100 my-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#logs">View logs</button>
+                    <button class="w-100 my-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#usersList">View Users</button>
+                @endif
+            </div>
+            <div class="col-8 d-flex flex-column p-2">
+                <img src="{{ asset('images/users/'.Auth()->user()->image) }}" style="width: 150px; height: 150px; overflow: hidden;" class="mx-auto rounded-circle border">
+                <h1 class="mx-auto m-0">{{ Auth()->user()->name }}</h1>
+                <h3 class="mx-auto mt-2 text-secondary">{{ Auth()->user()->username }}</h3>
+                <h3 class="mx-auto">{{ Auth()->user()->role }}</h3>
+                @if(Auth()->user()->email)
+                <p class="mx-auto my-0">{{ Auth()->user()->email }}</p>
+                @endif
+                @if(Auth()->user()->contact)
+                <p class="mx-auto my-0">{{ Auth()->user()->contact }}</p>
+                @endif
+                @if(Auth()->user()->address)
+                <p class="mx-auto my-0">{{ Auth()->user()->address }}</p>
+                @endif
+                
+            </div>
+            <div class="col-2"></div>
         </div>
     </div>
+
+
+<!-- -------------------------------------------------------------------------- -->
+
+
+    <div class="modal" id="usersList">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-1"><h1 class="modal-title text-white">Users</h1></div>
+                <div class="modal-body overflow-auto" style="height: 400px;">
+                
+                    
+                    <table class="table table-striped table-bordered table-hover">
+                        <tr class="text-center">
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Contact Number</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Username</th>
+                        </tr>
+                        <tbody>
+                            @foreach($users as $user)
+                            @if($user->role != 'Client' && $user->role != 'Head of Office')
+                                <tr id="{{ 'user-'.$user->id}}" onclick="showInfo('{{ $user->id}}')" style="font-size: 0.8rem; cursor: pointer;">
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->address }}</td>
+                                    <td>{{ $user->contact }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->role }}</td>
+                                    <td>{{ $user->username }}</td>
+                                </tr>
+                            @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                   
+
+                </div>
+
+                <div class="modal-footer bg-secondary">
+                    <button data-bs-toggle="modal" data-bs-target="#addUser" id="addUserBtn" class="btn btn-primary">Add User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+   
 
     <!-- hidden Buttons -->
     <button data-bs-toggle="modal" data-bs-target="#showUser" id="showUserBtn" hidden></button>
@@ -95,9 +143,9 @@
                             <label for="role" class="form-label">*Position:</label>
                             <select name="role" id="role" class="form-control">
                                 <option selected hidden></option>
-                                <option value="Secretary">Secretary</option>
-                                <option value="Engineer">Engineer</option>
-                                <option value="Surveyor">Surveyor</option>
+                                <option value="Secretary" {{(old('role') == 'Secretary')?'selected':''}}>Secretary</option>
+                                <option value="Engineer" {{(old('role') == 'Engineer')?'selected':''}}>Engineer</option>
+                                <option value="Surveyor" {{(old('role') == 'Surveyor')?'selected':''}}>Surveyor</option>
                             </select>
                             @error('role')
                                 <p class="text-danger">*{{$message}}</p>
@@ -106,85 +154,144 @@
                         
                     </div>
                     <div class="modal-footer bg-secondary">
-                        <button class="btn btn-danger" data-bs-dismiss="modal" style="width: 10rem;">Cancel</button>
-                        <input type="submit" value="Add" class="btn btn-primary" style="width: 10rem;">
+                        <button class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <input type="submit" value="Add" class="btn btn-primary">
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <div class="modal" id="showUser">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-1"><h1 class="modal-title text-white">User</h1></div>
-                <form action="" method="post">
-                    @csrf
-                    <div class="modal-body overflow-auto" style="height: 60vh;">
-                        <div class="my-2">
-                            <label for="name" class="form-label">Name:</label>
-                            <input type="text" name="name" id="Uname" class="form-control">
-                        </div>
-                        <div class="my-2">
-                            <label for="address" class="form-label">Address:</label>
-                            <input type="text" name="address" id="Uaddress" class="form-control">
-                        </div>
-                        <div class="my-2">
-                            <label for="contact" class="form-label">Contact:</label>
-                            <input type="text" name="contact" id="Ucontact" class="form-control">
-                        </div>
-                        <div class="my-2">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" name="email" id="Uemail" class="form-control">
-                        </div>
-                        <div class="my-2">
-                            <label for="user" class="form-label">Username:</label>
-                            <input type="text" name="user" id="Uuser" class="form-control">
-                        </div>
-                        <div class="my-2">
-                            <label for="role" class="form-label">Position:</label>
-                            <select name="role" id="Urole" class="form-control">
-                                <option value="Secretary">Secretary</option>
-                                <option value="Engineer">Engineer</option>
-                                <option value="Surveyor">Surveyor</option>
-                            </select>
-                        </div>
-                        
-                    </div>
-                    <div class="modal-footer d-flex justify-content-around bg-secondary">
-                        <button class="btn btn-danger" data-bs-dismiss="modal" style="width: 10rem;">Cancel</button>
-                        <input type="submit" value="Add" class="btn btn-primary" style="width: 10rem;">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function showInfo(id)
-        {
-            document.getElementById('showUserBtn').click();
-
-            const nodes = document.getElementById(`user-${id}`).childNodes;
-            document.getElementById('Uname').value = nodes[1].textContent;
-            document.getElementById('Uaddress').value = nodes[3].textContent;
-            document.getElementById('Ucontact').value = nodes[5].textContent;
-            document.getElementById('Uemail').value = nodes[7].textContent;
-            document.getElementById('Uuser').value = nodes[11].textContent;
-            
-            const selc = document.getElementById('Urole').childNodes;
-            console.log(selc);
-            for(let i = 0;i < selc.length;i++)
-            {
-                if(selc[i].textContent == nodes[9].textContent)
-                    selc[i].selected = true;
-            }
-        }
-    </script>
-
-    @if($errors->any())
+    @if($errors->has('name') || $errors->has('address') || $errors->has('contact') || $errors->has('email') || $errors->has('user') || $errors->has('pass') || $errors->has('img') || $errors->has('role'))
     <script>
         document.getElementById('addUserBtn').click();
     </script>
     @endif
+
+
+
+    @foreach($users as $user)
+    <button data-bs-toggle="modal" data-bs-target="#showUser-{{$user->id}}" id="showUser-{{$user->id}}Btn" hidden></button>
+    <div class="modal" id="showUser-{{$user->id}}">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-1"><h1 class="modal-title text-white">User</h1></div>
+                <form action="{{ url('user/update/'.$user->id) }}" method="post">
+                    @csrf
+                    <div class="modal-body overflow-auto" style="height: 60vh;">
+                        <div class="my-2">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" name="inputName" id="Uname" value="{{ $user->name }}" class="form-control">
+                            @error('inputName')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="my-2">
+                            <label for="address" class="form-label">Address:</label>
+                            <input type="text" name="inputAddress" id="Uaddress" value="{{ $user->address }}" class="form-control">
+                            @error('inputAddress')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="my-2">
+                            <label for="contact" class="form-label">Contact:</label>
+                            <input type="text" name="inputContact" id="Ucontact" value="{{ $user->contact }}" maxlength="11" class="form-control">
+                            @error('inputContact')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="my-2">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" name="inputEmail" id="Uemail" value="{{ $user->email }}" class="form-control">
+                            @error('inputEmail')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="my-2">
+                            <label for="user" class="form-label">Username:</label>
+                            <input type="text" name="inputUser" id="Uuser" value="{{ $user->username }}" class="form-control" disabled>
+                            @error('inputUser')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="my-2">
+                            <label for="role" class="form-label">Position:</label>
+                            @if($user->role == "Head of Office")
+                            <input type="text" class="form-control" value="{{ $user->role }}" disabled>
+                            <input type="hidden" name="inputRole" value="{{ $user->role }}">
+                            @else
+                            @if(Auth()->user()->role == 'Head of Office')
+                                <select name="inputRole" id="Urole" class="form-control">
+                                    <option value="Secretary" {{ ($user->role == 'Secretary')?'selected':'' }}>Secretary</option>
+                                    <option value="Engineer" {{ ($user->role == 'Engineer')?'selected':'' }}>Engineer</option>
+                                    <option value="Surveyor" {{ ($user->role == 'Surveyor')?'selected':'' }}>Surveyor</option>
+                                </select>
+                                @else
+                                <input type="text" class="form-control" value="{{ $user->role }}" disabled>
+                                <input type="hidden" name="inputRole" value="{{ $user->role }}">
+                                @endif
+                            @endif
+                            @error('inputRole')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-secondary">
+                        <input type="hidden" name="inputId" value="{{ $user->id }}">
+                        <button class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <input type="submit" value="Add" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endforeach
+    @if($errors->has('inputName') || $errors->has('inputAddress') || $errors->has('inputContact') || $errors->has('inputEmail') || $errors->has('inputRole'))
+    <script>
+        var id = "showUser-{{old('inputId')}}Btn";
+        document.getElementById(id).click();
+    </script>
+    @endif
+    
+
+    <div class="modal" id="logs">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-1"><h1 class="modal-title text-white">User Log</h1></div>
+                <div class="modal-body overflow-auto" style="height: 400px;">
+                    <table class="table table-striped table-bordered">
+                        <tr class="text-center">
+                            <th>Actor</th>
+                            <th>Target</th>
+                            <th>Remarks</th>
+                        </tr>
+                        @foreach($logs as $log)
+                            <tr style="font-size: .8rem;">
+                                <td>{{ $log->userActor->role }}: {{ $log->userActor->name }}</td>
+                                @if($log->user_id)
+                                    <td>{{ $log->user->role }}: {{ $log->user->name }}</td>
+                                @elseif($log->project_id)
+                                    <td>Project: {{ $log->project->survey_number }}</td>
+                                @elseif($log->file_id)
+                                    <td>File: {{ $log->file->title }}</td>
+                                @elseif($log->task_id)
+                                    <td>Task: {{ $log->task->task }}</td>
+                                @endif
+
+                                <td>{{ $log->remarks }}</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function showInfo(id){
+            document.getElementById(`showUser-${id}Btn`).click();
+        }
+    </script>
+    
+    
 @endsection

@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         $user['username'] = "Admin";
         $user['password'] = bcrypt('password');
         $user['image'] = "default.svg";
-        $user['role'] = "Admin";
+        $user['role'] = "Head of Office";
         $user->save();
 
         

@@ -15,17 +15,16 @@ class Log extends Model
         'project_id',
         'file_id',
         'task_id',
-        'client_id',
         'remarks',
     ];
 
-    public function actor()
+    public function userActor()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'actor');
     }
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function project()
     {
@@ -38,9 +37,5 @@ class Log extends Model
     public function task()
     {
         return $this->belongsTo(Task::class);
-    }
-    public function client()
-    {
-        return $this->belongsTo(User::class);
     }
 }

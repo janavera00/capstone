@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->string('image');
-            $table->enum('role', ['Admin', 'Secretary', 'Engineer', 'Surveyor', 'Client']);
+            $table->enum('role', ['Head of Office', 'Secretary', 'Engineer', 'Surveyor', 'Client']);
             $table->timestamps();
         });
     }

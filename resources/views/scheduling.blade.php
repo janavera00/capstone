@@ -5,7 +5,7 @@
     <div class="row" style="height: 90vh;">
         <div class="col-4">
             @php
-                if(Auth()->user()->role != "Admin" && Auth()->user()->role != "Secretary"){
+                if(Auth()->user()->role != "Head of Office" && Auth()->user()->role != "Secretary"){
                     $projects = Auth()->user()->clientProjects;
                 }
             @endphp    
@@ -65,7 +65,7 @@
                     <ul id="eventsOnCalendar" hidden>
 
                         @php
-                            if(Auth()->user()->role != "Admin" && Auth()->user()->role != "Secretary"){
+                            if(Auth()->user()->role != "Head of Office" && Auth()->user()->role != "Secretary"){
                                 $tasks = Auth()->user()->tasks;
                             }
                         @endphp    
@@ -162,7 +162,9 @@
                                         <select name="employee[]" class="form-control employee">
                                             <option selected hidden></option>
                                             @foreach($users as $user)
+                                            @if($user->role != 'Head of Office')
                                             <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </td>
@@ -173,7 +175,9 @@
                                         <select name="employee[]" class="form-control employee" style="width: 680px;">
                                             <option selected hidden></option>
                                             @foreach($users as $user)
+                                            @if($user->role != 'Head of Office')
                                             <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </td>

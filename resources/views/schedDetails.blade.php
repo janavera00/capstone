@@ -121,20 +121,24 @@
                                         <select name="taskEmployee[]" class="form-control employee" style="width: 680px;"> 
                                             <option selected hidden></option>
                                             @foreach($users as $user)
+                                            @if($user->role != 'Head of Office')
                                             <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </td>
                                 </tr>
                                 
-                                @if($task->employees === null)
+                                @if(count($task->employees) < 1)
                                 <tr class="d-flex justify-content-around">
                                     <td>
                                         <!-- <input type="text" name="employee[]" id="employee" class="form-control"> -->
                                         <select name="taskEmployee[]" class="form-control employee" style="width: 680px;">
                                             <option selected hidden></option>
                                             @foreach($users as $user)
+                                            @if($user->role != 'Head of Office')
                                             <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </td>
@@ -155,7 +159,9 @@
                                         <select name="taskEmployee[]" class="form-control employee" style="width: 680px;">
                                             <option value=""></option>
                                             @foreach($users as $user)
+                                            @if($user->role != 'Head of Office')
                                             <option value="{{ $user->id }}" {{ ($usr->id == $user->id)?'selected':'' }}>{{ $user->name }} - {{ $user->role }}</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </td>

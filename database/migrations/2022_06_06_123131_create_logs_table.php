@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignId('project_id')->nullable()->constrained();
             $table->foreignId('file_id')->nullable()->constrained();
             $table->foreignId('task_id')->nullable()->constrained();
-            $table->foreignId('client_id')->nullable()->constrained('users');
             $table->string('remarks');
             $table->timestamps();
         });

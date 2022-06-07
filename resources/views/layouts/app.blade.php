@@ -65,137 +65,48 @@
     this page will serve as the layout, this page will make sure
     that the page looks the same way in every tab -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <div class="container-fluid">
+        <div class="container-fluid mx-5">
             <a href="/" class="navbar-brand text-white fw-bolder ps-4">SProMAp</a>
+            <ul class="navbar-nav me-auto">
+                @if(Auth()->user()->role != 'Client')
+                <li class="nav-item">
+                    <a href="{{ url('home') }}" class="nav-link">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    @if(Auth()->user()->role == "Surveyor")
+                        <p class="nav-link mb-0" style="cursor: default;">Projects</p>
+                    @elseif(Auth()->user()->role == "Engineer")
+                        <a href="{{ url('projects') }}" class="nav-link">Projects</a>
+                    @else
+                        <a href="{{ url('clients') }}" class="nav-link">Projects</a>
+                    @endif
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url('scheduling') }}" class="nav-link">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    @if(Auth()->user()->role != "Head of Office" && Auth()->user()->role != "Secretary")
+                        <p class="nav-link mb-0" style="cursor: default;">Users</p>
+                    @else
+                        <a href="{{ url('users') }}" class="nav-link">Users</a>
+                    @endif
+                </li>
+                @endif
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ Auth()->user()->name }}</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('users') }}" class="dropdown-item">Profile</a></li>
+                        <li><a href="{{ url('logout') }}" class="dropdown-item">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </nav>
 
-    <div class="container-fluid">
-
-        @php
-        $url = explode("/", url()->current());
-        $url = $url[count($url)-1];
-        @endphp
-
-
-        <div class="row" style="height: calc(100vh - 55px);">
-            <div class="d-flex justify-content-between flex-column bg-2 p-0" style="width: 4.5rem;">
-                <ul class="nav nav-pills nav-flush flex-column">
-                    <li class="nav-item text-center border-bottom 
-                        @if($url == 'home')
-                            bg-3
-                        @endif
-                    ">
-                        <a href="{{ url('home') }}" class="nav-link py-4">
-                            <img src="{{ asset('images/assets/gauge-high-solid-white.svg') }}" width="25rem">
-                        </a>
-                    </li>
-                    <li class="nav-item text-center border-bottom
-                        @if($url == 'clients')
-                        bg-3
-                        @elseif(Auth()->user()->role == 'Surveyor')
-                        bg-secondary
-                        @endif
-                    ">
-                        @if(Auth()->user()->role == "Surveyor")
-                        <div class="py-4">
-                            <img src="{{ asset('images/assets/folder-open-solid-white.svg') }}" width="25rem">
-                        </div>
-                        @else
-                            @if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
-                                <a href="{{ url('clients') }}" class="nav-link py-4">
-                            @else
-                                <a href="{{ url('projects') }}" class="nav-link py-4">
-                            @endif
-                            <img src="{{ asset('images/assets/folder-open-solid-white.svg') }}" width="25rem">
-                        </a>
-                        @endif
-                    </li>
-                    <li class="nav-item text-center border-bottom
-                        @if($url == 'scheduling')
-                        bg-3
-                        @endif
-                    ">
-                        <a href="{{ url('scheduling') }}" class="nav-link py-4">
-                            <img src="{{ asset('images/assets/calendar-days-solid-white.svg') }}" width="22rem">
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Offcanvas -->
-                <div>
-                    <a href="#sidebar" class="d-flex align-items-center justify-content-center ms-3 ps-3 mb-5 pb-5 link-dark text-decoration-none" data-bs-toggle="offcanvas">
-                        <i class="fa fa-solid fa-caret-right fa-2xl"></i>
-                    </a>
-                </div>
-
-                <div class="offcanvas offcanvas-start" style="width: 15vmax;" id="sidebar">
-                    <div class="offcanvas-header bg-1 py-2 ps-5 p-0">
-                        <a href="/" class="navbar-brand text-white fw-bolder ps-4">SProMAp</a>
-                    </div>
-                    <div class="offcanvas-body d-flex justify-content-between flex-column bg-2 p-0">
-                        <ul class="nav nav-pills nav-flush flex-column">
-                            <li class="nav-item text-start border-bottom">
-                                <a href="" class="nav-link py-3 d-flex align-items-center">
-                                    <i class="fa fa-solid fa-gauge-high fa-xl"></i>
-                                    <h3 class="text-white m-1 ms-3">Dashboard</h3>
-                                </a>
-                            </li>
-                            <li class="nav-item text-start border-bottom">
-                            @if(Auth()->user()->role == 'Surveyor')   
-                                <div class=" bg-secondary nav-link py-3 d-flex align-items-center">
-                                    <i class="fa fa-solid fa-folder-open fa-xl"></i>
-                                    <h3 class="text-white m-1 ms-3">Filing</h3>
-                                </div>
-                            @else                     
-                                <a href="" class="nav-link py-3 d-flex align-items-center">
-                                    <i class="fa fa-solid fa-folder-open fa-xl"></i>
-                                    <h3 class="text-white m-1 ms-3">Filing</h3>
-                                </a>
-                            @endif
-                            </li>
-                            <li class="nav-item text-start border-bottom">
-                                <a href="" class="nav-link py-3 d-flex align-items-center">
-                                    <i class="fa fa-solid fa-calendar fa-xl"></i>
-                                    <h3 class="text-white m-1 ms-3">Scheduling</h3>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div>
-                            <a href="#sidebar" class="d-flex justify-content-end mb-3 me-2 link-dark text-decoration-none" data-bs-dismiss="offcanvas">
-                                <i class="fa fa-solid fa-caret-left fa-2xl"></i>
-                            </a>
-                        </div>
-
-                        <div class="border-top py-3">
-                            <a href="{{ url('users') }}" class="nav-link pt-3 mx-3 d-flex justify-content-center align-items-center">
-                            <img src="{{ asset('images/users/'.Auth()->user()->image) }}" class="rounded-circle border profilePic">
-                                <h3 class="text-white text-center m-1 ms-3 text-break" style="width: 20rem;">{{ Auth()->user()->name }}</h3>
-                            </a>
-                            <div class="w-100 mb-3 d-flex justify-content-center">
-                                <a href="{{ url('logout') }}" class="btn btn-danger">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="border-top">
-                    <a href="{{ url('users') }}" class="d-flex align-items-center justify-content-center m-3 p-2 link-dark text-decoration-none">
-                        <img src="{{ asset('images/users/'.Auth()->user()->image) }}" class="rounded-circle border profilePic">
-                    </a>
-                </div>
-
-            </div>
-
-
-            <div class="col">
-                @yield("content")
-            </div>
-        </div>
-    </div>
+    @yield("content")
+         
     <script>
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

@@ -20,9 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['web'])->group(function () {
 
     Route::middleware(['guest'])->group(function () {
-        Route::get('/', function () { return view('login');} )->name('login');
-        // Route::get('login', function () { return view('login');} );
+        Route::get('/', [UserController::class, 'initialize'] )->name('login');
+        Route::get('login', function () { return view('login');} );
         Route::post('home', [UserController::class, 'authenticate']);
+        Route::post('createAdmin', [UserController::class, 'createAdmin']);
     });
 
     Route::middleware(['auth'])->group(function () {
@@ -31,6 +32,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/logout', [UserController::class, 'destroy']);
         Route::get('/users', [UserController::class, 'show']);
         Route::post('/user/create', [UserController::class, 'create']);
+        Route::post('/user/update/{user}', [UserController::class, 'update']);
     
         Route::get('clients', [FilingController::class, 'show']);
         Route::get('updateProject/step/{project}/{stepNo}', [FilingController::class, 'updateStep']);

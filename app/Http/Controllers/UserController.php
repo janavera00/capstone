@@ -18,8 +18,11 @@ class UserController extends Controller
     public function show()
     {
         $users = User::all();
+        $logs = Log::all();
 
-        return view('userProfile', ['users' => $users]);
+        // dd($logs);
+
+        return view('userProfile', ['users' => $users, 'logs' => $logs]);
     }
 
     public function create()
@@ -67,18 +70,52 @@ class UserController extends Controller
         return redirect(url()->previous());
     }
 
+    public function update(User $user)
+    {
+        $request = request()->validate([
+            'inputName' => 'required',
+            'inputAddress' => 'nullable',
+            'inputContact' => ['nullable', 'regex:/(09)([0-9]{9})/'],
+            'inputEmail' => 'nullable|email',
+            'inputRole' => 'nullable',
+            'inputId' => 'nullable',
+        ]);
+
+        // dd(request()->all());
+
+        $user['name'] = $request['inputName'];
+        $user['address'] = $request['inputAddress'];
+        $user['contact'] = $request['inputContact'];
+        $user['email'] = $request['inputEmail'];
+        $user['role'] = $request['inputRole'];
+        $user->save();
+
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['user_id'] = $user->id;
+        $log['remarks'] = "Updated user Account";
+        $log->save();
+
+        return redirect(url()->previous());
+    }
+
     public function authenticate()
     {
         $request = request()->validate([
             'username' => 'required',
             'password' => 'required',
         ]);
-        // dd(filter_var($request['username'], FILTER_VALIDATE_EMAIL));
+        
         
         if(Auth::guard('web')->attempt($request)) {
+
+            
             if(Auth()->user()->role == "Client"){
                 // dd(Auth()->user()->role == "Client");
                 return redirect('project');
+            
+            
+            
             }else{
                 $projects = Project::all();
 
@@ -101,28 +138,57 @@ class UserController extends Controller
         
         
         
-        throw ValidationException::withMessages(['username' => 'Your provided credentials could not be verified.']);
+        throw ValidationException::withMessages(['invalid' => 'Your provided credentials could not be verified.']);
+    }
+
+    public function initialize(){
+        $user = DB::table('users')->where('role', '=', 'Head of Office')->get();
+
+        return view('login', ['user' => $user]);
+    }
+    public function createAdmin(){
+        $request = request()->validate([
+            'name' => 'required',
+            'inputUsername' => 'required',
+            'inputPassword' => 'required',
+        ]);
+
+        $user = new User;
+        $user['name'] = $request['name'];
+        $user['username'] = $request['username'];
+        $user['password'] = bcrypt($request['password']);
+        $user['image'] = "default.svg";
+        $user['role'] = "Head of Office";
+        $user->save();
+
+        return redirect('/');
     }
 
     public function home()
     {
-        $projects = Project::all();
+        if(Auth()->user()->role == "Client"){
+            return redirect('project');
+        }else{
 
-        $clients = DB::table('users')
-                ->where('role', '=', 'Client')
-                ->orderBy('updated_at', 'desc')
-                ->get();
-                
-        $tasks = DB::table('tasks')
-                ->orderBy('status', 'desc')
-                ->orderBy('date')
-                ->orderBy('time')
-                ->get();
-        // Task::all()->sortBy('date')->sortBy('time'); 
+            $projects = Project::all();
+    
+            $clients = DB::table('users')
+                    ->where('role', '=', 'Client')
+                    ->orderBy('updated_at', 'desc')
+                    ->get();
+                    
+            $tasks = DB::table('tasks')
+                    ->orderBy('status', 'desc')
+                    ->orderBy('date')
+                    ->orderBy('time')
+                    ->get();
+            // Task::all()->sortBy('date')->sortBy('time'); 
+    
+            // dd($projects, $clients, $tasks);
+    
+            return view('dashboard', ['projects' => $projects, 'clients' => $clients, 'tasks' => $tasks]);
+        }
 
-        // dd($projects, $clients, $tasks);
-
-        return view('dashboard', ['projects' => $projects, 'clients' => $clients, 'tasks' => $tasks]);
     }
 
     public function destroy()

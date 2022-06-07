@@ -4,7 +4,7 @@
     
     <div class="container-fluid overflow-auto" style="height: calc(100vh - 75px);">
         @php
-            if(Auth()->user()->role != "Admin" && Auth()->user()->role != "Secretary"){
+            if(Auth()->user()->role != "Head of Office" && Auth()->user()->role != "Secretary"){
                 $tasks = Auth()->user()->tasks;
                 $projects = Auth()->user()->engrProjects;
             }
@@ -12,7 +12,7 @@
 
 
         <div class="row justify-content-center mt-3">
-            @if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
+            @if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
             <div class="col-4">
                 <div class="card mx-3">
                     <div class="card-header bg-dark">
@@ -24,9 +24,9 @@
                         @foreach($clients as $client)
                             <div class="col-4">
                                 <a href="{{ url('projects/'.$client->id) }}" class="text-decoration-none text-black">
-                                    <div class="card text-center mx-2 my-2" style="height: 180px;">
+                                    <div class="card text-center mx-2 my-2">
                                         <div class="card-body">
-                                            <img src="{{ asset('images/users/'.$client->image) }}" height="80px" class="rounded-pill border">
+                                            <img src="{{ asset('images/users/'.$client->image) }}" width="100%" class="rounded-pill border">
                                         </div>
                                         <div class="card-header">{{ $client->name }}</div>
                                     </div>
