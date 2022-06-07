@@ -116,9 +116,16 @@
                         @enderror
                     </div>
                     <div class="mt-2">
-                        <label for="email">*Email:</label>
+                        <label for="email">Email:</label>
                         <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" autocomplete="off">
                         @error('email')
+                        <p class="text-danger">*{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="mt-2">
+                        <label for="username">*Username:</label>
+                        <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}" autocomplete="off">
+                        @error('username')
                         <p class="text-danger">*{{$message}}</p>
                         @enderror
                     </div>

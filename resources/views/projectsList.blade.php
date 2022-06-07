@@ -2,10 +2,21 @@
 
 @section('content')
 
+@if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
 <div class="container px-0">
     <a href="/clients" class="btn btn-danger mt-4"><img src="{{asset('images/assets/arrow-left-solid-white.svg')}}" width="30rem"></a>
 </div>
+@endif
+
+@php
+    if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary"){
+        $projects = $client->clientProjects;
+    } else {
+        $projects = Auth()->user()->engrProjects;
+    }
+@endphp
 <div class="container text-white bg-2 mt-2 overflow-auto rounded" style="height: 80vh;">
+    @if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
     <div class="row p-3">
         <!-- buttons -->
         <div class="col-2 border-end">
@@ -48,8 +59,7 @@
         </div>
     </div>
     
-
-
+    
     <button hidden data-bs-toggle="modal" data-bs-target="#message" id="messageBtn"></button>
     <!-- toast TESTING MIGHT REMOVE -->
     <div class="modal text-black" id="message">
@@ -70,18 +80,21 @@
         document.querySelector('#messageBtn').click();
     </script>
     @endif
+    <hr>
+    @endif
+
+
 
     
 
 
-    <hr>
 
     <!-- projects List -->
-    <div class="container rounded border border-2 mb-2">
+    <div class="container rounded border border-2 my-2">
         <!-- header -->
         <div class="mx-2 row py-2 border-bottom">
             <div class="col d-flex">
-                <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-primary my-auto ms-auto">Add a Project</button>
+                <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-{{(Auth()->user()->role != 'Admin' && Auth()->user()->role != 'Secretary')?'secondary':'primary'}} my-auto ms-auto" {{(Auth()->user()->role != "Admin" && Auth()->user()->role != "Secretary")?'disabled':''}}>Add a Project</button>
             </div>
             <h1 class="col text-center">Projects</h1>
             <div class="col">
@@ -89,13 +102,19 @@
             </div>
         </div>
 
-        <div class="overflow-auto" style="height: 53vh;">
-            
+        @if(Auth()->user()->role != 'Admin' && Auth()->user()->role != 'Secretary')
+            <div class="overflow-auto" style="height: 70vh;">
+        @else
+            <div class="overflow-auto" style="height: 53vh;">
+        @endif
+
             <div class="d-flex">
                 <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Active</h1>
             </div>
             <div class="row">
-                @foreach($client->projects as $project)
+                
+            
+                @foreach($projects as $project)
                 @if($project->status != "Archived")
                 <div class="col-3 my-2">
                     <a href="{{ url('projectContent/'.$project->id) }}" class="text-decoration-none text-black">
@@ -116,12 +135,13 @@
                 @endif
                 @endforeach
             </div>
+
             <div class="collapse" id="archivedProjects">
                 <div class="d-flex">
                     <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Archived</h1>
                 </div>
                 <div class="row">
-                    @foreach($client->projects as $project)
+                    @foreach($projects as $project)
                     @if($project->status == "Archived")
                     <div class="col-3 my-2">
                         <a href="{{ url('projectContent/'.$project->id) }}" class="text-decoration-none text-black">
@@ -147,6 +167,7 @@
     </div>
 </div>
 
+@if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
 <!-- -------------------------------------------------------- -->
 <!-- modal for editing client information -->
 <div>
@@ -197,7 +218,7 @@
     <div class="modal fade" id="addProject">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-    
+
                 <div class="modal-header text-white bg-1">
                     <h2 class="modal-title">Add Project</h2>
                 </div>
@@ -224,7 +245,9 @@
                             <select name="engr" id="engr" class="form-control">
                                 <option selected></option>
                                 @foreach($users as $user)
+                                @if($user->role == "Engineer")
                                 <option value="{{$user->id}}" {{($user->id == old('engr'))?'selected':''}}>{{$user->role}} - {{$user->name}}</option>
+                                @endif
                                 @endforeach
                             </select>
                             
@@ -259,7 +282,7 @@
                                         <p class="py-1 me-2 mb-0">Psd-</p>
                                         <input type="text" name="surNum" id="surNum" class="form-control" value="{{ old('surNum') }}" autocomplete="off" maxlength="9" placeholder="xx-xxxxxx" style="height: 2.3rem;">
                                     </div>
-                                    @error('surveyNo')
+                                    @error('surveyNumber')
                                     <p class="text-danger">*{{$message}}</p>
                                     @enderror
                                     @error('surNum')
@@ -294,7 +317,7 @@
             </div>
         </div>
     </div>
-    @if($errors->has('type') || $errors->has('engr') || $errors->has('loc') || $errors->has('lotNum') || $errors->has('surNum') || $errors->has('lotArea') || $errors->has('landOwn'))
+    @if($errors->has('type') || $errors->has('engr') || $errors->has('loc') || $errors->has('lotNum') || $errors->has('surNum') || $errors->has('surveyNumber') || $errors->has('lotArea') || $errors->has('landOwn'))
     <script>
         document.getElementById('addProjectBtn').click();
     </script>
@@ -303,7 +326,7 @@
 
 
 
-
+@endif
 
 
 <script>

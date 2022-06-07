@@ -4,23 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\File;
+use App\Models\Log;
 use App\Models\Project;
 use App\Models\Request as ModelsRequest;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Exists;
 use Illuminate\Validation\ValidationException;
 
 class ClientController extends Controller
 {
-    public function showProjects(Client $client)
+    public function showProjects()
     {
         // dd($client->projects);
-        return view('clientProjectList', ['client' => $client]);
+        return view('clientProjectList');
     }
 
-    public function showProjectDetail(Client $client, Project $project)
+    public function showProjectDetail(User $client, Project $project)
     {
         return view('clientProjectContent', ['client' => $client, 'project' => $project]);
     }
@@ -31,13 +34,14 @@ class ClientController extends Controller
             'name' => 'required|max:255',
             'address' => 'nullable|max:255',
             'contact' => 'nullable|numeric|regex:/(9)([0-9]{9})/',
-            'email' => 'required|max:255|email|unique:clients,email',
+            'email' => 'nullable|max:255|email|unique:users,email',
+            'username' => 'required|max:255|unique:users,username',
             'img' => 'nullable',
             'duplicate' => 'nullable',
         ]);
 
         if(is_null($request['duplicate'])){
-            $exist = Client::where('name', '=', $request['name'])->first();
+            $exist = DB::table('users')->where('name', '=', $request['name'])->where('role', '=', 'Client')->first(); 
             
             if(!($exist === null))
             {
@@ -48,14 +52,16 @@ class ClientController extends Controller
         }
         
         // dd('asjkdhsj');
-        $client = new Client;
+        $client = new User;
         $client['name'] = $request['name'];
         $client['address'] = $request['address'];
         $client['contact'] = $request['contact'];
         $client['email'] = $request['email'];
+        $client['username'] = $request['username'];
+        $client['role'] = "Client";
         $client['password'] = Hash::make('password');
 
-        if (count($request) > 5) {
+        if (count($request) > 6) {
             $newImageName = time() . '_' . $request['name'] . '.' . $request['img']->extension();
             $request['img']->move(public_path('images/users'), $newImageName);
 
@@ -65,6 +71,12 @@ class ClientController extends Controller
         }
 
         $client->save();
+
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['client_id'] = $client->id;
+        $log['remarks'] = "created client's account";
+        $log->save();
 
         return redirect(url()->previous());
     }
@@ -80,15 +92,21 @@ class ClientController extends Controller
         $client['contact'] = $request['contact'];
         $client->save();
 
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['client_id'] = $client->id;
+        $log['remarks'] = "updated client's account";
+        $log->save();
+
         return redirect(url()->previous())->with('success', 'ahhaha');
     }
 
-    public function submitFile(Client $client, Project $project)
+    public function submitFile(Project $project)
     {
         $request = request()->validate([
             'title' => 'required|max:255',
             'description' => 'max:255',
-            'img' => 'required|mimes:jpg,png,jpeg',
+            'img' => 'required',
             'remark' => 'max:255',
         ]);
 
@@ -110,10 +128,16 @@ class ClientController extends Controller
 
         $req->save();
 
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['file_id'] = $file->id;
+        $log['remarks'] = "submitted document";
+        $log->save();
+
         return redirect(url()->previous());
     }
 
-    public function requestTask(Client $client, Project $project)
+    public function requestTask(Project $project)
     {
         $request = request()->validate([
             'task' => 'required|max:255',
@@ -135,6 +159,12 @@ class ClientController extends Controller
         $req['remarks'] = $request['remark'];
         $req['status'] = "Request";
         $req->save();
+
+        $log = new Log();
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "requested for a task";
+        $log->save();
 
         return redirect(url()->previous());
     }
