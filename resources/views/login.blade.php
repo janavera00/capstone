@@ -40,14 +40,20 @@
                     <div class="py-2">
                         <label for="username" class="form-label">Username:</label>
                         <input type="text" name="username" id="username" class="form-control">
+                        @error('username')
+                        <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="pb-2">
                         <label for="password" class="form-label">Password:</label>
                         <input type="password" name="password" id="password" class="form-control">
+                        @error('password')
+                        <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @foreach($errors->all() as $error)
-                    <p class="text-danger">{{$error}}</p>
-                    @endforeach
+                    @error('invalid')
+                    <p class="text-danger">{{ $message }}</p>
+                    @enderror
                     <div class="py-2 d-flex justify-content-center">
                         <input type="submit" value="Login" class="btn bg-3 text-white w-25">
                     </div>
@@ -55,7 +61,49 @@
             </div>
         </div>
 
+    <button data-bs-toggle="modal" data-bs-target="#addUser" id="addUserBtn" hidden></button>
+    <div class="modal" id="addUser">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-1"><h1 class="modal-title text-white">Add user</h1></div>
+                <form action="{{ url('createAdmin') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <p>Please enter your user information</p>
+                        <div class="m-2 p-2 border rounded">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" autocomplete="off" value="{{ old('name') }}">
+                            @error('name')
+                            <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="m-2 p-2 border rounded">
+                            <label for="username">Username</label>
+                            <input type="text" name="inputUsername" id="inputUsername" class="form-control" autocomplete="off" value="{{ old('inputUsername') }}">
+                            @error('inputUsername')
+                            <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="m-2 p-2 border rounded">
+                            <label for="inputPassword">Password</label>
+                            <input type="password" name="inputPassword" id="inputPassword" class="form-control">
+                            @error('inputPassword')
+                            <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-secondary">
+                        <input type="submit" value="Submit" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-
+    @if(count($user) == 0 || $errors->has('name') || $errors->has('inputUsername') || $errors->has('inputPassword'))
+    <script>
+        document.getElementById('addUserBtn').click();
+    </script>
+    @endif
 </body>
 </html>

@@ -10,6 +10,7 @@ use App\Models\Request as ModelsRequest;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Exists;
@@ -74,7 +75,7 @@ class ClientController extends Controller
 
         $log = new Log();
         $log['actor'] = Auth()->user()->id;
-        $log['client_id'] = $client->id;
+        $log['user_id'] = $client->id;
         $log['remarks'] = "created client's account";
         $log->save();
 
@@ -84,17 +85,19 @@ class ClientController extends Controller
     public function update(Client $client)
     {
         $request = request()->validate([
-            'address' => 'max:255',
-            'contact' => 'numeric|regex:/(09)([0-9]{9})/',
+            'address' => 'nullable|max:255',
+            'contact' => 'nullable|numeric|regex:/(09)([0-9]{9})/',
+            'email' => 'nullable|email|unique:users,email'
         ]);
-
+        
         $client['address'] = $request['address'];
         $client['contact'] = $request['contact'];
+        $client['email'] = $request['email'];
         $client->save();
 
         $log = new Log();
         $log['actor'] = Auth()->user()->id;
-        $log['client_id'] = $client->id;
+        $log['user_id'] = $client->id;
         $log['remarks'] = "updated client's account";
         $log->save();
 

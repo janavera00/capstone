@@ -2,21 +2,21 @@
 
 @section('content')
 
-@if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
+@if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
 <div class="container px-0">
     <a href="/clients" class="btn btn-danger mt-4"><img src="{{asset('images/assets/arrow-left-solid-white.svg')}}" width="30rem"></a>
 </div>
 @endif
 
 @php
-    if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary"){
+    if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary"){
         $projects = $client->clientProjects;
     } else {
         $projects = Auth()->user()->engrProjects;
     }
 @endphp
 <div class="container text-white bg-2 mt-2 overflow-auto rounded" style="height: 80vh;">
-    @if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
+    @if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
     <div class="row p-3">
         <!-- buttons -->
         <div class="col-2 border-end">
@@ -46,9 +46,15 @@
                         <div class="col p-2 bg-white text-black rounded">{{ $client->contact }}</div>
                     </div>
                     @endif
+                    @if($client->email)
                     <div class="row m-2 pt-2">
                         <p class="col-2 h-100 my-auto">Email Address</p>
                         <div class="col p-2 bg-white text-black rounded">{{ $client->email }}</div>
+                    </div>
+                    @endif
+                    <div class="row m-2 pt-2">
+                        <p class="col-2 h-100 my-auto">Username</p>
+                        <div class="col p-2 bg-white text-black rounded">{{ $client->username }}</div>
                     </div>
                     <hr>
                     <div class="mt-3 d-flex">
@@ -85,16 +91,13 @@
 
 
 
-    
-
-
 
     <!-- projects List -->
     <div class="container rounded border border-2 my-2">
         <!-- header -->
         <div class="mx-2 row py-2 border-bottom">
             <div class="col d-flex">
-                <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-{{(Auth()->user()->role != 'Admin' && Auth()->user()->role != 'Secretary')?'secondary':'primary'}} my-auto ms-auto" {{(Auth()->user()->role != "Admin" && Auth()->user()->role != "Secretary")?'disabled':''}}>Add a Project</button>
+                <button data-bs-toggle="modal" data-bs-target="#addProject" id="addProjectBtn" class="btn btn-{{(Auth()->user()->role != 'Head of Office' && Auth()->user()->role != 'Secretary')?'secondary':'primary'}} my-auto ms-auto" {{(Auth()->user()->role != "Head of Office" && Auth()->user()->role != "Secretary")?'disabled':''}}>Add a Project</button>
             </div>
             <h1 class="col text-center">Projects</h1>
             <div class="col">
@@ -102,7 +105,7 @@
             </div>
         </div>
 
-        @if(Auth()->user()->role != 'Admin' && Auth()->user()->role != 'Secretary')
+        @if(Auth()->user()->role != 'Head of Office' && Auth()->user()->role != 'Secretary')
             <div class="overflow-auto" style="height: 70vh;">
         @else
             <div class="overflow-auto" style="height: 53vh;">
@@ -167,7 +170,7 @@
     </div>
 </div>
 
-@if(Auth()->user()->role == "Admin" || Auth()->user()->role == "Secretary")
+@if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
 <!-- -------------------------------------------------------- -->
 <!-- modal for editing client information -->
 <div>
@@ -177,7 +180,7 @@
                 <div class="modal-header bg-1 text-white">
                     <h1 class="modal-title">Edit Client's information</h1>
                 </div>
-                <form action="../client/{{$client->id}}/update" method="post">
+                <form action="{{ url('client/'.$client->id.'/update') }}" method="post">
                     @csrf
                     <div class="modal-body">
                         <div class="m-2 rounded border p-2">
@@ -194,6 +197,13 @@
                             <p class="text-danger">*{{$message}}</p>
                             @enderror
                         </div>
+                        <div class="m-2 rounded border p-2">
+                            <label for="email">email</label>
+                            <input type="email" name="email" id="email" class="form-control" autocomplete="off" value="{{ ($client->email)?$client->email:'' }}">
+                            @error('email')
+                            <p class="text-danger">*{{$message}}</p>
+                            @enderror
+                        </div>
                     </div>
                     <div class="modal-footer bg-secondary">
                         <a href="" class="btn btn-danger" data-bs-dismiss="modal" style="width: 200px;">Cancel</a>
@@ -203,7 +213,7 @@
             </div>
         </div>
     </div>
-    @if($errors->has('address') || $errors->has('contact'))
+    @if($errors->has('address') || $errors->has('contact') || $errors->has('email'))
     <script>
         document.getElementById('editClientBtn').click();
     </script>

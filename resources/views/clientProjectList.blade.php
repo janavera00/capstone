@@ -1,4 +1,4 @@
-@extends('layouts.navbarOnly')
+@extends('layouts.app')
 
 @section('content')
 

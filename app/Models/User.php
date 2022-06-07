@@ -50,4 +50,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Project::class, 'user_id');
     }
+    public function logs()
+    {
+        return $this->hasMany(Log::class, 'actor');
+    }
 }

@@ -20,30 +20,6 @@
                 <button class="btn btn-primary w-100" onclick="showInfo()">Show More Info</button>
                 <button id="collapseBtn" data-bs-toggle="collapse" data-bs-target="#showInfo" hidden></button>
                 <button data-bs-toggle="modal" data-bs-target="#updateFile" id="updateBtn" hidden></button>
-                <button data-bs-toggle="collapse" data-bs-target="#progress" id="progressBtn" hidden></button>
-            </div>
-
-            <!-- progress tracking -->
-            <div class="collapse" id="progress">
-                <hr>
-                <h4 class="text-center">{{ $project->service->name }}</h4>
-                <div class="overflow-auto mt-2" style="height: 230px;">
-                    <div class="d-flex flex-column p-2">
-                        @foreach($project->service->steps as $step)
-                            @if($step->stepNo <= $project->stepNo)
-                            <div class="btn text-white bg-success mt-2 mx-auto" style="cursor: default; width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
-                            @else
-                            <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" style="width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2 mx-auto">{{ $step->name }}</a>
-                            @endif
-                        
-                            @if($step->stepNo < count($project->service->steps))
-                            <div class="mx-auto" style="width: 30px; height: 30px;">
-                                <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
-                            </div>
-                            @endif
-                        @endforeach
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -114,129 +90,189 @@
     <hr>
 
     <!-- project contents -->
-    <div class="row justify-content-center">
-        <!-- documents list -->
-        <div class="col-5 rounded mx-2 border border-2 overflow-auto d-flex flex-column mb-5" style="height: 56vh;">
-            <!-- header -->
-            <div class="mx-2 row pt-2 border-bottom">
-                <div class="col">
-                    <button data-bs-toggle="modal" data-bs-target="#addDocument" class="btn bg-primary text-white w-100" id="addFileBtn">Add</button>
-                </div>
-                <h1 class="col text-center">Documents</h1>
-                <div class="col"></div>
-            </div>
-
-            <div class="overflow-auto m-1" style="height: 50vh;">
-                @if(count($project->files) < 1) 
-                <div class="w-100 h-100 d-flex pb-5">
-                    <h1 class="m-auto text-secondary" style="width: fit-content; border-bottom:1px solid gray">Document list empty</h1>
-                </div>
-                @endif
-            
-                <div class="row">
-                    @foreach($project->files as $file)
-                    @if($file->status != "Request")
-                    <div class="col-6">
-                        <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
-                            <div class="m-2 card bg-secondary overflow-auto">
-
-                                <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
-
-                                <div class="card-header">
-                                    <h3 class="card-title">{{ $file->title }}</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="w-50 m-auto bg-white rounded p-2">
-                                        @if($file->image_path)
-                                        <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image">
-                                        @else
-                                        <p class="text-center">No Image</p>
-                                        @endif
-                                    </div>
-                                </div>
+    <div class="row">
+        <div class="col-2 border-end py-2">
+            <!-- progress tracking -->
+            <div>
+                <h4 class="text-center">{{ $project->service->name }}</h4>
+                <div class="mt-2">
+                    <div class="d-flex flex-column p-2">
+                        @foreach($project->service->steps as $step)
+                            @if($step->stepNo <= $project->stepNo)
+                            <div class="btn text-white bg-success mt-2 mx-auto" style="cursor: default; width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}">{{ $step->name }}</div>
+                            @else
+                            <a href="{{ url('updateProject/step/'.$project->id.'/'.$step->stepNo) }}" style="width: fit-content;" data-bs-toggle="tooltip" data-bs-placement="left" title="{{$step->description}}" class="btn btn-dark mt-2 mx-auto">{{ $step->name }}</a>
+                            @endif
+                        
+                            @if($step->stepNo < count($project->service->steps))
+                            <div class="mx-auto" style="width: 30px; height: 30px;">
+                                <div class="{{ ($step->stepNo < $project->stepNo)?'bg-success':'bg-dark' }} mx-auto" style="width: 5px; height: 40px;"></div>
                             </div>
-                        </a>
+                            @endif
+                        @endforeach
                     </div>
-                    @endif
-                    @endforeach
                 </div>
-
-                @php
-                    $request = 0;
-                    foreach($project->files as $file){
-                        if($file->status == "Request"){
-                            $request++;
-                        }
-                    } 
-                @endphp
-                @if($request > 0)
-                <div class="d-flex">
-                    <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Submitted</h1>
-                </div>
-                <div class="row">
-                    @foreach($project->files as $file)
-                    @if($file->status == "Request")
-                    <div class="col-6">
-                        <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
-                            <div class="m-2 card bg-secondary overflow-auto">
-
-                                <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
-
-                                <div class="card-header">
-                                    <h3 class="card-title">{{ $file->title }}</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="w-50 m-auto bg-white rounded p-2">
-                                        @if($file->image_path)
-                                        <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image">
-                                        @else
-                                        <p class="text-center">No Image</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    @endif
-                    @endforeach
-                </div>
-                @endif
             </div>
         </div>
-
-        <!-- tasks list -->
-        <div class="col-5 rounded border border-2 overflow-auto d-flex flex-column" style="height: 56vh;">
-            <div class="mx-2 row pt-2 border-bottom">
-                <div class="col">
-                    <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-primary text-white w-100" id="addScheduleBtn">Schedule a Task</button>
+        <div class="col row mt-3">
+            <!-- documents list -->
+            <div class="col-6">
+                <div class="rounded mx-2 border border-2 overflow-auto d-flex flex-column mb-5" style="height: 53vh;">
+                <!-- header -->
+                    <div class="mx-2 row pt-2 border-bottom">
+                        <div class="col">
+                            <button data-bs-toggle="modal" data-bs-target="#addDocument" class="btn bg-primary text-white w-100" id="addFileBtn">Add</button>
+                        </div>
+                        <h1 class="col text-center">Documents</h1>
+                        <div class="col"></div>
+                    </div>
+        
+                    <div class="overflow-auto m-1" style="height: 50vh;">
+                        @if(count($project->files) < 1) 
+                        <div class="w-100 h-100 d-flex pb-5">
+                            <h1 class="m-auto text-secondary" style="width: fit-content; border-bottom:1px solid gray">Document list empty</h1>
+                        </div>
+                        @endif
+                    
+                        <div class="row">
+                            @foreach($project->files as $file)
+                            @if($file->status != "Request")
+                            <div class="col-6">
+                                <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
+                                    <div class="m-2 card bg-secondary overflow-auto">
+        
+                                        <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
+        
+                                        <div class="card-header">
+                                            <h4 class="card-title">{{ $file->title }}</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="w-50 m-auto bg-white rounded p-2">
+                                                @if($file->image_path)
+                                                <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image" style="filter: blur(8px);">
+                                                @else
+                                                <p class="text-center">No Image</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            @endif
+                            @endforeach
+                        </div>
+        
+                        @php
+                            $request = 0;
+                            foreach($project->files as $file){
+                                if($file->status == "Request"){
+                                    $request++;
+                                }
+                            } 
+                        @endphp
+                        @if($request > 0)
+                        <div class="d-flex">
+                            <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Submitted</h1>
+                        </div>
+                        <div class="row">
+                            @foreach($project->files as $file)
+                            @if($file->status == "Request")
+                            <div class="col-6">
+                                <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
+                                    <div class="m-2 card bg-warning text-black overflow-auto">
+        
+                                        <button data-bs-toggle="modal" data-bs-target="#showFile" id="showFileBtn" hidden></button>
+        
+                                        <div class="card-header">
+                                            <h4 class="card-title">{{ $file->title }}</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="w-50 m-auto bg-white rounded p-2">
+                                                @if($file->image_path)
+                                                <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image">
+                                                @else
+                                                <p class="text-center">No Image</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            @endif
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
                 </div>
-                <h1 class="col text-center">Tasks</h1>
-                <div class="col">
-                    <a href="{{ url('scheduling') }}" class="btn btn-success w-100">Show all task</a>
+            </div>  
+            
+    
+            <!-- tasks list -->
+            <div class="col-6">
+                <div class="rounded mx-2 border border-2 overflow-auto d-flex flex-column mb-5" style="height: 53vh;">
+                    <div class="mx-2 row pt-2 border-bottom">
+                        <div class="col">
+                            <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-primary text-white w-100" id="addScheduleBtn">Schedule a Task</button>
+                        </div>
+                        <h1 class="col text-center">Tasks</h1>
+                        <div class="col">
+                            <a href="{{ url('scheduling') }}" class="btn btn-success w-100">Show all task</a>
+                        </div>
+                    </div>
+        
+                    <div class="overflow-auto m-1" style="height: 50vh;">
+                        @if(count($project->tasks) < 1) 
+                        <div class="w-100 h-100 d-flex pb-5">
+                            <h1 class="m-auto text-secondary text-center" style="width: fit-content; border-bottom:1px solid gray">No tasks scheduled</h1>
+                        </div>
+                        @endif
+                        
+                        @foreach($project->tasks->sortByDesc('status') as $task)
+                        @if($task->status == "Active" || $task->status == "Overdue")
+                        <div class="my-2 d-flex flex-column">
+                            <a href="{{ url('task/'.$task->id.'/project') }}" class="mx-auto btn btn-{{($task->status == 'Overdue')?'danger':'primary'}} text-start mt-2" style="width: fit-content;">
+                                @php
+                                $time = explode(':', $task->time);
+                                $date = explode('-', $task->date);
+                                @endphp
+                                <h4>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h4>
+                                <p>{{ $task->task }}</p>
+                            </a>
+                        </div>
+                        @endif
+                        @endforeach
+                        
+                        @php
+                            $request = 0;
+                            foreach($project->tasks as $task){
+                                if($task->status == "Request"){
+                                    $request++;
+                                }
+                            } 
+                        @endphp
+
+                        @if($request > 0)
+                            <div class="d-flex">
+                                <h1 class="mx-auto border-bottom px-5 pt-4" style="width: fit-content;">Request</h1>
+                            </div>
+                            @foreach($project->tasks->sortByDesc('status') as $task)
+                            @if($task->status == "Request")
+                            <div class="my-2 d-flex flex-column">
+                                <a href="{{ url('task/'.$task->id.'/project') }}" class="mx-auto btn btn-{{($task->status == 'Overdue')?'danger':'warning'}} text-start mt-2" style="width: fit-content;">
+                                    @php
+                                    $time = explode(':', $task->time);
+                                    $date = explode('-', $task->date);
+                                    @endphp
+                                    <h4>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h4>
+                                    <p>{{ $task->task }}</p>
+                                </a>
+                            </div>
+                            @endif
+                            @endforeach
+                        @endif
+                    </div>
                 </div>
             </div>
-
-            <div class="overflow-auto m-1" style="height: 50vh;">
-                @if(count($project->tasks) < 1) <div class="w-100 h-100 d-flex pb-5">
-                    <h1 class="m-auto text-secondary text-center" style="width: fit-content; border-bottom:1px solid gray">No tasks scheduled</h1>
-            </div>
-            @endif
-            @foreach($project->tasks->sortByDesc('status') as $task)
-            @if($task->status == "Active" || $task->status == "Overdue")
-            <div class="my-2 d-flex flex-column">
-                <a href="{{ url('task/'.$task->id.'/project') }}" class="mx-auto btn btn-{{($task->status == 'Overdue')?'danger':'primary'}} text-start mt-2" style="width: fit-content;">
-                    @php
-                    $time = explode(':', $task->time);
-                    $date = explode('-', $task->date);
-                    @endphp
-                    <h2>{{ date("l, F j | g:i a", mktime($time[0],$time[1], 0, $date[1], $date[2], $date[0])) }}</h2>
-                    <p>{{ $task->task }}</p>
-                </a>
-            </div>
-            @endif
-            @endforeach
-            </div>
-
         </div>
     </div>
 </div>
@@ -268,10 +304,12 @@
                         <label>Engineer In Charge</label>
                         <select name="user" id="user" class="form-control">
                             @if(!$project->user_id)
-                            <option selected hidden></option>
+                            <option selected></option>
                             @endif
                             @foreach($users as $user)
+                            @if($user->role == 'Engineer')
                             <option value="{{$user->id}}" {{($project->user_id == $user->id)?'selected':''}}>{{$user->name}}</option>
+                            @endif
                             @endforeach
                         </select>
                         @error('user')
@@ -466,7 +504,9 @@
                                         <select name="employee[]" class="form-control employee">
                                             <option selected hidden></option>
                                             @foreach($users as $user)
+                                            @if($user->role != 'Head of Office')
                                             <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->role }}</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </td>
@@ -477,7 +517,9 @@
                                         <select name="employee[]" class="form-control employee">
                                             <option selected hidden></option>
                                             @foreach($users as $user)
+                                            @if($user->role != 'Head of Office')
                                             <option value="{{ $user->id }}" {{(old('task') == $user->id)?'selected':''}}>{{ $user->name }} - {{ $user->role }}</option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </td>
@@ -572,7 +614,6 @@
     function showInfo() {
         const btn = document.getElementById('collapseBtn');
         btn.click();
-        document.getElementById('progressBtn').click();
         btn.textContent = (btn.textContent == 'Show More Info' ? 'Hide Info' : 'Show More Info');
     }
 
