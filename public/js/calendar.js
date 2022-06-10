@@ -39,10 +39,22 @@ let selectedDateMessage = "block";
 for(let i = 0;i < displayTaskNode.length;i++)
 {
     displayTaskNode[i].style.display = "none";
-    if(displayTaskDate == displayTaskNode[i].id){
+
+    let ids = displayTaskNode[i].id;
+
+    ids = ids.split('-');
+
+    let asd = new Date(ids[0], ids[1], ids[2]);
+    let sdf = `${asd.getFullYear()}-${((asd.getMonth())<10)?'0'+(asd.getMonth()):asd.getMonth()}-${(asd.getDate()<10)?'0'+asd.getDate():asd.getDate()}`;
+    if(displayTaskDate == sdf){
+        document.getElementById('selectedDateMessage').style.display = "none";
         selectedDateMessage = "none";
         displayTaskNode[i].style.display = "block"
     }
+    // if(displayTaskDate == displayTaskNode[i].id){
+    //     selectedDateMessage = "none";
+    //     displayTaskNode[i].style.display = "block"
+    // }
 }
 document.getElementById('selectedDateMessage').style.display = selectedDateMessage;
 
@@ -139,8 +151,13 @@ function changeDate(day, month, year){
     for(let i = 0;i < displayTaskNode.length;i++)
     {
         displayTaskNode[i].style.display = "none";
-        
-        if(displayTaskDate == displayTaskNode[i].id){
+        let ids = displayTaskNode[i].id;
+
+        ids = ids.split('-');
+
+        let asd = new Date(ids[0], ids[1], ids[2]);
+        let sdf = `${asd.getFullYear()}-${((asd.getMonth())<10)?'0'+(asd.getMonth()):asd.getMonth()}-${(asd.getDate()<10)?'0'+asd.getDate():asd.getDate()}`;
+        if(displayTaskDate == sdf){
             document.getElementById('selectedDateMessage').style.display = "none";
             selectedDateMessage = "none";
             displayTaskNode[i].style.display = "block"
