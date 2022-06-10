@@ -69,28 +69,26 @@
             <a href="/" class="navbar-brand text-white fw-bolder ps-4">SProMAp</a>
             <ul class="navbar-nav me-auto">
                 @if(Auth()->user()->role != 'Client')
-                <li class="nav-item">
-                    <a href="{{ url('home') }}" class="nav-link">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    @if(Auth()->user()->role == "Surveyor")
-                        <p class="nav-link mb-0" style="cursor: default;">Projects</p>
-                    @elseif(Auth()->user()->role == "Engineer")
-                        <a href="{{ url('projects') }}" class="nav-link">Projects</a>
-                    @else
-                        <a href="{{ url('clients') }}" class="nav-link">Projects</a>
+                    <li class="nav-item">
+                        <a href="{{ url('home') }}" class="nav-link">Dashboard</a>
+                    </li>
+                    @if(Auth()->user()->role != "Surveyor")
+                    <li class="nav-item">
+                        @if(Auth()->user()->role == "Engineer")
+                            <a href="{{ url('projects') }}" class="nav-link">Projects</a>
+                        @else
+                            <a href="{{ url('clients') }}" class="nav-link">Projects</a>
+                        @endif
+                    </li>
                     @endif
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url('scheduling') }}" class="nav-link">Tasks</a>
-                </li>
-                <li class="nav-item">
-                    @if(Auth()->user()->role != "Head of Office" && Auth()->user()->role != "Secretary")
-                        <p class="nav-link mb-0" style="cursor: default;">Users</p>
-                    @else
+                    <li class="nav-item">
+                        <a href="{{ url('scheduling') }}" class="nav-link">Tasks</a>
+                    </li>
+                    @if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
+                    <li class="nav-item">
                         <a href="{{ url('users') }}" class="nav-link">Users</a>
+                    </li>
                     @endif
-                </li>
                 @endif
             </ul>
             <ul class="navbar-nav">

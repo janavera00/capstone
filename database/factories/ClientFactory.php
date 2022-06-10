@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Client>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class ClientFactory extends Factory
 {
@@ -21,8 +21,10 @@ class ClientFactory extends Factory
             'address' => $this->faker->address(),
             'contact' => '09'.$this->faker->randomNumber(9, true),
             'email' => $this->faker->unique()->safeEmail(),
-            'image' => 'photo.jpg',
-            'password' => bcrypt('password'), // password
+            'username' => $this->faker->firstname(),
+            'password' => bcrypt('password'),
+            'image' => "default.svg",
+            'role' => 'Client',
         ];
     }
 }

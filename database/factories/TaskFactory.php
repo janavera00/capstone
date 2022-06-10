@@ -17,12 +17,16 @@ class TaskFactory extends Factory
      */
     public function definition()
     {
+        $projectKeys = Project::all()->keys();
+        for($i = 0;$i < count($projectKeys);$i++){
+            $projectKeys[$i] += 1;
+        }
         return [
             'task' => $this->faker->word(),
-            'date' => $this->faker->dateTimeInInterval('now', '2 months')->format("Y-m-d"),
+            'date' => $this->faker->dateTimeInInterval('now')->format("Y-m-d"),
             'time' => $this->faker->time(),
             'status' => 'Active',
-            'project_id' => $this->faker->randomDigit()+1,
+            'project_id' => $projectKeys->random(),
         ];
     }
 }

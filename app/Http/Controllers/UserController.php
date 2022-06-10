@@ -22,6 +22,8 @@ class UserController extends Controller
 
         // dd($logs);
 
+
+
         return view('userProfile', ['users' => $users, 'logs' => $logs]);
     }
 
@@ -67,7 +69,7 @@ class UserController extends Controller
         $log['remarks'] = "Created User Account";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => $user->name.'\'s account successfully created']);
     }
 
     public function update(User $user)
@@ -96,7 +98,7 @@ class UserController extends Controller
         $log['remarks'] = "Updated user Account";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => $user->name.'\'s account successfully updated']);
     }
 
     public function authenticate()
@@ -132,7 +134,7 @@ class UserController extends Controller
 
 
 
-                return view('dashboard', ['projects' => $projects, 'clients' => $clients, 'tasks' => $tasks]);
+                return redirect('home')->with(['success' => 'Welcome back '.Auth()->user()->name]);
             }
         }
         
@@ -155,13 +157,18 @@ class UserController extends Controller
 
         $user = new User;
         $user['name'] = $request['name'];
-        $user['username'] = $request['username'];
-        $user['password'] = bcrypt($request['password']);
+        $user['username'] = $request['inputUsername'];
+        $user['password'] = bcrypt($request['inputPassword']);
         $user['image'] = "default.svg";
         $user['role'] = "Head of Office";
         $user->save();
+        Auth::loginUsingId($user->id);
 
-        return redirect('/');
+        $employees = User::where('role', '!=', 'Head of Office')->where('role', '!=', 'Client')->get();
+        if(count($employees) > 0){
+            return redirect('/home')->with(['success' => $user->name.'\'s account created.']);
+        }
+        return redirect('/users');
     }
 
     public function home()
@@ -188,7 +195,29 @@ class UserController extends Controller
     
             return view('dashboard', ['projects' => $projects, 'clients' => $clients, 'tasks' => $tasks]);
         }
+    }
 
+    public function changePass(){
+        $request = request()->validate([
+            'oldPassword' => 'required',
+            'newPassword' => 'required',
+        ]);
+
+        $user = Auth()->user();
+
+        
+        if(Hash::check($request['oldPassword'], $user->password))
+        {
+            $request['oldPassword'] = bcrypt($request['oldPassword']);
+            $user = User::find(Auth()->user()->id);
+            $user['password'] = bcrypt($request['newPassword']);
+            $user->save;
+
+            
+            return redirect('users')->with(['success' => 'Password successfuly changed.']);
+        }
+
+        throw ValidationException::withMessages(['passFail' => 'The old password is incorrect.']);
     }
 
     public function destroy()

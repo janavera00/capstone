@@ -47,7 +47,7 @@
                     </div>
                     <div class="card-body overflow-auto" style="height: 400px;">
     
-                        @foreach($projects as $project)
+                        @foreach($projects->sortByDesc('updated_at') as $project)
                         @if($project->status == "Active")
                         <a href="{{ url('projectContent/'.$project->id) }}" class="text-decoration-none text-black">
                             <div class="card border-primary text-center mx-auto my-3" style="width: 400px;">
@@ -73,7 +73,11 @@
                     </div>
                     <div class="card-body d-flex flex-column overflow-auto" style="height: 400px;">
                         
-                        @foreach($tasks as $task)
+                        @foreach($tasks->sortBy('time') as $task)
+                        @php
+                            $date = date_format(date_create($task->date), 'Y-m-d');
+                        @endphp
+                        @if($date == date('Y-m-d'))
                         @if($task->status == "Active" || $task->status == "Overdue")
                             <a href="{{ url('task/'.$task->id.'/project') }}" class="mx-auto btn btn-{{($task->status == 'Overdue')?'danger':'primary'}} text-start mt-3" style="width: 300px;">
                                 @php
@@ -84,6 +88,7 @@
                                 <p class="mb-0">{{ $task->task }}</p>
                             </a>
                         @endif
+                        @endif
                         @endforeach
                     </div>
                 </div>
@@ -92,4 +97,38 @@
 
     </div>
 
+    @if(session()->has('failed'))
+        <div class="modal" id="success">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger"><h1 class="modal-title text-white">Failed</h1></div>
+                    <div class="modal-body d-flex flex-column">
+                        <p class="m-auto">{{ session()->get('failed') }}</p>
+                        <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+        <script>
+            document.getElementById('successBtn').click();
+        </script>
+    @endif
+    @if(session()->has('success'))
+        <div class="modal" id="success">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success"><h1 class="modal-title text-white">Success</h1></div>
+                    <div class="modal-body d-flex flex-column">
+                        <p class="m-auto">{{ session()->get('success') }}</p>
+                        <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+        <script>
+            document.getElementById('successBtn').click();
+        </script>
+    @endif
 @endsection

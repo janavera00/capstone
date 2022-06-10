@@ -39,7 +39,7 @@
                     
                     <div class="py-2">
                         <label for="username" class="form-label">Username:</label>
-                        <input type="text" name="username" id="username" class="form-control">
+                        <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}">
                         @error('username')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror

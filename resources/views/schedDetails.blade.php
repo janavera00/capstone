@@ -58,8 +58,21 @@
                             @endforeach
                         </ul>
                     </div>
-                    <div class="my-auto">
-                        <button class="btn btn-{{(Auth()->user()->role == 'Surveyor' || Auth()->user()->role == 'Engineer')?'secondary':'primary'}}" id="editSchedBtn" data-bs-toggle="modal" data-bs-target="#editSched" style="width: 200px;" {{(Auth()->user()->role == 'Surveyor' || Auth()->user()->role == 'Engineer')?'disabled':''}}>Edit Schedule</button>
+                    <div class="my-auto d-flex flex-column">
+                        @if($task->project->status != 'Archived')
+                        @if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
+                            <button class="btn btn-primary my-2" id="editSchedBtn" data-bs-toggle="modal" data-bs-target="#editSched">Edit Schedule</button>
+                            <a href="{{ url('taskDone/'.$task->id) }}" class="btn btn-success my-2">Mark as Done</a>
+                            
+                            @if($task->status == "Overdue")
+                                <a href="{{ url('deleteTask/'.$task->id) }}" class="btn btn-danger my-2">Remove</a>
+                                <a data-bs-toggle="modal" href="#resched" class="btn btn-success my-2">Reschedule</a>
+                            @elseif($task->status == "Request")
+                                <a href="{{ url('taskReject/'.$task->id) }}" class="btn btn-danger my-2">Reject</a>
+                                <a href="{{ url('taskAccept/'.$task->id) }}" class="btn btn-success my-2">Accept</a>
+                            @endif
+                        @endif
+                        @endif
                     </div>
 
                 </div>
@@ -196,6 +209,35 @@
     </div>
 </div>
 
+<div class="modal fade" id="resched">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-1"><h1 class="modal-title text-white">Reschedule Task</h1></div>
+            <form action="{{ url('reschedule/'.$task->id) }}" method="post">
+                @csrf
+                <div class="modal-body">
+                    <div class="m-2 p-2 border rounded">
+                        <label for="reschedDate">Date</label>
+                        <input type="date" name="reschedDate" id="reschedDate" class="form-control">
+                    </Div>
+                    <div class="m-2 p-2 border rounded">
+                        <label for="reschedTime">Time</label>
+                        <input type="time" name="reschedTime" id="reschedTime" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer bg-secondary">
+                    <a data-bs-dismiss="modal" class="btn btn-danger">Cancel</a>
+                    <input type="submit" value="Reschedule" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@foreach($errors->all() as $error)
+<p>{{ $error }}</p>
+@endforeach
+
 @if($errors->any())
 <script>
     document.getElementById('editSchedBtn').click();
@@ -221,4 +263,22 @@
             field.removeChild(field.lastElementChild);
     }
 </script>
+
+@if(session()->has('success'))      
+    <div class="modal" id="success">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success"><h1 class="modal-title text-white">Success</h1></div>
+                <div class="modal-body d-flex flex-column">
+                    <p class="m-auto">{{ session()->get('success') }}</p>
+                    <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+    <script>
+        document.getElementById('successBtn').click();
+    </script>
+    @endif
 @endsection

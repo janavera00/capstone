@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'username' => $this->faker->firstname(),
             'password' => bcrypt('password'),
             'image' => "default.svg",
-            'role' => $this->faker->randomElement(['Secretary', 'Engineer', 'Surveyor']),
+            'role' => $this->faker->randomElement(['Secretary', 'Engineer', 'Surveyor', 'Client']),
         ];
     }
 }

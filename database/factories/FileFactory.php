@@ -17,12 +17,16 @@ class FileFactory extends Factory
      */
     public function definition()
     {
+        $projectKeys = Project::all()->keys();
+        for($i = 0;$i < count($projectKeys);$i++){
+            $projectKeys[$i] += 1;
+        }
         return [
             'title' => $this->faker->word(),
             'description' => $this->faker->sentence(),
-            'project_id' => $this->faker->randomDigit()+1,
+            'project_id' => $projectKeys->random(),
             'status' => $this->faker->randomElement(['In Folder', 'Digital', 'Away']),
-            'image_path' => "1653914430_Cat.jpg",
+            'image_path' => "copy-solid.svg",
         ];
     }
 }

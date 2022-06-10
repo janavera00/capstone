@@ -29,6 +29,7 @@ Route::middleware(['web'])->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('home', [UserController::class, 'home']);
     
+        Route::post('/changePass', [UserController::class, 'changePass']);
         Route::get('/logout', [UserController::class, 'destroy']);
         Route::get('/users', [UserController::class, 'show']);
         Route::post('/user/create', [UserController::class, 'create']);
@@ -50,6 +51,9 @@ Route::middleware(['web'])->group(function () {
         Route::post('scheduling/update/{task}', [TaskController::class, 'updateTask']);
         Route::post('reschedule/{task}', [TaskController::class, 'resched']);
         Route::get('deleteTask/{task}', [TaskController::class, 'delete']);
+        Route::get('taskReject/{task}', [TaskController::class, 'reject']);
+        Route::get('taskAccept/{task}', [TaskController::class, 'accept']);
+        Route::get('taskDone/{task}', [TaskController::class, 'done']);
     
         
         Route::post('search', [FilingController::class, 'search']);
@@ -57,7 +61,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('fileAccept/{file}', [FilingController::class, 'accept']);
         
         Route::post('/client/create', [ClientController::class, 'create']);
-        Route::post('client/update', [ClientController::class, 'update']);
+        Route::post('/client/{client}/update', [ClientController::class, 'update']);
         Route::get('project', [ClientController::class, 'showProjects']);
         Route::get('project/{project}', [ClientController::class, 'showProjectDetail']);
         Route::post('project/{project}/submitFile', [ClientController::class, 'submitFile']);

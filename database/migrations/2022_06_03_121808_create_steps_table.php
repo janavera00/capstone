@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('steps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('service_id')->constrained();
+            $table->foreignId('service_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->integer('stepNo');
             $table->string('name');
             $table->text('description');
