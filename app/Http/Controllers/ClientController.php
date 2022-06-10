@@ -48,8 +48,8 @@ class ClientController extends Controller
             {
                 throw ValidationException::withMessages(['duplicate' => 'duplicate']); 
             }
-        }else if($request['duplicate'] != 'password'){
-            return redirect(url()->previous());
+        }else if(!Hash::check($request['duplicate'], Auth()->user()->password)){
+            return redirect(url()->previous())->with(['failed' => 'The password you\'ve entered is incorrect.']);
         }
         
         // dd('asjkdhsj');
@@ -79,15 +79,15 @@ class ClientController extends Controller
         $log['remarks'] = "created client's account";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => $client->username.' has been added.']);
     }
 
-    public function update(Client $client)
+    public function update(User $client)
     {
         $request = request()->validate([
             'address' => 'nullable|max:255',
             'contact' => 'nullable|numeric|regex:/(09)([0-9]{9})/',
-            'email' => 'nullable|email|unique:users,email'
+            'email' => 'nullable|email'
         ]);
         
         $client['address'] = $request['address'];
@@ -101,7 +101,7 @@ class ClientController extends Controller
         $log['remarks'] = "updated client's account";
         $log->save();
 
-        return redirect(url()->previous())->with('success', 'ahhaha');
+        return redirect(url()->previous())->with(['success' => 'Client information successfuly updated.']);
     }
 
     public function submitFile(Project $project)

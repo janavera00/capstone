@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('actor')->constrained('users');
-            $table->foreignId('user_id')->nullable()->constrained();
-            $table->foreignId('project_id')->nullable()->constrained();
-            $table->foreignId('file_id')->nullable()->constrained();
-            $table->foreignId('task_id')->nullable()->constrained();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('project_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('file_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('task_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('remarks');
             $table->timestamps();
         });

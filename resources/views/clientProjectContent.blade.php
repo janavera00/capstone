@@ -283,7 +283,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
                 <div class="modal-header bg-1 text-white">
-                    <h1 class="modal-title">Submit a documment</h1>
+                    <h1 class="modal-title">Submit a document</h1>
                 </div>
                 <form action="{{ url('project/'.$project->id.'/submitFile') }}" method="post" enctype="multipart/form-data">
                     @csrf

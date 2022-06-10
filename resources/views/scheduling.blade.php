@@ -53,7 +53,9 @@
             <div class="container">
                 <div class="row text-white mx-auto mt-2 p-2">
                     <div class="col d-flex">
-                        <button class="btn btn-{{(Auth()->user()->role == 'Surveyor' || Auth()->user()->role == 'Engineer')?'secondary':'primary'}} m-auto" style="width: 200px;" data-bs-toggle="modal" data-bs-target="#newSched" id="newSchedBtn" {{(Auth()->user()->role == "Surveyor" || Auth()->user()->role == "Engineer")?'disabled':''}}>Schedule new task</button>
+                        @if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
+                            <button class="btn btn-primary m-auto" data-bs-toggle="modal" data-bs-target="#newSched" id="newSchedBtn">Schedule new task</button>
+                        @endif
                     </div>
                     <div class="col d-flex">
                         <div class="m-auto text-center" id="date"></div>
@@ -68,22 +70,21 @@
                             if(Auth()->user()->role != "Head of Office" && Auth()->user()->role != "Secretary"){
                                 $tasks = Auth()->user()->tasks;
                             }
+
                         @endphp    
 
 
-                        @foreach($tasks as $task)
+                        @foreach($tasks->where('status', '!=', 'Reject')->where('status', '!=', 'Done') as $task)
                         <li>{{$task->date}}</li>
                         @endforeach
 
                     </ul>
-
+                        
                     <div class="m-auto" id="selectedDateMessage">
                         <h2 class="text-secondary text-center" style="border-bottom: 1px solid gray; width: fit-content;">No Task Scheduled for this day</h2>
                     </div>
                     
-                    @foreach($tasks as $task)
-                    @if($task->status == "Active" || $task->status == "Overdue")
-
+                    @foreach($tasks->where('status', '!=', 'Reject')->where('status', '!=', 'Done') as $task)
                     <div class="selectedDate" id="{{ $task->date }}">
                         <a href="{{ url('task/'.$task->id.'/sched') }}" class="btn btn-{{($task->status == 'Overdue')?'danger':'primary'}} w-100 text-start" style="width: fit-content;">
                             @php
@@ -94,7 +95,7 @@
                         </a>
                         <hr>
                     </div>
-                    @endif
+                    
                     @endforeach
 
                 </div>
@@ -146,7 +147,9 @@
                         <select name="project" id="project" class="form-control">
                             <option disabled selected hidden></option>
                             @foreach($projects as $project)
+                            @if($project->status != 'Archived')
                             <option value="{{ $project->id }}">{{ $project->client->name }} - {{ $project->location }}</option>
+                            @endif
                             @endforeach
                         </select>
                         @error('project')
@@ -227,4 +230,23 @@
             field.removeChild(field.lastElementChild);
     }
 </script>
+
+
+    @if(session()->has('success'))      
+    <div class="modal" id="success">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success"><h1 class="modal-title text-white">Success</h1></div>
+                <div class="modal-body d-flex flex-column">
+                    <p class="m-auto">{{ session()->get('success') }}</p>
+                    <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+    <script>
+        document.getElementById('successBtn').click();
+    </script>
+    @endif
 @endsection

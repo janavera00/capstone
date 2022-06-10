@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Project;
+use App\Models\Task;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +16,6 @@ class ProjectSeeder extends Seeder
      */
     public function run()
     {
-        Project::factory(10)->hasFiles(3)->create();
+        Task::factory(10)->create();
     }
 }

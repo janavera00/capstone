@@ -21,10 +21,11 @@ class FilingController extends Controller
         // dd($clients);
         return view('clientLists', ['clients' => $clients]);
     }
-
+    
     public function showProjects(User $client)
     {
         $users = DB::table('users')->whereNot('role', '=', 'Client')->get();
+        $clients = DB::table('users')->where('role', '=', 'Client')->get();
         $services = DB::table('services')->get();
         
         if($client->id === null){
@@ -33,7 +34,7 @@ class FilingController extends Controller
         }
         
         // dd($projects);
-        return view('projectsList', ['client' => $client, 'users' => $users, 'services' => $services]);
+        return view('projectsList', ['client' => $client, 'clients'=> $clients, 'users' => $users, 'services' => $services]);
     }
 
     public function showProjectContent(Project $project)
@@ -41,9 +42,14 @@ class FilingController extends Controller
         $users = DB::table('users')->whereNot('role', '=', 'Client')->get();
 
         foreach($project->tasks as $task){
-            if(date('Y-m-d') > $task->date && $task->status != "Done")
+            if(date('Y-m-d') > $task->date && $task->status == "Active")
             {
                 $task['status'] = "Overdue";
+                $task->save();
+            }
+            
+            if($task->project->status == 'Archived'){
+                $task['status'] = "Reject";
                 $task->save();
             }
         }
@@ -87,7 +93,7 @@ class FilingController extends Controller
             $log['remarks'] = "created a project";
             $log->save();
     
-            return redirect('projectContent/'.$project->id);
+            return redirect('projectContent/'.$project->id)->with(['success' => $project->service->name.' successfully initiated.']);
         }
 
         throw ValidationException::withMessages(['surveyNumber' => 'Survey Number already exist']);
@@ -120,7 +126,7 @@ class FilingController extends Controller
         $log['remarks'] = "created a file";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => $file->title.' successfully added.']);
     }
 
     public function updateFile(File $file)
@@ -147,18 +153,16 @@ class FilingController extends Controller
             'user' => ['exists:users,id', 'nullable'],
             'location' => ['max:255',],
             'lot_num' => ['numeric', 'nullable'],
-            'sur_num1' => ['numeric', 'nullable'],
-            'sur_num2' => ['numeric', 'nullable', 'min:100000'],
+            'sur_num' => ['nullable'],
             'lot_area' => ['numeric', 'nullable'],
             'land_owner' => ['max:255', 'nullable'],
         ]);
 
-        // dd($request);
 
         $project['user_id'] = $request['user'];
         $project['location'] = $request['location'];
         $project['lot_number'] = ($request['lot_num'])?'Lot '.$request['lot_num']:'';
-        $project['survey_number'] = ($request['sur_num1'] && $request['sur_num2'])?'Psd-'.$request['sur_num1'].'-'.$request['sur_num2']:'';
+        $project['survey_number'] = ($request['sur_num'])?'Psd-'.$request['sur_num']:'';
         $project['lot_area'] = ($request['lot_area'])?$request['lot_area'].' sqr.m.':'';
         $project['land_owner'] = $request['land_owner'];
         $project->save();
@@ -169,26 +173,33 @@ class FilingController extends Controller
         $log['remarks'] = "updated a project";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => 'Projcet successfully added.']);
     }
 
     public function updateStep(Project $project, $step)
     {
         
         $project['stepNo'] = $step;
+        $project->save();
 
         if(count($project->service->steps) == $step)
         {
-            $project['status'] = "Completed";
+            $project['status'] = "Archived";
+            $project->save();
+            $log = new Log();
+            $log['actor'] = Auth()->user()->id;
+            $log['project_id'] = $project->id;
+            $log['remarks'] = "project marked as Done";
+            $log->save();
+            return redirect('projects/'.$project->client->id)->with(['success' => 'Project moved to '.$project->service->steps[$project->stepNo-1]->name]);
         }
-        $project->save();
         $log = new Log();
         $log['actor'] = Auth()->user()->id;
         $log['project_id'] = $project->id;
         $log['remarks'] = "updated a project";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => 'Project moved to '.$project->service->steps[$project->stepNo-1]->name]);
     }
 
     public function search(Request $request)
@@ -199,7 +210,8 @@ class FilingController extends Controller
 
         $clients = User::where('role', '=', 'Client')
                     ->where("name", "LIKE", "%{$request->search}%")
-                    ->orWhere("address", "LIKE", "%{$request->search}%")->get();
+                    ->orWhere("address", "LIKE", "%{$request->search}%")
+                    ->where('role', '=', 'Client')->get();
         
         $projects = Project::where("survey_number", "LIKE", "%{$request->search}%")
                     ->orWhere("land_owner", "LIKE", "%{$request->search}%")->get();

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description')->nullable();
-            $table->foreignId('project_id')->constrained();
-            $table->enum('status', ['In Folder', 'Digital', 'Away', 'Request']);
+            $table->foreignId('project_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->enum('status', ['In Folder', 'Digital', 'Away', 'Request', 'Reject']);
             $table->string('image_path')->nullable();
             $table->timestamps();
         });

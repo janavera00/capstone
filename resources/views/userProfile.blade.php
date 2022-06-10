@@ -6,6 +6,7 @@
         <div class="row">
             <div class="col-2">
                 <button class="w-100 mb-2 btn btn-success" onclick="showInfo('{{ Auth()->user()->id}}')">Edit Profile</button>
+                <!-- <button class="w-100 my-2 btn btn-success" id="changePassBtn" data-bs-toggle="modal" data-bs-target="#changePass">Change Password</button> -->
                 @if(Auth()->user()->role == 'Head of Office' || Auth()->user()->role == 'Secretary')
                     <button class="w-100 my-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#logs">View logs</button>
                     <button class="w-100 my-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#usersList">View Users</button>
@@ -253,6 +254,66 @@
     @endif
     
 
+    <div class="modal" id="changePass">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-1"><h1 class="modal-title text-white">Change Password</h1></div>
+                <form action="{{ url('changePass') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="m-2 p-2 border rounded">
+                            <label for="oldPassword">Current Password</label>
+                            <input type="password" name="oldPassword" id="oldPassword" class="form-control">
+                            @error('passFail')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                            @error('oldPassword')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="m-2 p-2 border rounded">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" name="newPassword" id="newPassword" class="form-control">
+                            @error('newPassword')
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-secondary">
+                        <a href="" data-bs-dismiss="modal" class="btn btn-danger">Cancel</a>
+                        <input type="submit" value="Change" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if($errors->has('passFail') || $errors->has('oldPassword') || $errors->has('newPassword'))
+        <script>
+            document.getElementById('changePassBtn').click();
+        </script>
+    @endif
+
+
+    @if(session()->has('success'))
+    <div class="modal" id="success">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success"><h1 class="modal-title text-white">Success</h1></div>
+                <div class="modal-body d-flex flex-column">
+                    <p class="m-auto">{{ session()->get('success') }}</p>
+                    <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+    <script>
+        document.getElementById('successBtn').click();
+    </script>
+    @endif
+
+
     <div class="modal" id="logs">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
@@ -264,13 +325,13 @@
                             <th>Target</th>
                             <th>Remarks</th>
                         </tr>
-                        @foreach($logs as $log)
+                        @foreach($logs->sortByDesc('created_at') as $log)
                             <tr style="font-size: .8rem;">
                                 <td>{{ $log->userActor->role }}: {{ $log->userActor->name }}</td>
                                 @if($log->user_id)
                                     <td>{{ $log->user->role }}: {{ $log->user->name }}</td>
                                 @elseif($log->project_id)
-                                    <td>Project: {{ $log->project->survey_number }}</td>
+                                    <td>Project: {{ ($log->project->survey_number)?$log->project->survey_number:sprintf('%05d', $log->project->id) }}</td>
                                 @elseif($log->file_id)
                                     <td>File: {{ $log->file->title }}</td>
                                 @elseif($log->task_id)
@@ -287,11 +348,50 @@
     </div>
 
 
+    @if(session()->has('failed'))
+        <div class="modal" id="success">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger"><h1 class="modal-title text-white">Failed</h1></div>
+                    <div class="modal-body d-flex flex-column">
+                        <p class="m-auto">{{ session()->get('failed') }}</p>
+                        <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+        <script>
+            document.getElementById('successBtn').click();
+        </script>
+    @endif
+    @if(session()->has('success'))
+        <div class="modal" id="success">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success"><h1 class="modal-title text-white">Success</h1></div>
+                    <div class="modal-body d-flex flex-column">
+                        <p class="m-auto">{{ session()->get('success') }}</p>
+                        <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+        <script>
+            document.getElementById('successBtn').click();
+        </script>
+    @endif
+
     <script>
         function showInfo(id){
             document.getElementById(`showUser-${id}Btn`).click();
         }
     </script>
     
-    
+    @if(count($users->where('role', '!=', 'Client')->where('role', '!=', 'Head of Office')) == 0)
+        <script>
+            document.getElementById('addUserBtn').click();
+        </script>
+    @endif
 @endsection

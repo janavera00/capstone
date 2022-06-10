@@ -21,9 +21,14 @@ class TaskController extends Controller
         // dd(date('Y-m-d') < $tasks[0]->date);
 
         foreach($tasks as $task){
-            if(date('Y-m-d') > $task->date && $task->status != "Done")
+            if(date('Y-m-d') > $task->date && $task->status == "Active")
             {
                 $task['status'] = "Overdue";
+                $task->save();
+            }
+
+            if($task->project->status == 'Archived'){
+                $task['status'] = "Reject";
                 $task->save();
             }
         }
@@ -85,7 +90,7 @@ class TaskController extends Controller
         $log['remarks'] = "Scheduled a task";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => 'Task successfully created']);
     }
 
     public function updateTask(Task $task)
@@ -118,18 +123,18 @@ class TaskController extends Controller
         $log['remarks'] = "updated a task";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect(url()->previous())->with(['success' => 'Task successfully updated']);;
     }
 
     public function resched(Task $task)
     {
         $request = request()->validate([
-            'taskDate' => 'required',
-            'taskTime' => 'required',
+            'reschedDate' => 'required',
+            'reschedTime' => 'required',
         ]);
 
-        $task['date'] = $request['taskDate'];
-        $task['time'] = $request['taskTime'];
+        $task['date'] = $request['reschedDate'];
+        $task['time'] = $request['reschedTime'];
         $task['status'] = "Active";
         $task->save();
 
@@ -139,12 +144,12 @@ class TaskController extends Controller
         $log['remarks'] = "rescheduled overdue task";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect('projectContent/'.$task->project->id)->with(['success' => 'Task rescheduled']);;
     }
 
     public function delete(Task $task){
-        $task->employees()->detach();
-        $task->delete();
+        $task['status'] = "Reject";
+        $task->save();
 
         $log = new Log;
         $log['actor'] = Auth()->user()->id;
@@ -152,7 +157,7 @@ class TaskController extends Controller
         $log['remarks'] = "deleted overdue task";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect('projectContent/'.$task->project->id)->with(['success' => 'Task deleted']);;
     }
 
     public function reject(Task $task){
@@ -165,7 +170,7 @@ class TaskController extends Controller
         $log['remarks'] = "rejected requested task";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect('projectContent/'.$task->project->id)->with(['success' => 'Task deleted']);;
     }
     public function accept(Task $task){
         $task['status'] = "Active";
@@ -177,6 +182,18 @@ class TaskController extends Controller
         $log['remarks'] = "accepted requested task";
         $log->save();
 
-        return redirect(url()->previous());
+        return redirect('projectContent/'.$task->project->id)->with(['success' => 'Task accepted']);;
+    }
+    public function done(Task $task){
+        $task['status'] = "Done";
+        $task->save();
+
+        $log = new Log;
+        $log['actor'] = Auth()->user()->id;
+        $log['task_id'] = $task->id;
+        $log['remarks'] = "task marked as Done";
+        $log->save();
+
+        return redirect('projectContent/'.$task->project->id)->with(['success' => $task->task.' is marked as Done']);;
     }
 }

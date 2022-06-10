@@ -33,7 +33,7 @@
             <!-- project updating form -->
             
                 <div class="row m-2 pt-2">
-                    <p class="col-2 h-100 my-auto">Subject Property Location</p>
+                    <p class="col-2 h-100 my-auto">Subject property location</p>
                     <div class="col-10 p-2 rounded bg-white text-black">{{ $project->location }}</div>
                 </div>
 
@@ -42,7 +42,7 @@
 
                     @if($project->user_id)
                     <div class="row m-2 pt-2">
-                        <p class="col-2 h-100 my-auto">Engineer In-charge</p>
+                        <p class="col-2 h-100 my-auto">Engineer in-charge</p>
                         <div class="col-10 p-2 rounded bg-white text-black" style="height: 2.7rem;">{{ $project->user->name }}</div>
                     </div>
                     @endif
@@ -51,13 +51,13 @@
                         <div class="col-10 row w-75 ">
                             <div class="col">
                                 @if($project->lot_number)
-                                <label>Lot Number:</label>
+                                <label>Lot number:</label>
                                 <div class="col-10 p-2 rounded bg-white text-black">{{ $project->lot_number }}</div>
                                 @endif
                             </div>
                             <div class="col">
                                 @if($project->survey_number)
-                                <label for="sur_num">Survey Number:</label>
+                                <label for="sur_num">Survey number:</label>
                                 <div class="col-10 p-2 rounded bg-white text-black">{{ $project->survey_number }}</div>
                                 @endif
                             </div>
@@ -66,20 +66,22 @@
                     </div>
                     @if($project->lot_area)
                     <div class="row m-2 pt-2">
-                        <p class="col-2 h-100 my-auto">Lot Area</p>
+                        <p class="col-2 h-100 my-auto">Lot area</p>
                         <div class="col-10 p-2 rounded bg-white text-black" style="height: 2.7rem;">{{ $project->lot_area }}</div>
                     </div>
                     @endif
                     @if($project->land_owner)
                     <div class="row m-2 pt-2">
-                        <p class="col-2 h-100 my-auto">Registered Land Owner</p>
+                        <p class="col-2 h-100 my-auto">Registered land owner</p>
                         <div class="col-10 p-2 rounded bg-white text-black">{{ $project->land_owner }}</div>
                     </div>
                     @endif
                     <hr>
                     <!-- update button -->
-                    <div class="my-2 d-flex justify-content-center">
-                        <button class="btn btn-primary" id="projectUpdateBtn" data-bs-toggle="modal" data-bs-target="#projectUpdate">Update</button>    
+                    <div class="my-2">
+                        @if($project->status != 'Archived')
+                        <button class="btn btn-primary" id="projectUpdateBtn" data-bs-toggle="modal" data-bs-target="#projectUpdate">Edit project's information</button>    
+                        @endif
                     </div>
                 </div>
             
@@ -121,7 +123,9 @@
                 <!-- header -->
                     <div class="mx-2 row pt-2 border-bottom">
                         <div class="col">
+                        @if($project->status != 'Archived')
                             <button data-bs-toggle="modal" data-bs-target="#addDocument" class="btn bg-primary text-white w-100" id="addFileBtn">Add</button>
+                        @endif
                         </div>
                         <h1 class="col text-center">Documents</h1>
                         <div class="col"></div>
@@ -136,7 +140,7 @@
                     
                         <div class="row">
                             @foreach($project->files as $file)
-                            @if($file->status != "Request")
+                            @if($file->status != "Request" && $file->status != "Reject")
                             <div class="col-6">
                                 <a href="#file-{{$file->id}}" class="text-white text-decoration-none" data-bs-toggle="modal">
                                     <div class="m-2 card bg-secondary overflow-auto">
@@ -151,7 +155,7 @@
                                                 @if($file->image_path)
                                                 <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image" style="filter: blur(8px);">
                                                 @else
-                                                <p class="text-center">No Image</p>
+                                                <p class="text-center">No image</p>
                                                 @endif
                                             </div>
                                         </div>
@@ -189,9 +193,9 @@
                                         <div class="card-body">
                                             <div class="w-50 m-auto bg-white rounded p-2">
                                                 @if($file->image_path)
-                                                <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image">
+                                                <img class="w-100" src="{{ asset('documents/'.$file->image_path) }}" alt="No Image" style="filter: blur(8px);">
                                                 @else
-                                                <p class="text-center">No Image</p>
+                                                <p class="text-center">No image</p>
                                                 @endif
                                             </div>
                                         </div>
@@ -212,16 +216,20 @@
                 <div class="rounded mx-2 border border-2 overflow-auto d-flex flex-column mb-5" style="height: 53vh;">
                     <div class="mx-2 row pt-2 border-bottom">
                         <div class="col">
-                            <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-primary text-white w-100" id="addScheduleBtn">Schedule a Task</button>
+                        @if($project->status != 'Archived')
+                        @if(Auth()->user()->role == 'Head of Office' || Auth()->user()->role == 'Secretary')
+                        <button data-bs-toggle="modal" data-bs-target="#newSched" class="btn bg-primary text-white w-100" id="addScheduleBtn">Schedule task</button>
+                        @endif
+                        @endif
                         </div>
                         <h1 class="col text-center">Tasks</h1>
                         <div class="col">
-                            <a href="{{ url('scheduling') }}" class="btn btn-success w-100">Show all task</a>
+                            <a href="{{ url('scheduling') }}" class="btn btn-success w-100">View all tasks</a>
                         </div>
                     </div>
         
                     <div class="overflow-auto m-1" style="height: 50vh;">
-                        @if(count($project->tasks) < 1) 
+                        @if(count($project->tasks->where('status', '=', 'Active')) < 1 && count($project->tasks->where('status', '=', 'Overdue')) < 1) 
                         <div class="w-100 h-100 d-flex pb-5">
                             <h1 class="m-auto text-secondary text-center" style="width: fit-content; border-bottom:1px solid gray">No tasks scheduled</h1>
                         </div>
@@ -289,17 +297,16 @@
                 <h2 class="modal-title">Update project details</h2>
             </div>
 
-            <form action="{{ url('project/update/'.$project->id) }}" method="post">
+            <form action="{{ url('project/update/'.$project->id) }}" method="post" id="formProjectUpdate">
                 @csrf
                 <div class="modal-body">
                     <div class="m-2 p-2 border rounded">
                         <label>Subject Property Location</label>
-                        <input type="text" name="location" id="location" class="form-control" autocomplete="off" value="{{$project->location}}">
-                        @error('location')
-                        <p class="text-danger">*{{$message}}</p>
-                        @enderror
+                        <input type="text" name="location" id="loc" class="form-control" autocomplete="off" value="{{$project->location}}" onfocusout="validate('loc', 'submitProjectUpdate', 'formProjectUpdate')" readonly>
+                        <p class="text-danger error" id="errorloc"></p>
                     </div>
-    
+                    
+                    @if(Auth()->user()->role == "Head of Office" || Auth()->user()->role == "Secretary")
                     <div class="m-2 p-2 border rounded">
                         <label>Engineer In Charge</label>
                         <select name="user" id="user" class="form-control">
@@ -316,6 +323,9 @@
                         <p class="text-danger">*{{$message}}</p>
                         @enderror
                     </div>
+                    @else
+                    <input type="hidden" name="user" value="{{ $project->user_id }}">
+                    @endif
                     <div class="m-2 p-2 border rounded">
 
                         <div class="col-10 row w-75 ">
@@ -323,28 +333,18 @@
                                 <label>Lot Number</label>
                                 <div class="d-flex">
                                     <p class="p-2">Lot </p>
-                                    <input type="text" name="lot_num" id="lot_num" class="form-control" style="height: 2.5rem;" autocomplete="off" value="{{($project->lot_number)?explode(' ', $project->lot_number)[1]:''}}">
+                                    <input type="text" name="lot_num" id="lotNum" class="form-control" style="height: 2.5rem;" autocomplete="off" value="{{($project->lot_number)?explode(' ', $project->lot_number)[1]:''}}" onfocusout="validate('lotNum', 'submitProjectUpdate', 'formProjectUpdate')">
                                 </div>
-                                @error('lot_num')
-                                <p class="text-danger">*{{$message}}</p>
-                                @enderror
+                                <p class="text-danger error" id="errorlotNum"></p>
                             </div>
                             <div class="col">
     
                                 <label for="sur_num">Survey Number</label>
                                 <div class="d-flex">
                                     <p class="py-2">Psd-</p>
-                                    <input type="text" name="sur_num1" id="sur_num1" class="form-control" style="height: 2.5rem; width: 3rem;" maxlength="2" autocomplete="off" value="{{($project->survey_number)?explode('-', $project->survey_number)[1]:''}}">
-    
-                                    <p class="py-2">-</p>
-                                    <input type="text" name="sur_num2" id="sur_num2" class="form-control" style="height: 2.5rem;" maxlength="6" autocomplete="off" value="{{($project->survey_number)?explode('-', $project->survey_number)[2]:''}}">
+                                    <input type="text" name="sur_num" id="surNum" class="form-control" maxlength="9" style="height: 2.5rem;" autocomplete="off" value="{{($project->survey_number)?explode('-', $project->survey_number)[1].'-'.explode('-', $project->survey_number)[2]:''}}" onfocusout="validate('surNum', 'submitProjectUpdate', 'formProjectUpdate')">
                                 </div>
-                                @error('sur_num1')
-                                <p class="text-danger">*{{$message}}</p>
-                                @enderror
-                                @error('sur_num2')
-                                <p class="text-danger">*{{$message}}</p>
-                                @enderror
+                                <p class="text-danger error" id="errorsurNum"></p>
                             </div>
                         </div>
     
@@ -353,12 +353,10 @@
                         <label>Lot Area</label>
     
                         <div class="col-10 d-flex" style="padding-left: 0px;">
-                            <input type="text" name="lot_area" id="lot_area" class="form-control w-25" value="{{ ($project->lot_area)?(explode(' ', $project->lot_area))[0]:'' }}">
+                            <input type="text" name="lot_area" id="lotArea" class="form-control w-25" value="{{ ($project->lot_area)?(explode(' ', $project->lot_area))[0]:'' }}" onfocusout="validate('lotArea', 'submitProjectUpdate', 'formProjectUpdate')">
                             <p class="px-2 my-auto">sqr.m.</p>
-                            @error('lot_area')
-                            <p class="text-danger">*{{$message}}</p>
-                            @enderror
                         </div>
+                        <p class="text-danger error" id="errorlotArea"></p>
                     </div>
                     <div class="m-2 p-2 border rounded">
                         <label>Registered Land Owner</label>
@@ -373,7 +371,9 @@
                 
                 <!-- update button -->
                 <div class="modal-footer bg-secondary">
-                    <input type="submit" value="Update" class="btn bg-3 text-white" style="width: 12rem;">
+                    <a data-bs-dismiss="modal" style="width: 200px;" class="btn btn-danger">Cancel</a>
+                    <button class="btn btn-primary" style="width: 200px;" id="submitProjectUpdate">Update</button>
+                    <input type="submit" id="submitProjectUpdateBtn" hidden>
                 </div>
                 
             </form>
@@ -396,9 +396,9 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-1 text-white">
-                <h1 class="modal-title">Add a new documment</h1>
+                <h1 class="modal-title">Add a new document</h1>
             </div>
-            <form action="{{ url('project/'.$project->id.'/createFile') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ url('project/'.$project->id.'/createFile') }}" method="post" enctype="multipart/form-data" id="formDocumentAdd">
                 @csrf
                 <div class="modal-body overflow-auto" style="height: 60vh;">
                     <p>Enter the name of the document, a short description of it, and a scanned/photograph copy of the document</p>
@@ -408,33 +408,28 @@
                             <p class="text-danger">*</p>
                             <label for="title">Title:</label>
                         </div>
-                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" autocomplete="off">
-                        @error('title')
-                        <p class="text-danger">* {{ $message }}</p>
-                        @enderror
+                        <input type="text" name="title" id="title" class="form-control required" value="{{ old('title') }}" autocomplete="off" onfocusout="validate('title', 'submitDocumentAdd', 'formDocumentAdd')">
+                        <p class="text-danger error" id="errortitle"></p>
                     </div>
                     <div class="mt-2">
                         <label for="description">Description:</label>
                         <input type="text" name="description" id="description" class="form-control" value="{{ old('description') }}" autocomplete="off">
-                        @error('description')
-                        <p class="text-danger">* {{ $message }}</p>
-                        @enderror
+                        
                     </div>
                     <div class="mt-2">
                         <div class="d-flex">
                             <p class="text-danger">*</p>
                             <label for="img">Document:</label>
                         </div>
-                        <input type="file" name="img" id="img" class="form-control" accept="image/*" value="{{ old('img') }}">
-                        @error('img')
-                        <p class="text-danger">* {{ $message }}</p>
-                        @enderror
+                        <input type="file" name="img" id="img" class="form-control required" accept="image/*" value="{{ old('img') }}">
+                        <p class="text-danger error" id="errorimg"></p>
                     </div>
                     
                 </div>
                 <div class="modal-footer bg-secondary">
-                    <a class="btn bg-4 text-white" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
-                    <input type="submit" value="Add" class="btn btn-primary" style="width: 200px;">
+                    <a class="btn btn-danger" style="width: 200px;" data-bs-dismiss="modal">Cancel</a>
+                    <button class="btn btn-primary" style="width: 200px;" data-bs-dismiss="modal" id="submitDocumentAdd">Add</button>
+                    <input type="submit" id="submitDocumentAddBtn" hidden>
                 </div>
             </form>
 
@@ -572,6 +567,7 @@
                         <img class="w-100" id="fileImage" src="{{ asset('documents/'.$file->image_path) }}">
                     </div>
                 </div>
+                @if($project->status != 'Archived')
                 <div class="modal-footer bg-secondary">
                     @if($file->status == "Request")
                     <a href="{{ url('fileReject/'.$file->id) }}" class="btn btn-danger">Reject</a>
@@ -580,6 +576,7 @@
                     <input type="submit" value="Update" class="btn btn-primary" style="width: 15rem;">
                     @endif
                 </div>
+                @endif
             </form>
         </div>
     </div>
@@ -606,7 +603,23 @@
 </script>
 @enderror
 
-
+@if(session()->has('success'))
+<div class="modal" id="success">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success"><h1 class="modal-title text-white">Success</h1></div>
+            <div class="modal-body d-flex flex-column">
+                <p class="m-auto">{{ session()->get('success') }}</p>
+                <button class="btn btn-primary mx-auto" data-bs-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+<button data-bs-toggle="modal" data-bs-target="#success" id="successBtn" hidden></button>
+<script>
+    document.getElementById('successBtn').click();
+</script>
+@endif
 
 <!-- ---------------------------------------------------------------------------------------------------------------------- -->
 <!-- JavaScript -->
@@ -646,8 +659,100 @@
         if (field.childElementCount > 2)
             field.removeChild(field.lastElementChild);
     }
+
+    function validate(element, submit, form) {
+        const error = document.getElementById(`error${element}`);
+        const input = document.getElementById(element);
+        const submitBtn = document.getElementById(submit);
+        const errors = document.querySelectorAll(`#${form} .error`);
+
+        console.log(input.value);
+
+        if (element == 'contact') {
+            if(input.value.length > 0){
+                const pattern = /(09)([0-9]{9})/;
+    
+                if (!pattern.test(input.value)) {
+                    error.textContent = 'Invalid format';
+                } else {
+                    error.textContent = '';
+                }
+            }else{
+                error.textContent = '';
+            }
+        }else if(element == 'lotNum' || element == 'lotArea'){
+            if(input.value.length > 0){
+                let pattern = /^\d+$/;
+    
+                if(!pattern.test(input.value)){
+                    error.textContent = "Invalid format";
+                }else{
+                    error.textContent = "";
+                }
+            }else{
+                error.textContent = "";
+            }
+        }else if(element == 'email'){
+        }else if(element == 'surNum'){
+            if(input.value.length > 0){
+                let pattern = /^[0-9]{2}(-)[0-9]{6}$/;
+    
+                if(!pattern.test(input.value)){
+                    error.textContent = "Invalid format";
+                }else{
+                    error.textContent = "";
+                }
+            }else{
+                error.textContent = "";
+            }
+        }else{
+            if (input.value === '' || input.value == null) {
+                error.textContent = 'This field is required';
+            } else {
+                error.textContent = '';
+            }
+        }
+
+        let exist = false;
+        for(let i = 0;i < errors.length;i++){   
+            if(errors[i].textContent !== '')
+                exist = true;
+        }
+
+        if(exist){
+            submitBtn.disabled = true;
+        }else{
+            submitBtn.disabled = false;
+        }
+    }
+
+
+
+    function checkSubmit(submit, form){
+        const btn = document.getElementById(submit);
+        const reqInputs = document.querySelectorAll(`#${form} .required`);
+        console.log(reqInputs);
+        
+        let blank = false;
+        for(let i = 0;i < reqInputs.length;i++){
+            if(reqInputs[i].value === '' || reqInputs[i].value == null){
+                blank = true;
+                document.getElementById(`error${reqInputs[i].id}`).textContent = 'This field is required';
+            }
+        }
+
+        if(blank){
+            btn.disabled = true;
+        }else{
+            btn.disabled = false;
+            document.getElementById(`${submit}Btn`).click();
+        }
+        
+    }
 </script>
 
-
+@foreach($errors->all() as $error)
+    <p>{{$error}}</p>
+@endforeach
 
 @endsection
