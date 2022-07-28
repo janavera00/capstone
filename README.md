@@ -4,22 +4,22 @@ Survey Project Management Application
 A project management application for surveying firms. features include a file directory, a task management, user management, and a dashboard for an overview of the account's contents.
 
 How to run:
- - clone the repository: 
+ - clone the repository: <br>
      run git clone https://github.com/janavera00/capstone.git
- - enter the folder: 
+ - enter the folder: <br>
      run cd capstone
- - install composer: 
+ - install composer: <br>
      run composer install
  - create the database named 'spromap'
- - generate the env file: 
+ - generate the env file: <br>
      run cp .env.example .env
- - generate the key: 
+ - generate the key: <br>
      run php artisan key:generate
- - migrate and seed the database: 
+ - migrate and seed the database: <br>
      run php artisan migrate --seed
- - serve the project
+ - serve the project:<br>
      run php artisan serve
- - on your web browser's url put in:
+ - on your web browser's url put in:<br>
      localhost:8000
  
  
