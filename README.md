@@ -1,3 +1,29 @@
+SProMAp
+Survey Project Management Application
+
+A project management application for surveying firms. features include a file directory, a task management, user management, and a dashboard for an overview of the account's contents.
+
+How to run:
+ - clone the repository: 
+     run git clone https://github.com/janavera00/capstone.git
+ - enter the folder: 
+     run cd capstone
+ - install composer: 
+     run composer install
+ - create the database named 'spromap'
+ - generate the env file: 
+     run cp .env.example .env
+ - generate the key: 
+     run php artisan key:generate
+ - migrate and seed the database: 
+     run php artisan migrate --seed
+ - serve the project
+     run php artisan serve
+ - on your web browser's url put in:
+     localhost:8000
+ 
+ 
+ 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
